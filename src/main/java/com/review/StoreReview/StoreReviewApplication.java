@@ -1,4 +1,4 @@
-package com.review.ReviewService;
+package com.review.StoreReview;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration
 
 @SpringBootApplication()
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class, XADataSourceAutoConfiguration.class})
-public class ReviewServiceApplication {
+public class StoreReviewApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ReviewServiceApplication.class, args);
+		SpringApplication.run(StoreReviewApplication.class, args);
 	}
 
 }
