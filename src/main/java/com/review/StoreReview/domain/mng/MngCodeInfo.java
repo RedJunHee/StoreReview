@@ -42,8 +42,7 @@ public class MngCodeInfo {
     private char USE_YN;
 
     @Builder
-    public MngCodeInfo(Integer SEA, MngCode CODE_ID, String CODE_NAME, String DESC, Integer SORT_ORDER, char USE_YN) {
-        this.SEA = SEA;
+    public MngCodeInfo(MngCode CODE_ID, String CODE_NAME, String DESC, Integer SORT_ORDER, char USE_YN) {
         this.CODE_ID = CODE_ID;
         this.CODE_NAME = CODE_NAME;
         this.DESC = DESC;

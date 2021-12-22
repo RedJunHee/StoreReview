@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 // 객체   : USER (Model)
 // 설명   : CUST_DB.USER_INFO 테이블에 매핑될 Model
@@ -21,38 +22,39 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="SUID", nullable = false)
     private String SUID;
 
-    @Column(name="SAID", nullable = false)
+    @Column(name="SAID", nullable = false, length = 12)
     private String SAID;
 
-    @Column(name="ID", nullable = false)
+    @Column(name="ID", nullable = false, length = 12)
     private String ID;
 
-    @Column(name="PASSWORD", nullable = false)
+    @Column(name="PASSWORD", nullable = false, length = 100)
     private String PASSWORD;
 
-    @Column(name="NAME", nullable = false)
+    // 한글 10자
+    @Column(name="NAME", nullable = false, length = 10)
     private String NAME;
 
-    @Column(name="NICKNAME", nullable = false)
+    //한글 10자
+    @Column(name="NICKNAME", nullable = false, length = 10)
     private String NICKNAME;
 
     @Column(name="BIRTH_DATE", nullable = false)
-    private String BIRTH_DATE;
+    private LocalDateTime BIRTH_DATE;
 
     @Column(name="GENDER", nullable = false)
-    private String GENDER;
+    private char GENDER;
 
     @Column(name="PHONE", nullable = false)
     private String PHONE;
 
     @Builder
     public User(String SUID, String SAID, String ID, String PASSWORD
-            , String NAME, String NICKNAME, String BIRTH_DATE
-            , String GENDER, String PHONE) {
+            , String NAME, String NICKNAME, LocalDateTime BIRTH_DATE
+            , char GENDER, String PHONE) {
         this.SUID = SUID;
         this.SAID = SAID;
         this.ID = ID;
