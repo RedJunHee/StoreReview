@@ -1,10 +1,10 @@
-package com.review.StoreReview.domain.log;
+package com.review.StoreReview.domain;
 
-import com.review.StoreReview.domain.user.User;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Table(name="API_LOG")
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 테스트할 경우 PUBLIC으로 설정
@@ -14,8 +14,12 @@ public class Log {
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)    // Log to User
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "SUID")
+    private User suid;
+
+    @ManyToOne(fetch=FetchType.LAZY)    // Log to User
+    @JoinColumn(name = "SAID")
+    private User said;
 
     private LocalDateTime date;
 
@@ -32,8 +36,9 @@ public class Log {
     private double processTime;
 
     @Builder
-    public Log(User user, LocalDateTime date, String apiName, char apiStatus, String apiDesc, double processTime) {
-        this.user = user;
+    public Log(User suid, User said, LocalDateTime date, String apiName, char apiStatus, String apiDesc, double processTime) {
+        this.suid = suid;
+        this.said = said;
         this.date = date;
         this.apiName = apiName;
         this.apiStatus = apiStatus;

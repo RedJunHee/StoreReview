@@ -1,4 +1,4 @@
-package com.review.StoreReview.domain.user;
+package com.review.StoreReview.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class User {
     @Column(name="SAID", nullable = false, length = 12)
     private String SAID;
 
-    @Column(name="ID", nullable = false, length = 12)
+    @Column(name="USER_ID", nullable = false, length = 12)
     private String ID;
 
     @Column(name="PASSWORD", nullable = false, length = 100)

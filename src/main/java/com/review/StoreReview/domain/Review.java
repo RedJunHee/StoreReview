@@ -1,10 +1,10 @@
-package com.review.StoreReview.domain.review;
+package com.review.StoreReview.domain;
 
 import com.review.StoreReview.common.BaseTimeEntity;
-import com.review.StoreReview.domain.user.User;
 import lombok.*;
 import javax.persistence.*;
 
+@Table(name="REVIEW")
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 테스트할 경우 PUBLIC으로 설정
