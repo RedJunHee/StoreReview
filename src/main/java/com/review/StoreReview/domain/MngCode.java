@@ -25,21 +25,21 @@ public class MngCode {
     // 2. 테이블과 매핑될 컬럼 = "CODE_ID"/
     @Id
     @Column(name= "CODE_ID")
-    private String CODE_ID;
+    private String dodeId;
 
     // 1. 테이블과 매핑될 컬럼 = "DESC"/
     @Column(name = "DESC", nullable = false, length=100, columnDefinition = "VARCHAR(100) Default ''")
-    private String DESC;
+    private String desc;
 
     // 1. 테이블과 매핑될 컬럼 = "USE_YN"/
     @Column(name = "USE_YN", nullable = false, columnDefinition = "CHAR(1) Default 'N'")
-    private char USE_YN;
+    private char useYN;
 
     @Builder
     public MngCode(String code_ID, String desc, char use_YN)
     {
-        this.CODE_ID = code_ID;
-        this.DESC = desc;
-        this.USE_YN = use_YN;
+        this.dodeId = code_ID;
+        this.desc = desc;
+        this.useYN = use_YN;
     }
 }
