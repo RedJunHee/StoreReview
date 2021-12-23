@@ -23,46 +23,46 @@ public class User {
 
     @Id
     @Column(name="SUID", nullable = false)
-    private String SUID;
+    private String suid;
 
     @Column(name="SAID", nullable = false, length = 12)
-    private String SAID;
+    private String said;
 
     @Column(name="USER_ID", nullable = false, length = 12)
-    private String ID;
+    private String id;
 
     @Column(name="PASSWORD", nullable = false, length = 100)
-    private String PASSWORD;
+    private String password;
 
     // 한글 10자
     @Column(name="NAME", nullable = false, length = 10)
-    private String NAME;
+    private String name;
 
     //한글 10자
     @Column(name="NICKNAME", nullable = false, length = 10)
-    private String NICKNAME;
+    private String nickname;
 
     @Column(name="BIRTH_DATE", nullable = false)
-    private LocalDateTime BIRTH_DATE;
+    private LocalDateTime birthDate;
 
     @Column(name="GENDER", nullable = false)
-    private char GENDER;
+    private char gender;
 
     @Column(name="PHONE", nullable = false)
-    private String PHONE;
+    private String phone;
 
     @Builder
     public User(String SUID, String SAID, String ID, String PASSWORD
             , String NAME, String NICKNAME, LocalDateTime BIRTH_DATE
             , char GENDER, String PHONE) {
-        this.SUID = SUID;
-        this.SAID = SAID;
-        this.ID = ID;
-        this.PASSWORD = PASSWORD;
-        this.NAME = NAME;
-        this.NICKNAME = NICKNAME;
-        this.BIRTH_DATE = BIRTH_DATE;
-        this.GENDER = GENDER;
-        this.PHONE = PHONE;
+        this.suid = SUID;
+        this.said = SAID;
+        this.id = ID;
+        this.password = PASSWORD;
+        this.name = NAME;
+        this.nickname = NICKNAME;
+        this.birthDate = BIRTH_DATE;
+        this.gender = GENDER;
+        this.phone = PHONE;
     }
 }

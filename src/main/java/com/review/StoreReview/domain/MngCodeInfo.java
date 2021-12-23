@@ -20,34 +20,34 @@ public class MngCodeInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "SEQ")
-    private Integer SEA;
+    private Integer seq;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "CODE_ID")
-    private MngCode CODE_ID;
+    private MngCode codeId;
 
     // 1. 테이블과 매핑될 컬럼 = "CODE_NAME"/
     @Column(name = "CODE_NAME", nullable = false, length=100)
-    private String CODE_NAME;
+    private String codeName;
 
     // 1. 테이블과 매핑될 컬럼 = "DESC"/
     @Column(name = "DESC", nullable = false, length=100, columnDefinition = "VARCHAR(100) Default ''")
-    private String DESC;
+    private String desc;
 
     @Column(name = "SORT_ORDER", nullable = false, columnDefinition = "INTEGER Default 0")
-    private Integer SORT_ORDER;
+    private Integer sortOrder;
 
     // 1. 테이블과 매핑될 컬럼 = "USE_YN"/
     @Column(name = "USE_YN", nullable = false, columnDefinition = "CHAR(1) Default 'N'")
-    private char USE_YN;
+    private char useYN;
 
     @Builder
     public MngCodeInfo(MngCode CODE_ID, String CODE_NAME, String DESC, Integer SORT_ORDER, char USE_YN) {
-        this.CODE_ID = CODE_ID;
-        this.CODE_NAME = CODE_NAME;
-        this.DESC = DESC;
-        this.SORT_ORDER = SORT_ORDER;
-        this.USE_YN = USE_YN;
+        this.codeId = CODE_ID;
+        this.codeName = CODE_NAME;
+        this.desc = DESC;
+        this.sortOrder = SORT_ORDER;
+        this.useYN = USE_YN;
     }
 
 }
