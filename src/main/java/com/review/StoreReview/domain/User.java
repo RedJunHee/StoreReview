@@ -9,11 +9,11 @@ import javax.persistence.Column;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-// 객체   : USER (Model)
-// 설명   : CUST_DB.USER_INFO 테이블에 매핑될 Model
-// 이름   : 조 준 희
-// 생성   : 2021-12-21
-// 기록   : [2021-12-21] - TEMP History/
+/** Class       : User (Model)
+ *  Author      : 조 준 희
+ *  Description : CUST_DB.USER_INFO 테이블에 매필될 Model
+ *  History     : [2021-12-21] - TEMP
+ */
 
 @Entity
 @Getter

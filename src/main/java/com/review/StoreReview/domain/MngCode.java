@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 
-// 객체   : MngCode (Model)
-// 설명   : MNG_DB.MngCode 테이블에 매핑될 Model
-// 이름   : 조 준 희
-// 생성   : 2021-12-21
-// 기록   : [2021-12-21] - TEMP History/
-
+/** Class       : MngCode (Model)
+ *  Author      : 조 준 희
+ *  Description : MNG_DB.MngCode 테이블에 매핑될 Model
+ *  History     : [2021-12-21] - TEMP History/
+ */
 
 @Entity
 @Getter
