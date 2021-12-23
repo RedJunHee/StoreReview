@@ -1,4 +1,4 @@
-package com.review.StoreReview.domain.mng;
+package com.review.StoreReview.domain;
 
 import lombok.Builder;
 

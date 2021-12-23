@@ -1,11 +1,10 @@
-package com.review.StoreReview.domain.comment;
+package com.review.StoreReview.domain;
 
 import com.review.StoreReview.common.BaseTimeEntity;
-import com.review.StoreReview.domain.review.Review;
-import com.review.StoreReview.domain.user.User;
 import lombok.*;
 import javax.persistence.*;
 
+@Table(name="COMMENT")
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 테스트할 경우 PUBLIC으로 설정
@@ -15,20 +14,25 @@ public class Comment extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)         // Comment to Board
-    @JoinColumn(name="review_id")
+    @JoinColumn(name="REVIEW_ID")
     private Review review;
 
-    @ManyToOne(fetch=FetchType.LAZY)     // Comment to User
-    @JoinColumn(name="user_id")
-    private User user;
+    @ManyToOne(fetch=FetchType.LAZY)      // Comment To User
+    @JoinColumn(name="SAID")
+    private User said;
 
-    @Column(name = "content", length = 300)
+    @ManyToOne(fetch=FetchType.LAZY)      // Comment To User
+    @JoinColumn(name="SUID")
+    private User suid;
+
+    @Column(name = "CONTENT", length = 300)
     private String content;
 
     @Builder
-    public Comment(Review review, User user, String content) {
+    public Comment(Review review, User suid, User said, String content) {
         this.review = review;
-        this.user = user;
+        this.suid = suid;
+        this.said = said;
         this.content = content;
     }
 
