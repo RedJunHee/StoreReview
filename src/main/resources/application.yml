@@ -1,1 +1,8 @@
-
+#JPA
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+      use-new-id-generator-mappings: false
+    open-in-view: true
+    show-sql: true
