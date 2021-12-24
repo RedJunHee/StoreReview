@@ -2,10 +2,13 @@ package com.review.StoreReview.web.rest.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/** Author : 조 준 희
- *  Update Date : 2021-12-22
- *  Test Code : com.review.StoreReview.web.rest.controller.dto.CommonResDtoTest.class
+
+/** Class       : CommonResDto (Model)
+ *  Author      : 조 준 희
+ *  Description : 모든 API return 클래스   == 응답 객체
+ *  History     : [2021-12-21] - TestCode : com.review.StoreReview.web.rest.controller.dto.CommonResDtoTest.class
  */
+
 //Jackson어노테이션 json에 없는 프로퍼티 설정시 에러 무시 true
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CommonResDto {

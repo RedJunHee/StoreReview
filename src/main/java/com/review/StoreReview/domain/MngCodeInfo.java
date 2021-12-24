@@ -1,17 +1,23 @@
 package com.review.StoreReview.domain;
 
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 
-// 객체   : MngCodeInfo (Model)
-// 설명   : MNG_DB.MngCodeInfo 테이블에 매핑될 Model
-// 이름   : 조 준 희
-// 생성   : 2021-12-21
-// 기록   : [2021-12-21] - TEMP History/
 
-
+/** Class       : MngCodeInfo (Model)
+ *  Author      : 조 준 희
+ *  Description : MNG_DB.MngCodeInfo 테이블에 매핑될 Model
+ *  History     : [2021-12-21] - TEMP History/
+ */
+@Entity
+@Getter
+@Table(name= "MNG_CODE_INFO")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MngCodeInfo {
 
     // 1. id 컬럼
