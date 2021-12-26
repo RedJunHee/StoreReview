@@ -1,5 +1,6 @@
-package com.review.StoreReview.domain;
+package com.review.StoreReview.domain.MNG;
 
+import com.review.StoreReview.domain.MNG.MngCode;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

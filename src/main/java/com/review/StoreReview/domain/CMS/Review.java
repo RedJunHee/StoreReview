@@ -1,6 +1,7 @@
-package com.review.StoreReview.domain;
+package com.review.StoreReview.domain.CMS;
 
 import com.review.StoreReview.common.BaseTimeEntity;
+import com.review.StoreReview.domain.CUST.User;
 import lombok.*;
 import javax.persistence.*;
 
