@@ -1,3 +1,6 @@
+### DB Config
+src/main/java/com/review/StoreReview/config/
+
 HELP.md
 .gradle
 build/

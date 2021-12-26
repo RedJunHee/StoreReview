@@ -1,4 +1,4 @@
-package com.review.StoreReview.domain;
+package com.review.StoreReview.domain.MNG;
 
 import lombok.AccessLevel;
 import lombok.Builder;

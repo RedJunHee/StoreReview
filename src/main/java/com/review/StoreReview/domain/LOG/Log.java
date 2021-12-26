@@ -1,5 +1,6 @@
-package com.review.StoreReview.domain;
+package com.review.StoreReview.domain.LOG;
 
+import com.review.StoreReview.domain.CUST.User;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
