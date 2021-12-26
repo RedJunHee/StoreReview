@@ -1,4 +1,4 @@
-package com.review.StoreReview.domain;
+package com.review.StoreReview.domain.MNG;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 
-// 객체   : MngCode (Model)
-// 설명   : MNG_DB.MngCode 테이블에 매핑될 Model
-// 이름   : 조 준 희
-// 생성   : 2021-12-21
-// 기록   : [2021-12-21] - TEMP History/
-
+/** Class       : MngCode (Model)
+ *  Author      : 조 준 희
+ *  Description : MNG_DB.MngCode 테이블에 매핑될 Model
+ *  History     : [2021-12-21] - TEMP History/
+ */
 
 @Entity
 @Getter
@@ -25,21 +24,21 @@ public class MngCode {
     // 2. 테이블과 매핑될 컬럼 = "CODE_ID"/
     @Id
     @Column(name= "CODE_ID")
-    private String CODE_ID;
+    private String dodeId;
 
     // 1. 테이블과 매핑될 컬럼 = "DESC"/
     @Column(name = "DESC", nullable = false, length=100, columnDefinition = "VARCHAR(100) Default ''")
-    private String DESC;
+    private String desc;
 
     // 1. 테이블과 매핑될 컬럼 = "USE_YN"/
     @Column(name = "USE_YN", nullable = false, columnDefinition = "CHAR(1) Default 'N'")
-    private char USE_YN;
+    private char useYN;
 
     @Builder
     public MngCode(String code_ID, String desc, char use_YN)
     {
-        this.CODE_ID = code_ID;
-        this.DESC = desc;
-        this.USE_YN = use_YN;
+        this.dodeId = code_ID;
+        this.desc = desc;
+        this.useYN = use_YN;
     }
 }

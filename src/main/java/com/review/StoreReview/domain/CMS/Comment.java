@@ -1,6 +1,8 @@
-package com.review.StoreReview.domain;
+package com.review.StoreReview.domain.CMS;
 
 import com.review.StoreReview.common.BaseTimeEntity;
+import com.review.StoreReview.domain.CMS.Review;
+import com.review.StoreReview.domain.CUST.User;
 import lombok.*;
 import javax.persistence.*;
 
@@ -14,20 +16,25 @@ public class Comment extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)         // Comment to Board
-    @JoinColumn(name="review_id")
+    @JoinColumn(name="REVIEW_ID")
     private Review review;
 
-    @ManyToOne(fetch=FetchType.LAZY)     // Comment to User
-    @JoinColumn(name="user_id")
-    private User user;
+    @ManyToOne(fetch=FetchType.LAZY)      // Comment To User
+    @JoinColumn(name="SAID")
+    private User said;
 
-    @Column(name = "content", length = 300)
+    @ManyToOne(fetch=FetchType.LAZY)      // Comment To User
+    @JoinColumn(name="SUID")
+    private User suid;
+
+    @Column(name = "CONTENT", length = 300)
     private String content;
 
     @Builder
-    public Comment(Review review, User user, String content) {
+    public Comment(Review review, User suid, User said, String content) {
         this.review = review;
-        this.user = user;
+        this.suid = suid;
+        this.said = said;
         this.content = content;
     }
 

@@ -1,6 +1,7 @@
-package com.review.StoreReview.domain;
+package com.review.StoreReview.domain.CMS;
 
 import com.review.StoreReview.common.BaseTimeEntity;
+import com.review.StoreReview.domain.CUST.User;
 import lombok.*;
 import javax.persistence.*;
 
@@ -11,25 +12,30 @@ import javax.persistence.*;
 public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="review_id")
+    @Column(name="REVIEW_ID")
     private Long id;
 
     @ManyToOne(fetch=FetchType.LAZY)      // Review To User
-    @JoinColumn(name="user_id")
-    private User user;
+    @JoinColumn(name="SAID")
+    private User said;
 
-    @Column(name = "stars", nullable = false)
+    @ManyToOne(fetch=FetchType.LAZY)      // Review To User
+    @JoinColumn(name="SUID")
+    private User suid;
+
+    @Column(name = "STARS", nullable = false)
     private double stars;
 
-    @Column(name = "content", nullable = false, length = 1000)
+    @Column(name = "CONTENT", nullable = false, length = 1000)
     private String content;
 
-    @Column(name = "img_url", length = 45)
+    @Column(name = "IMG_URL", length = 45)
     private String imgUrl;
 
     @Builder
-    public Review (User user, double stars, String content, String imgUrl) {
-        this.user = user;
+    public Review (User suid, User said, double stars, String content, String imgUrl) {
+        this.suid = suid;
+        this.said = said;
         this.stars = stars;
         this.content = content;
         this.imgUrl = imgUrl;

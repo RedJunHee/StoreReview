@@ -1,5 +1,6 @@
-package com.review.StoreReview.domain;
+package com.review.StoreReview.domain.LOG;
 
+import com.review.StoreReview.domain.CUST.User;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,16 +24,16 @@ public class Log {
 
     private LocalDateTime date;
 
-    @Column(name="api_name", nullable = false, length = 20)
+    @Column(name="API_NAME", nullable = false, length = 20)
     private  String apiName;
 
-    @Column(name="api_status")
+    @Column(name="API_STATUS")
     private char apiStatus;
 
-    @Column(name="api_desc", length = 100)
+    @Column(name="API_DESC", length = 100)
     private  String apiDesc;
 
-    @Column(name="process_time")
+    @Column(name="PROCESS_TIME")
     private double processTime;
 
     @Builder
