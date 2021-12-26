@@ -2,7 +2,31 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       use-new-id-generator-mappings: false
     open-in-view: true
     show-sql: true
+  #### CUST_DB DataSource Configuration1
+  cust-datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/CUST_DB
+    username: admin
+    password: review123
+  #### CMS_DB DataSource Configuration2
+  cms-datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/CMS_DB
+    username: admin
+    password: review123
+  #### MNG_DB DataSource Configuration3
+  mng-datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/MNG_DB
+    username: admin
+    password: review123
+  #### LOG_DB DataSource Configuration4
+  log-datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/LOG_DB
+    username: admin
+    password: review123
