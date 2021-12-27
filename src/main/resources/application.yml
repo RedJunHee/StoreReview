@@ -30,4 +30,3 @@ spring:
     jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/LOG_DB
     username: admin
     password: review123
-
