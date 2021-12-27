@@ -2,9 +2,10 @@ package com.review.StoreReview.web.rest.controller.dto;
 
 import com.review.StoreReview.domain.CUST.User;
 import lombok.Builder;
-
+import lombok.Getter;
 import java.time.LocalDateTime;
 
+@Getter
 public class UserSaveRequestDto {
     private String suid;
     private String said;

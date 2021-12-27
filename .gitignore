@@ -1,5 +1,5 @@
 ### DB Config
-src/main/java/com/review/StoreReview/config/
+/src/main/resources/application.yml
 
 HELP.md
 .gradle

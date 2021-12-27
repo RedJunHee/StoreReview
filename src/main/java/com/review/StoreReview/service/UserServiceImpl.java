@@ -3,7 +3,9 @@ package com.review.StoreReview.service;
 import com.review.StoreReview.repository.UserRepository;
 import com.review.StoreReview.web.rest.controller.dto.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
