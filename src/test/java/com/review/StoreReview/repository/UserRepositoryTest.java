@@ -1,6 +1,7 @@
 package com.review.StoreReview.repository;
 
 import com.review.StoreReview.domain.CUST.User;
+import com.review.StoreReview.domain.enums.Gender;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -23,14 +24,14 @@ class UserRepositoryTest {
 //        LocalDate date = LocalDate.of(1999, 11, 15);
          LocalDateTime birthDate = LocalDateTime.parse("1999-11-15");
         userRepository.save(User.builder()
-                .SUID("RE0013411547")
+                .SUID("RE001341154s7")
                 .SAID("KA0223874413")
                 .ID("moonz99")
                 .NAME("문윤지")
                 .NICKNAME("moonz")
                 .PASSWORD("1234")
                 .BIRTH_DATE(birthDate)
-                .GENDER('W')
+                .GENDER(Gender.WOMAN)
                 .PHONE("01012345678")
                 .build());
 

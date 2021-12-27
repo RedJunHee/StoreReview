@@ -1,5 +1,6 @@
 package com.review.StoreReview.domain.CUST;
 
+import com.review.StoreReview.domain.enums.Gender;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,7 +47,8 @@ public class User {
     private LocalDateTime birthDate;
 
     @Column(name="GENDER", nullable = false)
-    private char gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(name="PHONE", nullable = false)
     private String phone;
@@ -54,7 +56,7 @@ public class User {
     @Builder
     public User(String SUID, String SAID, String ID, String PASSWORD
             , String NAME, String NICKNAME, LocalDateTime BIRTH_DATE
-            , char GENDER, String PHONE) {
+            , Gender GENDER, String PHONE) {
         this.suid = SUID;
         this.said = SAID;
         this.id = ID;
