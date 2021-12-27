@@ -1,5 +1,6 @@
 package com.review.StoreReview.domain.MNG;
 
+import com.review.StoreReview.domain.enums.UseYN;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,11 +32,12 @@ public class MngCode {
     private String desc;
 
     // 1. 테이블과 매핑될 컬럼 = "USE_YN"/
-    @Column(name = "USE_YN", nullable = false, columnDefinition = "CHAR(1) Default 'N'")
-    private char useYN;
+    @Column(name = "USE_YN", nullable = false, columnDefinition = "dDefault 'N'")
+    @Enumerated(EnumType.STRING)
+    private UseYN useYN = UseYN.N; // 처음에는 모두 N으로 생성!
 
     @Builder
-    public MngCode(String code_ID, String desc, char use_YN)
+    public MngCode(String code_ID, String desc, UseYN use_YN)
     {
         this.dodeId = code_ID;
         this.desc = desc;

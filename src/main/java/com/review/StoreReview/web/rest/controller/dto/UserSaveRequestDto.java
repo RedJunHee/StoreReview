@@ -1,6 +1,7 @@
 package com.review.StoreReview.web.rest.controller.dto;
 
 import com.review.StoreReview.domain.CUST.User;
+import com.review.StoreReview.domain.enums.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import java.time.LocalDateTime;
@@ -14,13 +15,13 @@ public class UserSaveRequestDto {
     private String name;
     private String nickname;
     private LocalDateTime birthDate;
-    private char gender;
+    private Gender gender;
     private String phone;
 
     @Builder
     public UserSaveRequestDto(String suid, String said, String id, String password
             , String name, String nickname, LocalDateTime birthDate
-            , char gender, String phone) {
+            , Gender gender, String phone) {
         this.suid = suid;
         this.said = said;
         this.id = id;
