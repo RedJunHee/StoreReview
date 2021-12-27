@@ -25,7 +25,7 @@ public class MngCode {
     // 2. 테이블과 매핑될 컬럼 = "CODE_ID"/
     @Id
     @Column(name= "CODE_ID")
-    private String dodeId;
+    private String codeId;
 
     // 1. 테이블과 매핑될 컬럼 = "DESC"/
     @Column(name = "DESC", nullable = false, length=100, columnDefinition = "VARCHAR(100) Default ''")
@@ -39,7 +39,7 @@ public class MngCode {
     @Builder
     public MngCode(String code_ID, String desc, UseYN use_YN)
     {
-        this.dodeId = code_ID;
+        this.codeId = code_ID;
         this.desc = desc;
         this.useYN = use_YN;
     }

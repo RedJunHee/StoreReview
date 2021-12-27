@@ -2,8 +2,8 @@ package com.review.StoreReview.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -22,14 +22,9 @@ import javax.sql.DataSource;
 public class LOGJpaConfig {
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.log-datasource")
-    public DataSourceProperties LOGDataSourceProperties() {     // property를 이용하여 생성
-        return new DataSourceProperties();
-    }
-
-    @Bean
-    public DataSource LOGDataSource(@Qualifier("LOGDataSourceProperties") DataSourceProperties dsProperties) {
-        return dsProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+    @ConfigurationProperties(prefix = "spring.datasource.log-datasource")
+    public DataSource LOGDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
     @Bean

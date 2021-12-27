@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -22,14 +23,9 @@ import javax.sql.DataSource;
 public class MNGJpaConfig {
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.mng-datasource")
-    public DataSourceProperties MNGDataSourceProperties() {     // property를 이용하여 생성
-        return new DataSourceProperties();
-    }
-
-    @Bean
-    public DataSource MNGDataSource(@Qualifier("MNGDataSourceProperties") DataSourceProperties dsProperties) {
-        return dsProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+    @ConfigurationProperties(prefix = "spring.datasource.mng-datasource")
+    public DataSource MNGDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build(); // DataSource를 build하는데 편리한 class "DataSourceBuilder"
     }
 
     @Bean
