@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,17 +26,12 @@ import javax.sql.DataSource;
         transactionManagerRef = "CUSTTransactionManager"
 )
 public class CUSTJpaConfig {
-    @Primary
-    @Bean
-    @ConfigurationProperties(prefix = "spring.cust-datasource")
-    public DataSourceProperties CUSTDataSourceProperties() {     // property를 이용하여 생성
-        return new DataSourceProperties();
-    }
 
     @Primary
     @Bean
-    public DataSource CUSTDataSource(@Qualifier("CUSTDataSourceProperties") DataSourceProperties dsProperties) {
-        return dsProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+    @ConfigurationProperties(prefix = "spring.datasource.cust-datasource")
+    public DataSource CUSTDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
     @Primary
