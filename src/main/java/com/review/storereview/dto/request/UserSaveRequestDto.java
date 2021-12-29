@@ -48,4 +48,9 @@ public class UserSaveRequestDto {
                 .build();
     }
 
+    // 인코딩
+    public void passwordEncoding(String encodingPassword) {
+        this.password = encodingPassword;
+    }
+
 }
