@@ -29,14 +29,16 @@ public class UserServiceImpl implements BaseUserService {
      * @return User.suid
      */
     @Override
-    public String join(UserSaveRequestDto userSaveRequestDto) throws NoSuchAlgorithmException {
+    public User join(UserSaveRequestDto userSaveRequestDto) throws NoSuchAlgorithmException {
         // 중복 회원 검증
         if (!validateDuplicateUser(userSaveRequestDto)) {
-            return ""; //에러 처리
+            return null; //에러 처리. -> User 외의 객체로 반환해야하는데..
         }
         // 인코딩
         userSaveRequestDto.passwordEncoding(encrypt(userSaveRequestDto.getPassword()));
-        return userRepository.save(userSaveRequestDto.toEntity()).getSuid();
+        User result = userRepository.save(userSaveRequestDto.toEntity());
+
+        return result; // result값이 있으면 result 반환, 아니면 other
     }
 
     // 중복 회원 검증

@@ -4,7 +4,7 @@ import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.request.UserSigninRequestDto;
-import com.review.storereview.dto.response.UserSigninResponseDto;
+import com.review.storereview.dto.response.UserResponseDto;
 import com.review.storereview.service.cust.BaseUserService;
 import com.review.storereview.dto.request.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,26 +26,46 @@ public class UserApiController {
         this.userService = userService;
     }
 
+
     /**
      * 회원가입 요청 처리 api
      * @param userSaveRequestDto
      * @return User.suid
      */
     @PostMapping("/user/signup")
-    public String save(@RequestBody UserSaveRequestDto userSaveRequestDto) throws NoSuchAlgorithmException {
+    public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto) throws NoSuchAlgorithmException {
         System.out.println("UserApiController: save 호출");
+        // ResponseJsonOBject 사용
+        ResponseJsonObject resDto = null;
+        UserResponseDto responseDto;
+        User user = userService.join(userSaveRequestDto);
 
-        return userService.join(userSaveRequestDto);
+        responseDto = UserResponseDto.builder()
+                .suid(user.getSuid())
+                .said(user.getSaid())
+                .birthDate(user.getBirthDate())
+                .id(user.getId())
+                .gender(user.getGender())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .phone(user.getPhone())
+                .build();
+        resDto = ResponseJsonObject.builder().withMeta(
+                ResponseJsonObject.Meta.builder()
+                        .withCode(ApiStatusCode.OK)
+                        .build()).withData( responseDto).build();
+
+        return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }
 
     @PutMapping(value = "/api/sign_in")
     public ResponseEntity<ResponseJsonObject> sign_in(@RequestBody UserSigninRequestDto requstDto)
     {
         ResponseJsonObject resDto = null;
-        UserSigninResponseDto responseDto;
+        UserResponseDto responseDto;
         User user = userService.sign_in(requstDto);
 
-        responseDto = UserSigninResponseDto.builder()
+        responseDto = UserResponseDto.builder()
                 .suid(user.getSuid())
                 .said(user.getSaid())
                 .birthDate(user.getBirthDate())

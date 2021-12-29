@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 public interface BaseUserService extends BaseService {
     // 회원가입
     @Transactional  // 전체에서 실패하면 Rollback됨. 따로 로직을 짜줘야함.
-    String join(UserSaveRequestDto requestDto) throws NoSuchAlgorithmException;
+    User join(UserSaveRequestDto requestDto) throws NoSuchAlgorithmException;
 
      // 중복 회원 검증
     boolean validateDuplicateUser(UserSaveRequestDto requestDto);

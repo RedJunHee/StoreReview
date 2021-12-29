@@ -15,5 +15,5 @@ public class GlobalExceptionHandler {
 //
 //    }
     // 에러 반환 객체 생성 필요
-    // enum + 반환객체 세트로
+    // enum + 반환객체 세트로 감싸기.
 }
