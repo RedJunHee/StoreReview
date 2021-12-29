@@ -2,7 +2,7 @@ package com.review.storereview.repository;
 
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.common.enumerate.Gender;
-import com.review.storereview.repository.impl.cust.UserRepository;
+import com.review.storereview.repository.cust.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ class UserRepositoryTest {
 
     @AfterEach  // Test 실행 후에 실행되는 메서드
     public void cleanup() {
-        //userRepository.deleteAll();
+        userRepository.deleteAll();
     }
     @Test
     public void 유저생성_조회() {

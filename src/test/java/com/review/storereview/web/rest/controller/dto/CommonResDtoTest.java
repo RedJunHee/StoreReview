@@ -1,6 +1,6 @@
 package com.review.storereview.web.rest.controller.dto;
 
-import com.review.storereview.dto.impl.BaseResponseDto;
+import com.review.storereview.dto.BaseResponseDto;
 import org.junit.jupiter.api.Test;
 
 class CommonResDtoTest {

@@ -1,8 +1,8 @@
-package com.review.storereview.service.impl.cust;
+package com.review.storereview.service.cust;
 
-import com.review.storereview.repository.impl.cust.UserRepository;
+import com.review.storereview.repository.cust.UserRepository;
 import com.review.storereview.service.BaseUserService;
-import com.review.storereview.dto.impl.request.UserSaveRequestDto;
+import com.review.storereview.dto.request.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

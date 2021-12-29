@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"com.review.StoreReview.repository"},
+        basePackages = {"com.review.storereview.repository.cust"},
         entityManagerFactoryRef = "CUSTEntityManagerFactory",
         transactionManagerRef = "CUSTTransactionManager"
 )
@@ -53,7 +53,7 @@ public class CustJpaConfig {
                                                                            @Qualifier("CUSTDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource) // JDBC DataSource
-                .packages("com.review.StoreReview.domain.CUST") // 관리할 Entity packages
+                .packages("com.review.storereview.dao.cust") // 관리할 Entity packages
                 .persistenceUnit("CUSTEntityManager") // 종속유닛의 이름을 정의.
                 .build();  // DataSource + Entity Package + 유닛 이름을 가지고 EntityManageFactory 만들어냄.
     }

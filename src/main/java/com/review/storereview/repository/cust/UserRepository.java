@@ -1,4 +1,4 @@
-package com.review.storereview.repository.impl.cust;
+package com.review.storereview.repository.cust;
 
 import com.review.storereview.dao.cust.User;
 import org.springframework.data.jpa.repository.JpaRepository;

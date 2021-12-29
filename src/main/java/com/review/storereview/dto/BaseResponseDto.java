@@ -1,4 +1,4 @@
-package com.review.storereview.dto.impl;
+package com.review.storereview.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

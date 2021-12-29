@@ -15,7 +15,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @EnableJpaRepositories(
-        basePackages = {"com.review.StoreReview.repository"},
+        basePackages = {"com.review.storereview.repository.mng"},
         entityManagerFactoryRef = "MNGEntityManagerFactory",
         transactionManagerRef = "MNGTransactionManager"
 )
@@ -32,7 +32,7 @@ public class MngJpaConfig {
                                                                           @Qualifier("MNGDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.review.StoreReview.domain.MNG")
+                .packages("com.review.storereview.dao.mng")
                 .persistenceUnit("MNGEntityManager")
                 .build();
     }

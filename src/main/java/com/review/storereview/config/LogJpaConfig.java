@@ -15,7 +15,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @EnableJpaRepositories(
-        basePackages = {"com.review.StoreReview.repository"},       // 해당 DataSource를 적용할 패키지 경로
+        basePackages = {"com.review.storereview.repository.log"},       // 해당 DataSource를 적용할 패키지 경로
         entityManagerFactoryRef = "LOGEntityManagerFactory",
         transactionManagerRef = "LOGTransactionManager"
 )
@@ -32,7 +32,7 @@ public class LogJpaConfig {
                                                                           @Qualifier("LOGDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.review.StoreReview.domain.LOG")
+                .packages("com.review.storereview.dao.log")
                 .persistenceUnit("LOGEntityManager")
                 .build();
     }

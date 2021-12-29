@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"com.review.StoreReview.repository"},
+        basePackages = {"com.review.storereview.repository.cms"},
         entityManagerFactoryRef = "CMSEntityManagerFactory",
         transactionManagerRef = "CMSTransactionManager"
 )
@@ -47,7 +47,7 @@ public class CmsJpaConfig {
                                                                            @Qualifier("CMSDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.review.StoreReview.domain.CMS")
+                .packages("com.review.storereview.dao.cms")
                 .persistenceUnit("CMSEntityManager")
                 .build();
     }

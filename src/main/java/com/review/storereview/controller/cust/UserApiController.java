@@ -1,7 +1,7 @@
-package com.review.storereview.controller.impl.cust;
+package com.review.storereview.controller.cust;
 
 import com.review.storereview.service.BaseUserService;
-import com.review.storereview.dto.impl.request.UserSaveRequestDto;
+import com.review.storereview.dto.request.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
