@@ -62,7 +62,7 @@ public class ResponseJsonObject {
     }
     //CommonResDto Builder Pattern 생성자
     public static Builder builder() { return new Builder(); }
-    public ResponseJsonObject() {}
+//    public ResponseJsonObject() {}
     private ResponseJsonObject(Builder builder) {
         this.meta = builder.meta;
         this.data = builder.data;

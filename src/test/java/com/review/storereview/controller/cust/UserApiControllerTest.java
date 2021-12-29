@@ -5,7 +5,6 @@ import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.repository.cust.BaseUserRepository;
-import com.review.storereview.repository.cust.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,8 @@ class UserApiControllerTest {
     BaseUserRepository userRepository;
 
     @Autowired
-    public UserApiControllerTest(UserRepository userService) {
-        this.userRepository = userService;
+    public UserApiControllerTest(BaseUserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Test
