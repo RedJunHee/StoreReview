@@ -9,39 +9,36 @@ package com.review.storereview.common.enumerate;
  *  History     : [2021-12-21] - TEMP
  */
 
-public enum ApiStatusCode implements KeyValueEnumImpl {
+public enum ApiStatusCode {
 
     //COMMON CODE
-    OK (200,"OK","성공.")
+    NONE (0,"","")
+    ,OK (200,"OK","성공.")
     ,PARAMETER_CHECK_FAILED (400,"ParameterCheckFailed","문법상 또는 파라미터 오류가 있어서 서버가 요청사항을 처리하지 못함.")
     ,SYSTEM_ERROR(599,"SystemError", "시스템오류.")
-
     ;
 
     //Enum 필드
     private int code;
-    private String name;
-    private String desc;
+    private String type;
+    private String message;
 
     //Enum 생성자
-    ApiStatusCode(int code, String name , String desc) {
+    ApiStatusCode(int code, String type , String message) {
         this.code = code;
-        this.name = name;
-        this.desc = desc;
+        this.type = type;
+        this.message = message;
     }
 
-    @Override
     public Integer getKey() {
         return this.code;
     }
 
-    @Override
-    public String getName() {
-        return this.name;
+    public String getType() {
+        return this.type;
     }
 
-    @Override
-    public String getDesc() {
-        return this.desc;
+    public String getMessage() {
+        return this.message;
     }
 }
