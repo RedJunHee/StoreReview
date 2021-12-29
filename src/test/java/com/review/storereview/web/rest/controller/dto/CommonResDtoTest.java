@@ -11,41 +11,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class CommonResDtoTest {
+    class CommonResDtoTest {
 
 
-    class TestClass implements BaseResponseDto {
-        String id = "testId";
-        int seq = 12313;
-        String name = "조준희";
+        class TestClass implements BaseResponseDto {
+            String id = "testId";
+            int seq = 12313;
+            String name = "조준희";
 
-        public String getId() {
-            return id;
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public int getSeq() {
+                return seq;
+            }
+
+            public void setSeq(int seq) {
+                this.seq = seq;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
         }
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public int getSeq() {
-            return seq;
-        }
-
-        public void setSeq(int seq) {
-            this.seq = seq;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
-    @Test
-    public void CommonResDto테스트() throws JsonProcessingException {
+        @Test
+        public void CommonResDto테스트() throws JsonProcessingException{
 
         List<TestClass> listTest = new ArrayList<>();
         listTest.add(new TestClass());
