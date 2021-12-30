@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class UserSigninResponseDto implements BaseResponseDto {
+public class UserResponseDto implements BaseResponseDto {
     private String suid;
     private String said;
     private String id;
@@ -18,7 +18,7 @@ public class UserSigninResponseDto implements BaseResponseDto {
     private String phone;
 
     @Builder
-    public UserSigninResponseDto(String suid, String said, String id, String name, String nickname, LocalDateTime birthDate, Gender gender, String phone) {
+    public UserResponseDto(String suid, String said, String id, String name, String nickname, LocalDateTime birthDate, Gender gender, String phone) {
         this.suid = suid;
         this.said = said;
         this.id = id;

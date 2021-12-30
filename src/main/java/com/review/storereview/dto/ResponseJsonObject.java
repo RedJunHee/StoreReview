@@ -27,7 +27,7 @@ public class ResponseJsonObject {
     public static class Meta {
         // code
         private ApiStatusCode code = ApiStatusCode.NONE;
-        public Integer getCode(){ return code.getKey(); }
+        public Integer getCode(){ return code.getCode(); }
         public void setCode(ApiStatusCode code) { this.code = code; }
         //msg
         private String type =null;

@@ -1,6 +1,8 @@
 package com.review.storereview.common.enumerate;
 
 
+import lombok.Getter;
+
 /** Class       : ApiStatusCode (Enum)
  *  Author      : 조 준 희
  *  Description : 모든 API에서 사용될 API 처리 상태 코드관리 Enum Class
@@ -8,7 +10,7 @@ package com.review.storereview.common.enumerate;
  *                  - ** 추가적인 도메인 코드가 생길 경우 //도메인명 CODE 와 같이 주석 후 코드 정리할 것.
  *  History     : [2021-12-21] - TEMP
  */
-
+@Getter
 public enum ApiStatusCode {
 
     //COMMON CODE
@@ -28,17 +30,5 @@ public enum ApiStatusCode {
         this.code = code;
         this.type = type;
         this.message = message;
-    }
-
-    public Integer getKey() {
-        return this.code;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public String getMessage() {
-        return this.message;
     }
 }
