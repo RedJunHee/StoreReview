@@ -49,7 +49,7 @@ public class UserSaveRequestDto {
     }
 
     // 인코딩
-    public void passwordEncoding(String encodingPassword) {
+    public void setPasswordEncoding(String encodingPassword) {
         this.password = encodingPassword;
     }
 
