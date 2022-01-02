@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 @RestController
 public class UserApiController {
@@ -38,8 +39,13 @@ public class UserApiController {
         ResponseJsonObject resDto = null;
         UserResponseDto responseDto;
 
-        // validate 예외처리 필요 (id 조건, null 체크)
+        // 파라미터 validate 예외처리 (id 조건, null 체크)
+        if (userSaveRequestDto == null) {
 
+        }
+        if (!isId(userSaveRequestDto.getId())) {
+
+        }
 
         User user = userService.join(userSaveRequestDto);
 
@@ -49,6 +55,11 @@ public class UserApiController {
                         .build()).build();  // Data는 null
 
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
+    }
+    // id 체크
+    public boolean isId(String id) {
+        String regex = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";   // 시작은 영문으로만, '_'를 제외한 특수문자 x, 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
+        return Pattern.matches(regex, id);
     }
 
     @PutMapping(value = "/api/sign_in")
@@ -69,10 +80,12 @@ public class UserApiController {
                 .phone(user.getPhone())
                 .build();
 
-       resDto = ResponseJsonObject.builder().withMeta(
-                ResponseJsonObject.Meta.builder()
+       resDto = ResponseJsonObject.builder()
+               .withMeta(
+                       ResponseJsonObject.Meta.builder()
                         .withCode(ApiStatusCode.OK)
-                        .build()).withData( responseDto).build();
+                        .build())
+               .withData( responseDto).build();
 
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }
