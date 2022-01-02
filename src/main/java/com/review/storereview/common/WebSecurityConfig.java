@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean   // 어떤 암호화방식 사용할 것인지 빈 등록
+    @Bean(name="getPasswordEncoder")   // 어떤 암호화방식 사용할 것인지 빈 등록
     public PasswordEncoder getPasswordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();  // 기본은  BCryptPasswordEncoder 방식
     }

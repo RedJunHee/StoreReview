@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.security.NoSuchAlgorithmException;
 
-@Service
 public interface BaseUserService extends BaseService {
     // 회원가입
     @Transactional  // 전체에서 실패하면 Rollback됨. 따로 로직을 짜줘야함.
