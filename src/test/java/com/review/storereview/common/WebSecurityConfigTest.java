@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class WebSecurityConfigTest {
-    @Autowired @Qualifier("BCryptPasswordEncoder")
-    BCryptPasswordEncoder passwordEncoder;
-//    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 인스턴스 생성
+//    @Autowired @Qualifier("BCryptPasswordEncoder")
+//    BCryptPasswordEncoder passwordEncoder;
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 인스턴스 생성
 
     @Test
-    @DisplayName("패스워드 암호화 테스트")
+    @DisplayName("암호화 모듈 테스트")
     void getPasswordEncoder() {
         // given
         String rawPW = "123456789";

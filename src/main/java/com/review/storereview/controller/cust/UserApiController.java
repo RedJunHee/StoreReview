@@ -26,7 +26,6 @@ public class UserApiController {
         this.userService = userService;
     }
 
-
     /**
      * 회원가입 요청 처리 api
      * @param userSaveRequestDto
@@ -38,6 +37,10 @@ public class UserApiController {
         // ResponseJsonOBject 사용
         ResponseJsonObject resDto = null;
         UserResponseDto responseDto;
+
+        // validate 예외처리 필요 (id 조건, null 체크)
+
+
         User user = userService.join(userSaveRequestDto);
 
         resDto = ResponseJsonObject.builder().withMeta(

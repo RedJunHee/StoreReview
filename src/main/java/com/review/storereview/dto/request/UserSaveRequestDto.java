@@ -48,9 +48,9 @@ public class UserSaveRequestDto {
                 .build();
     }
 
-    // 인코딩
+    /* 인코딩 후 pwd 세팅 -> 추후 SUID, SAID 인코딩 필요
     public void setPasswordEncoding(String encodingPassword) {
         this.password = encodingPassword;
-    }
-
+     }
+     */
 }

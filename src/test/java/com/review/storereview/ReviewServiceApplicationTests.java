@@ -16,7 +16,5 @@ class ReviewServiceApplicationTests {
 	void contextLoads() throws Exception{
 		String[] beanNames = ac.getBeanDefinitionNames();          // bean 이름을 출력
 		for(String beanName : beanNames) {             System.out.println(beanName);         }
-
 	}
-
 }

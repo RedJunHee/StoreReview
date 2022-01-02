@@ -5,5 +5,5 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(staticName = "of")  // 생성자를 감싸는 정적팩토리 메서드
 public class ExceptionResponseDto {
     private int code;
-    private String message;
+    private String status;
 }
