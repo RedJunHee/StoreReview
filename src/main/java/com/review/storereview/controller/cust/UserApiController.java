@@ -40,20 +40,10 @@ public class UserApiController {
         UserResponseDto responseDto;
         User user = userService.join(userSaveRequestDto);
 
-        responseDto = UserResponseDto.builder()
-                .suid(user.getSuid())
-                .said(user.getSaid())
-                .birthDate(user.getBirthDate())
-                .id(user.getId())
-                .gender(user.getGender())
-                .name(user.getName())
-                .nickname(user.getNickname())
-                .phone(user.getPhone())
-                .build();
         resDto = ResponseJsonObject.builder().withMeta(
                 ResponseJsonObject.Meta.builder()
                         .withCode(ApiStatusCode.OK)
-                        .build()).withData( responseDto).build();
+                        .build()).build();  // Data는 null
 
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }

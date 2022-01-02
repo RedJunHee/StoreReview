@@ -5,6 +5,7 @@ import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.repository.cust.BaseUserRepository;
 import com.review.storereview.dto.request.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -14,10 +15,10 @@ import java.security.NoSuchAlgorithmException;
 public class UserServiceImpl implements BaseUserService {
 
     private final BaseUserRepository userRepository;
-    private PasswordEncoder passwordEncoder;     // 암호화
+    private BCryptPasswordEncoder passwordEncoder;     // 암호화
 
     @Autowired
-    public UserServiceImpl(BaseUserRepository UserRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(BaseUserRepository UserRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = UserRepository;
         this.passwordEncoder = passwordEncoder;
     }
