@@ -17,6 +17,7 @@ public enum ApiStatusCode {
     NONE (0,"","")
     ,OK (200,"OK","성공.")
     ,PARAMETER_CHECK_FAILED (400,"ParameterCheckFailed","문법상 또는 파라미터 오류가 있어서 서버가 요청사항을 처리하지 못함.")
+    ,PERSON_NOT_FOUND(411,"Person Not Found", "사용자 정보를 찾을 수 없습니다.")
     ,SYSTEM_ERROR(599,"SystemError", "시스템오류.")
     ;
 
