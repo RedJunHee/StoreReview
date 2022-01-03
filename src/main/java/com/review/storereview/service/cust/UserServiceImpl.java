@@ -1,5 +1,6 @@
 package com.review.storereview.service.cust;
 
+import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.repository.cust.BaseUserRepository;
@@ -15,12 +16,11 @@ import java.security.NoSuchAlgorithmException;
 public class UserServiceImpl implements BaseUserService {
 
     private final BaseUserRepository userRepository;
-    private BCryptPasswordEncoder passwordEncoder;     // 암호화
+//    private BCryptPasswordEncoder passwordEncoder;     // 암호화
 
     @Autowired
-    public UserServiceImpl(BaseUserRepository UserRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(BaseUserRepository UserRepository) {
         this.userRepository = UserRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -29,32 +29,30 @@ public class UserServiceImpl implements BaseUserService {
      * @return User
      */
     @Override
-    public User join(UserSaveRequestDto userSaveRequestDto) throws NoSuchAlgorithmException {
+    public User join(UserSaveRequestDto userSaveRequestDto)  {
         // 중복 회원 검증
-        if (!validateDuplicateUser(userSaveRequestDto)) {
-            return null; //에러 처리. -> User 외의 객체로 반환해야하는데..
-        }
+        validateDuplicateUser(userSaveRequestDto);
+
         /* 인코딩 및 PW 재설정 -> 추후 SUID, SAID 인코딩 팔요
         String encodedPW = passwordEncoder.encode(userSaveRequestDto.getPassword());
         userSaveRequestDto.setPasswordEncoding(encodedPW);
          */
         User result = userRepository.save(userSaveRequestDto.toEntity());
+        System.out.println(result.getSuid());
 
         return result; // result값이 있으면 result 반환, 아니면 other
     }
 
     // 중복 회원 검증
     @Override
-    public boolean validateDuplicateUser(UserSaveRequestDto userSaveRequestDto) {
-        User findUser = userRepository.findBySuid(userSaveRequestDto.getSuid());
-        System.out.println(findUser.getSuid());
-        if (findUser == null) return true;  // 중복 아니면
-        else return false;  // 중복이면
+    public void validateDuplicateUser(UserSaveRequestDto userSaveRequestDto) {
+        boolean isExist = userRepository.existsBySuid(userSaveRequestDto.getSuid());
+        if (isExist)  // 중복이면 true
+            throw new PersonAlreadyExistsException();
     }
 
     /**
      * 로그인 서비스
-     * @param requestDto
      * @return User
      */
     @Override
@@ -69,10 +67,10 @@ public class UserServiceImpl implements BaseUserService {
             // System.out.println("해당 이메일의 유저가 존재하지 않습니다.");
             return null; // return false;
         }
-        if(!passwordEncoder.matches(result.get().getPassword(),loginUser.getPassword())) {
-//            System.out.println("비밀번호가 일치하지 않습니다.");
-            return null;    // return false;
-        }
+//        if(!passwordEncoder.matches(result.get().getPassword(),loginUser.getPassword())) {
+////            System.out.println("비밀번호가 일치하지 않습니다.");
+//            return null;    // return false;
+//        }
         return result.get();
     }
 

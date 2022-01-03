@@ -18,13 +18,8 @@ import java.util.Optional;
 
 @SpringBootTest
 class UserApiControllerTest {
-
-    BaseUserRepository userRepository;
-
     @Autowired
-    public UserApiControllerTest(BaseUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private BaseUserRepository userRepository;
 
     @Test
     public void  로그인_테스트()
@@ -53,15 +48,15 @@ class UserApiControllerTest {
         LocalDateTime birthDate = LocalDateTime.now();
 
         userRepository.save(User.builder()          // 같은 KEY값을 UPDATE
-                .SUID("DE001341155s")       // RE001341155s
-                .SAID("KA0223874453")
-                .ID("moonz99")
-                .NAME("문")
-                .NICKNAME("moonz")
-                .PASSWORD("1234")
-                .BIRTH_DATE(birthDate)
-                .GENDER(Gender.W)
-                .PHONE("01012345678")
+                .suid("CE001341155s")       // CE001341155s 이미 존재할 때
+                .said("KA0223874453")
+                .id("moonz99")
+                .name("문")
+                .nickname("moonz")
+                .password("1234")
+                .birthDate(birthDate)
+                .gender(Gender.W)
+                .phone("01012345678")
                 .build());
         // given
         Optional<User> result = Optional.ofNullable(userRepository.findBySuid("DE001341155s"));

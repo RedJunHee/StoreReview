@@ -39,7 +39,7 @@ public class ExceptionResponseDto {
         }
     }
 
-    //CommonResDto Builder Pattern
+    // ExceptionResponseDto Builder Pattern
     public final static class Builder {
         private ExceptionResponseDto.Meta meta = null;
 

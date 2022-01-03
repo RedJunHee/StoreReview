@@ -14,7 +14,7 @@ public interface BaseUserService extends BaseService {
     User join(UserSaveRequestDto requestDto) throws NoSuchAlgorithmException;
 
      // 중복 회원 검증
-    boolean validateDuplicateUser(UserSaveRequestDto requestDto);
+    void validateDuplicateUser(UserSaveRequestDto requestDto);
 
     // 로그인
     User sign_in(UserSigninRequestDto requestDto);
