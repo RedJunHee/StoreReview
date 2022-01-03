@@ -1,13 +1,14 @@
 package com.review.storereview.controller.cust;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
+import com.review.storereview.common.exception.ParameterCheckFailedException;
+import com.review.storereview.common.exception.dto.ExceptionResponseDto;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.dto.response.UserResponseDto;
 import com.review.storereview.service.cust.BaseUserService;
 import com.review.storereview.dto.request.UserSaveRequestDto;
-import com.sun.org.apache.xpath.internal.objects.XNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,23 +29,21 @@ public class UserApiController {
     /**
      * 회원가입 요청 처리 api
      * @param userSaveRequestDto
-     * @return User.suid
+     * @return ResponseEntity<ResponseJsonObject>
      */
     @PostMapping("/user/signup")
     public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto) throws NoSuchAlgorithmException {
         System.out.println("UserApiController: save 호출");
         // ResponseJsonOBject 사용
         ResponseJsonObject resDto = null;
-        UserResponseDto responseDto;
+        ExceptionResponseDto exceptionResDto;
 
-        // 파라미터 validate 예외처리 (id 조건, null 체크)
-        if (userSaveRequestDto == null) {
-
+        /** 파라미터 validate 예외처리 (null 체크, id 조건 체크)
+         * 예외 발생 시, [400,"ParameterCheckFailed","문법상 또는 파라미터 오류가 있어서 서버가 요청사항을 처리하지 못함."]
+         */
+        if (userSaveRequestDto == null || !isId(userSaveRequestDto.getId())) {
+            throw new ParameterCheckFailedException();
         }
-        if (!isId(userSaveRequestDto.getId())) {
-
-        }
-
         User user = userService.join(userSaveRequestDto);
 
         resDto = ResponseJsonObject.builder().withMeta(

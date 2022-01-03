@@ -36,15 +36,15 @@ public class UserSaveRequestDto {
     // Dto에서 필요한 부분을 entity화
     public User toEntity() {
         return User.builder()
-                .SUID(suid)
-                .SAID(said)
-                .ID(id)
-                .PASSWORD(password)
-                .NAME(name)
-                .NICKNAME(nickname)
-                .BIRTH_DATE(birthDate)
-                .GENDER(gender)
-                .PHONE(phone)
+                .suid(suid)
+                .said(said)
+                .id(id)
+                .password(password)
+                .name(name)
+                .nickname(nickname)
+                .birthDate(birthDate)
+                .gender(gender)
+                .phone(phone)
                 .build();
     }
 

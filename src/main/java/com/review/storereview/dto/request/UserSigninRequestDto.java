@@ -20,8 +20,8 @@ public class UserSigninRequestDto {
 
     public User toEntity(){
         return User.builder()
-                .ID(userId)
-                .PASSWORD(password)
+                .id(userId)
+                .password(password)
                 .build();
     }
 }

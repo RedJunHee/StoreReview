@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface BaseUserRepository extends BaseRepository, JpaRepository<User, String> {
     Optional<User> findByIdAndPassword(String id, String password);
+    boolean existsBySuid(String Suid);
 
 }
