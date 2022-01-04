@@ -12,11 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean(name="getPasswordEncoder")   // 어떤 암호화방식 사용할 것인지 빈 등록
-    public PasswordEncoder getPasswordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();  // 기본은  BCryptPasswordEncoder 방식
-    }
-
     @Override
     protected void configure (HttpSecurity http) throws Exception {
         http.cors().disable()  // CORS(다른 도메인의 요청/응답을 성립하게 하는 방식) 설정하여 보안 강화 가능. Spring과 독립적으로 작용되는 설정. 일단 disable
