@@ -16,7 +16,8 @@ import java.security.NoSuchAlgorithmException;
 public class UserServiceImpl implements BaseUserService {
 
     private final BaseUserRepository userRepository;
-//    private BCryptPasswordEncoder passwordEncoder;     // 암호화
+    private final BCryptPasswordEncoder passwordEncoder;     // 암호화
+
 
     @Autowired
     public UserServiceImpl(BaseUserRepository UserRepository) {
@@ -67,10 +68,6 @@ public class UserServiceImpl implements BaseUserService {
             // System.out.println("해당 이메일의 유저가 존재하지 않습니다.");
             return null; // return false;
         }
-//        if(!passwordEncoder.matches(result.get().getPassword(),loginUser.getPassword())) {
-////            System.out.println("비밀번호가 일치하지 않습니다.");
-//            return null;    // return false;
-//        }
         return result.get();
     }
 

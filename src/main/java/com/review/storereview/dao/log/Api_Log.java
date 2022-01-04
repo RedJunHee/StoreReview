@@ -5,23 +5,29 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
+
+/** Class       : Api_Log (Model)
+ *  Author      : 조 준 희
+ *  Description : LOG_DB.API_LOG 테이블에 매핑되어지는 JPA 객체모델
+ *  History     : [2022-01-03] - Temp
+ */
 @Table(name="API_LOG")
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 테스트할 경우 PUBLIC으로 설정
-public class Log {
+public class Api_Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch=FetchType.LAZY)    // Log to User
-    @JoinColumn(name = "SUID")
-    private User suid;
+    @Column(name="SUID", nullable = false, length = 12)
+    private String suid;
 
-    @ManyToOne(fetch=FetchType.LAZY)    // Log to User
-    @JoinColumn(name = "SAID")
-    private User said;
+    @Column(name="SAID", nullable = false, length = 12)
+    private String said;
 
+    @Column(name="DATE")
     private LocalDateTime date;
 
     @Column(name="API_NAME", nullable = false, length = 20)
@@ -37,7 +43,7 @@ public class Log {
     private double processTime;
 
     @Builder
-    public Log(User suid, User said, LocalDateTime date, String apiName, char apiStatus, String apiDesc, double processTime) {
+    public Api_Log( String suid, String said, LocalDateTime date, String apiName, char apiStatus, String apiDesc, double processTime) {
         this.suid = suid;
         this.said = said;
         this.date = date;
@@ -46,4 +52,5 @@ public class Log {
         this.apiDesc = apiDesc;
         this.processTime = processTime;
     }
+
 }
