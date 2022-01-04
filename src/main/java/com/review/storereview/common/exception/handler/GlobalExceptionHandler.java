@@ -1,9 +1,9 @@
 package com.review.storereview.common.exception.handler;
 
-import com.review.storereview.common.enumerate.ApiStatusCode;
+import com.review.storereview.common.exception.ParameterCheckFailedException;
+import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.common.exception.PersonNotFoundException;
 import com.review.storereview.common.exception.dto.ExceptionResponseDto;
-import com.review.storereview.dto.ResponseJsonObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +21,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponseDto> handlePersonNotFoundException(PersonNotFoundException ex) {
 
         return new ResponseEntity<ExceptionResponseDto>(ex.getExceptionResponseDto(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = ParameterCheckFailedException.class)   // api 요청 시 전달하는 파라미터에 문제 발생 시 호출되는 Exception
+    public ResponseEntity<ExceptionResponseDto> handleParameterCheckFailedException(ParameterCheckFailedException ex) {
+
+        return new ResponseEntity<>(ex.getExceptionResponseDto(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = PersonAlreadyExistsException.class)   // 회원가입 시 이미 존재하는 회원이 있을 경우 호출되는 Exception
+    public ResponseEntity<ExceptionResponseDto> handlePersonAlreadyExistsException(PersonAlreadyExistsException ex) {
+        return new ResponseEntity<>(ex.getExceptionResponseDto(), HttpStatus.CONFLICT);
     }
 
 }

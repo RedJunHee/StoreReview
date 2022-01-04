@@ -54,17 +54,17 @@ public class User {
     private String phone;
 
     @Builder
-    public User(String SUID, String SAID, String ID, String PASSWORD
-            , String NAME, String NICKNAME, LocalDateTime BIRTH_DATE
-            , Gender GENDER, String PHONE) {
-        this.suid = SUID;
-        this.said = SAID;
-        this.id = ID;
-        this.password = PASSWORD;
-        this.name = NAME;
-        this.nickname = NICKNAME;
-        this.birthDate = BIRTH_DATE;
-        this.gender = GENDER;
-        this.phone = PHONE;
+    public User(String suid, String said, String id, String password
+            , String name, String nickname, LocalDateTime birthDate
+            , Gender gender, String phone) {
+        this.suid = suid;
+        this.said = said;
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.phone = phone;
     }
 }

@@ -14,11 +14,11 @@ import com.review.storereview.common.enumerate.ApiStatusCode;
 //Jackson어노테이션 json에 없는 프로퍼티 설정시 에러 무시 true
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseJsonObject {
-    //meta
+    // meta
     private ResponseJsonObject.Meta meta = null;
     public ResponseJsonObject.Meta getMeta() {return meta;}
     private void setMeta(ResponseJsonObject.Meta val) {this.meta = val;}
-
+    // data
     private Object data = null;
     public Object getData() {return data;}
     private void setData(Object val) {this.data = val;}
@@ -29,10 +29,10 @@ public class ResponseJsonObject {
         private ApiStatusCode code = ApiStatusCode.NONE;
         public Integer getCode(){ return code.getCode(); }
         public void setCode(ApiStatusCode code) { this.code = code; }
-        //msg
+        // type
         private String type =null;
         public String getType() { return code.getType(); }
-        //msg
+        // msg
         private String message =null;
         public String getMessage() { return code.getMessage(); }
 
@@ -50,7 +50,7 @@ public class ResponseJsonObject {
         }
     }
 
-    //CommonResDto Builder Pattern
+    // ResponseJsonObject Builder Pattern
     public final static class Builder {
         private ResponseJsonObject.Meta meta = null;
         private Object data = null;
@@ -60,9 +60,10 @@ public class ResponseJsonObject {
 
         public ResponseJsonObject build() { return new ResponseJsonObject(this); }
     }
-    //CommonResDto Builder Pattern 생성자
+    // ResponseJsonObject Builder Pattern 생성자
     public static Builder builder() { return new Builder(); }
-//    public ResponseJsonObject() {}
+
+    public ResponseJsonObject() {}
     private ResponseJsonObject(Builder builder) {
         this.meta = builder.meta;
         this.data = builder.data;
