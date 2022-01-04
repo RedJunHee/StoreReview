@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 public class UserServiceImpl implements BaseUserService {
 
     private final BaseUserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;     // 암호화
+    //private final BCryptPasswordEncoder passwordEncoder;     // 암호화
 
 
     @Autowired
