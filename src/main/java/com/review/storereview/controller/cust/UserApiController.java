@@ -2,6 +2,7 @@ package com.review.storereview.controller.cust;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParameterCheckFailedException;
+import com.review.storereview.common.exception.PersonNotFoundException;
 import com.review.storereview.common.exception.dto.ExceptionResponseDto;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.sasl.AuthenticationException;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
@@ -64,8 +66,14 @@ public class UserApiController {
     {
         ResponseJsonObject resDto = null;
         UserResponseDto responseDto;
+
+        // 1. Validation 필요..
+
+
+        // 2. Sign_in 서비스 로직
         User user = userService.sign_in(requstDto);
 
+        // 3. response 데이터 가공
         responseDto = UserResponseDto.builder()
                 .suid(user.getSuid())
                 .said(user.getSaid())
@@ -77,6 +85,7 @@ public class UserApiController {
                 .phone(user.getPhone())
                 .build();
 
+        // 4. return 객체 가공
        resDto = ResponseJsonObject.builder()
                .withMeta(
                        ResponseJsonObject.Meta.builder()
@@ -84,6 +93,7 @@ public class UserApiController {
                         .build())
                .withData( responseDto).build();
 
+       // 5.
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }
 }
