@@ -11,10 +11,31 @@ public class ExceptionResponseDto {
     private ExceptionResponseDto.Meta meta = null;
     public ExceptionResponseDto.Meta getMeta() {return meta;}
 
-    public ExceptionResponseDto(ApiStatusCode metaCode) {
+    /**
+     * MetaCode 포함한 정적 팩토리 메소드
+     * @param metaCode
+     * @return
+     */
+    public static ExceptionResponseDto createMetaDto(ApiStatusCode metaCode){
+        return new ExceptionResponseDto(metaCode);
+    }
+
+    /**
+     *  MetaCode, Message 포함한 정적 팩토리 메소드
+     * @param metaCode
+     * @param extraErrorMessage
+     * @return
+     */
+    public static ExceptionResponseDto createMetaMessageDto(ApiStatusCode metaCode, String extraErrorMessage)
+    {
+        return new ExceptionResponseDto(metaCode, extraErrorMessage);
+    }
+
+    private ExceptionResponseDto(ApiStatusCode metaCode) {
         this.meta = new ExceptionResponseDto.Meta(metaCode);
     }
-    public ExceptionResponseDto(ApiStatusCode metaCode, String extraErrorMessage) {
+
+    private ExceptionResponseDto(ApiStatusCode metaCode, String extraErrorMessage) {
         this.meta = new ExceptionResponseDto.Meta(metaCode);
         meta.addExtraErrorMessage(extraErrorMessage);
     }

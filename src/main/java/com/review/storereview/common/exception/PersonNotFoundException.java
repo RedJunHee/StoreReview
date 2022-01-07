@@ -14,11 +14,11 @@ public class PersonNotFoundException extends RuntimeException {
         return exceptionResponseDto;
     }
     public PersonNotFoundException() {
-        exceptionResponseDto = new ExceptionResponseDto(error_code);
+        exceptionResponseDto = ExceptionResponseDto.createMetaDto(error_code);
     }
 
     public PersonNotFoundException(String message) {
         super(message);
-        exceptionResponseDto = new ExceptionResponseDto(error_code,message);
+        exceptionResponseDto = ExceptionResponseDto.createMetaMessageDto(error_code,message);
     }
 }

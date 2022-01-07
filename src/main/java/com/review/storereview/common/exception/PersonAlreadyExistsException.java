@@ -13,11 +13,11 @@ public class PersonAlreadyExistsException extends RuntimeException{
     }
 
     public PersonAlreadyExistsException() {
-        exceptionResponseDto = new ExceptionResponseDto(error_code);
+        exceptionResponseDto = ExceptionResponseDto.createMetaDto(error_code);
     }
 
     public PersonAlreadyExistsException(String message) {
         super(message);
-        exceptionResponseDto = new ExceptionResponseDto(error_code,message);
+        exceptionResponseDto = ExceptionResponseDto.createMetaMessageDto(error_code,message);
     }
 }

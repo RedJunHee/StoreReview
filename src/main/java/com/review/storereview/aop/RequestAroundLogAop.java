@@ -7,6 +7,8 @@ import com.review.storereview.service.log.LogService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -24,14 +26,12 @@ import java.util.Arrays;
 
 @Aspect
 @Component
-public class RqeuestAroundLogAop {
-
+public class RequestAroundLogAop {
     private final ObjectMapper om ;
-
     private final LogService logService;
 
     @Autowired
-    public RqeuestAroundLogAop(LogService logService) {
+    public RequestAroundLogAop(LogService logService) {
         this.om = new ObjectMapper().registerModule(new JavaTimeModule());
         this.logService = logService;
     }

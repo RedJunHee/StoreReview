@@ -11,8 +11,8 @@ class ExceptionResponseDtoTest {
     @Test
     void 빌드패턴_테스트()
     {
-        ExceptionResponseDto dto = new ExceptionResponseDto(ApiStatusCode.PARAMETER_CHECK_FAILED);
-        ExceptionResponseDto dto2 = new ExceptionResponseDto(ApiStatusCode.PARAMETER_CHECK_FAILED,"email is null.");
+        ExceptionResponseDto dto = ExceptionResponseDto.createMetaDto(ApiStatusCode.PARAMETER_CHECK_FAILED);
+        ExceptionResponseDto dto2 = ExceptionResponseDto.createMetaMessageDto(ApiStatusCode.PARAMETER_CHECK_FAILED,"email is null.");
 
 
         ObjectMapper om = new ObjectMapper().registerModule(new JavaTimeModule());
