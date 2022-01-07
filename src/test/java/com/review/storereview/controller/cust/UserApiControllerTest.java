@@ -44,8 +44,8 @@ class UserApiControllerTest {
 //        LocalDate date = LocalDate.of(1999, 11, 15);
         LocalDateTime birthDate = LocalDateTime.now();
 
-        userRepository.save(User.builder()          // 같은 KEY값을 UPDATE
-                .suid("CE001341155s")       // CE001341155s 이미 존재할 때
+        userRepository.save(User.builder()          // hibernate: 같은 KEY값은 UPDATE
+                .suid("RE001341155s")
                 .said("KA0223874453")
                 .id("moonz99")
                 .name("문")
@@ -56,9 +56,9 @@ class UserApiControllerTest {
                 .phone("01012345678")
                 .build());
         // given
-        Optional<User> result = Optional.ofNullable(userRepository.findBySuid("DE001341155s"));
+        Optional<User> result = Optional.ofNullable(userRepository.findBySuid("RE001341155s"));
         System.out.println("조회값 : " + result.get().getSuid());
         // then
-        Assertions.assertThat(result.get().getSuid()).isEqualTo("DE001341155s");
+        Assertions.assertThat(result.get().getSuid()).isEqualTo("RE001341155s");
     }
 }

@@ -2,13 +2,11 @@ package com.review.storereview.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.review.storereview.dao.log.Api_Log;
+import com.review.storereview.dao.log.ApiLog;
 import com.review.storereview.service.log.LogService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -37,11 +35,11 @@ public class RequestAroundLogAop {
     }
 
     //  execution(* com.review.storereview.controller 하위 패키지 내에
-    //   *Controller 클래스의 모든 메서드 Around
+    //   *Controller 클래스의 모든 메서드 Around => Pointcut 설정
     @Around(value = "execution(* com.review.storereview.controller.*.*Controller.*(..))")
-    public Object ApiLog(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object ApiLog(ProceedingJoinPoint joinPoint) throws Throwable { // 파라미터 : 프록시 대상 객체의 메서드를 호출할 때 사용
 
-        final long time_stamp = System.currentTimeMillis();
+        final long timeStamp = System.currentTimeMillis();
 
         Object[] arguments   = joinPoint.getArgs();
         String  inputParam = Arrays.toString(arguments);
@@ -55,7 +53,7 @@ public class RequestAroundLogAop {
         String methodName  = joinPoint.getSignature().getName();   // 메소드 이름 => Api명
         final char status = 'Y'; // 성공 케이스
         StringBuilder apiResultDescription = new StringBuilder();
-        long elapsed_time = 0L;
+        long elapsedTime = 0L;
 
         StopWatch stopWatch = new StopWatch();
         // joinPoint 리턴 객체 담을 변수
@@ -64,7 +62,7 @@ public class RequestAroundLogAop {
         try {
             // 서비스 처리 시간 기록 시작
             stopWatch.start();
-            retValue = joinPoint.proceed();
+            retValue = joinPoint.proceed();   // 실제 대상 객체의 메서드 호출
 
             outputMessage = om.writeValueAsString( ((ResponseEntity)retValue).getBody());
 
@@ -82,10 +80,10 @@ public class RequestAroundLogAop {
             // 서비스 처리 시간 기록 종료
             stopWatch.stop();
 
-            elapsed_time = stopWatch.getTotalTimeMillis();
+            elapsedTime = stopWatch.getTotalTimeMillis();
 
             //API_LOG담을 객체 생성
-            Api_Log data = new Api_Log(suid,said,date,methodName,status,apiResultDescription.toString(),elapsed_time*0.001);
+            ApiLog data = new ApiLog(suid,said,date,methodName,status,apiResultDescription.toString(),elapsedTime*0.001);
 
             // INSERT
             logService.InsertApiLog(data);
