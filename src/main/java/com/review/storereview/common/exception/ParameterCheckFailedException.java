@@ -16,11 +16,11 @@ public class ParameterCheckFailedException extends RuntimeException{
     }
 
     public ParameterCheckFailedException() {
-        exceptionResponseDto = ExceptionResponseDto.builder()
-                .withMeta(
-                        ExceptionResponseDto.Meta.builder()
-                        .withCode(error_code)
-                        .build()
-                ).build();
+        exceptionResponseDto = ExceptionResponseDto.createMetaDto(error_code);
+    }
+
+    public ParameterCheckFailedException(String message) {
+        super(message);
+        exceptionResponseDto =  ExceptionResponseDto.createMetaMessageDto(error_code,message);
     }
 }

@@ -2,6 +2,7 @@ package com.review.storereview.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.review.storereview.common.enumerate.ApiStatusCode;
+import com.review.storereview.common.exception.dto.ExceptionResponseDto;
 
 
 /** Class       : CommonResDto (Model)
@@ -14,58 +15,26 @@ import com.review.storereview.common.enumerate.ApiStatusCode;
 //Jackson어노테이션 json에 없는 프로퍼티 설정시 에러 무시 true
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseJsonObject {
-    // meta
-    private ResponseJsonObject.Meta meta = null;
-    public ResponseJsonObject.Meta getMeta() {return meta;}
-    private void setMeta(ResponseJsonObject.Meta val) {this.meta = val;}
+    private Meta meta = null;
+    public Meta getMeta() {return meta;}
+
     // data
     private Object data = null;
     public Object getData() {return data;}
-    private void setData(Object val) {this.data = val;}
+    public ResponseJsonObject setData(Object val) {this.data = val; return this;}
+
+    public ResponseJsonObject(ApiStatusCode metaCode) {
+        this.meta = new Meta(metaCode);
+    }
 
     //meta Class
     public static class Meta {
         // code
         private ApiStatusCode code = ApiStatusCode.NONE;
         public Integer getCode(){ return code.getCode(); }
-        public void setCode(ApiStatusCode code) { this.code = code; }
-        // type
-        private String type =null;
-        public String getType() { return code.getType(); }
-        // msg
-        private String message =null;
-        public String getMessage() { return code.getMessage(); }
 
-        //Meta Builder Pattern
-        public final static class Builder{
-            private ApiStatusCode code = ApiStatusCode.NONE;
-            public Builder withCode(ApiStatusCode val) {this.code = val; return this;}
-            public ResponseJsonObject.Meta build() {return new ResponseJsonObject.Meta(this);}
+        public Meta(ApiStatusCode code) {
+            this.code = code;
         }
-        //Meta Builder Pattern 생성자
-        public static Builder builder() {return new Builder();}
-        public Meta(){}
-        private Meta(Builder builder) {
-            this.code = builder.code;
-        }
-    }
-
-    // ResponseJsonObject Builder Pattern
-    public final static class Builder {
-        private ResponseJsonObject.Meta meta = null;
-        private Object data = null;
-
-        public Builder withMeta(ResponseJsonObject.Meta val) { this.meta = val; return this; }
-        public Builder withData(Object val) { this.data = val; return this; }
-
-        public ResponseJsonObject build() { return new ResponseJsonObject(this); }
-    }
-    // ResponseJsonObject Builder Pattern 생성자
-    public static Builder builder() { return new Builder(); }
-
-    public ResponseJsonObject() {}
-    private ResponseJsonObject(Builder builder) {
-        this.meta = builder.meta;
-        this.data = builder.data;
     }
 }

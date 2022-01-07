@@ -1,6 +1,7 @@
 package com.review.storereview.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.review.storereview.dao.log.Api_Log;
 import com.review.storereview.service.log.LogService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,15 +24,13 @@ import java.util.Arrays;
 
 @Aspect
 @Component
-public class RqeuestAroundLogAop {
-
+public class RequestAroundLogAop {
     private final ObjectMapper om ;
-
     private final LogService logService;
 
     @Autowired
-    public RqeuestAroundLogAop(LogService logService, ObjectMapper objectMapper) {
-        this.om = objectMapper;
+    public RequestAroundLogAop(LogService logService) {
+        this.om = new ObjectMapper().registerModule(new JavaTimeModule());
         this.logService = logService;
     }
 

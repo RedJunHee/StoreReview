@@ -2,7 +2,6 @@ package com.review.storereview.controller.cust;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParameterCheckFailedException;
-import com.review.storereview.common.exception.PersonNotFoundException;
 import com.review.storereview.common.exception.dto.ExceptionResponseDto;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.sasl.AuthenticationException;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
@@ -48,10 +46,7 @@ public class UserApiController {
         }
         User user = userService.join(userSaveRequestDto);
 
-        resDto = ResponseJsonObject.builder().withMeta(
-                ResponseJsonObject.Meta.builder()
-                        .withCode(ApiStatusCode.OK)
-                        .build()).build();  // Data는 null
+        resDto = new ResponseJsonObject(ApiStatusCode.OK);
 
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }
@@ -85,13 +80,7 @@ public class UserApiController {
                 .phone(user.getPhone())
                 .build();
 
-        // 4. return 객체 가공
-       resDto = ResponseJsonObject.builder()
-               .withMeta(
-                       ResponseJsonObject.Meta.builder()
-                        .withCode(ApiStatusCode.OK)
-                        .build())
-               .withData( responseDto).build();
+       resDto = new ResponseJsonObject(ApiStatusCode.OK).setData(responseDto);
 
        // 5.
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
