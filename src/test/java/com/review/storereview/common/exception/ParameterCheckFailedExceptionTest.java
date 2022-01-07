@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.*;
 
-class ParameterCheckFailedExceptionTestTest {
+class ParameterCheckFailedExceptionTest {
 
     ObjectMapper om ;
 
@@ -19,9 +19,9 @@ class ParameterCheckFailedExceptionTestTest {
     @DisplayName("추가 메시지를 지닌 예외의 경우")
     void 파라미터에외_테스트 ()
     {
-        ParameterCheckFailedExceptionTest ex =  Assertions.assertThrows(ParameterCheckFailedExceptionTest.class, ()
+        ParameterCheckFailedException ex =  Assertions.assertThrows(ParameterCheckFailedException.class, ()
         ->{
-            throw new ParameterCheckFailedExceptionTest("parameter email is null.");
+            throw new ParameterCheckFailedException("parameter email is null.");
         });
 
         try {
@@ -35,9 +35,9 @@ class ParameterCheckFailedExceptionTestTest {
     @DisplayName("추가 메시지 없는 예외의 경우")
     void 파라미터에외_테스트2 ()
     {
-        ParameterCheckFailedExceptionTest ex =  Assertions.assertThrows(ParameterCheckFailedExceptionTest.class, ()
+        ParameterCheckFailedException ex =  Assertions.assertThrows(ParameterCheckFailedException.class, ()
                 ->{
-            throw new ParameterCheckFailedExceptionTest();
+            throw new ParameterCheckFailedException();
         });
 
         try {

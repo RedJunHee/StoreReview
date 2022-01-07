@@ -46,10 +46,7 @@ public class UserApiController {
         }
         User user = userService.join(userSaveRequestDto);
 
-        resDto = ResponseJsonObject.builder().withMeta(
-                ResponseJsonObject.Meta.builder()
-                        .withCode(ApiStatusCode.OK)
-                        .build()).build();  // Data는 null
+        resDto = new ResponseJsonObject(ApiStatusCode.OK);
 
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }
@@ -77,12 +74,7 @@ public class UserApiController {
                 .phone(user.getPhone())
                 .build();
 
-       resDto = ResponseJsonObject.builder()
-               .withMeta(
-                       ResponseJsonObject.Meta.builder()
-                        .withCode(ApiStatusCode.OK)
-                        .build())
-               .withData( responseDto).build();
+       resDto = new ResponseJsonObject(ApiStatusCode.OK).setData(responseDto);
 
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }

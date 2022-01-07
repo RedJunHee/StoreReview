@@ -8,17 +8,16 @@ public class PersonAlreadyExistsException extends RuntimeException{
     private final ApiStatusCode error_code = ApiStatusCode.PERSON_ALREADY_EXISTS;
     private final ExceptionResponseDto exceptionResponseDto;
 
-    public ExceptionResponseDto getExceptionResponseDto() {
+    public ExceptionResponseDto getExceptionResponseDto(){
         return exceptionResponseDto;
     }
 
     public PersonAlreadyExistsException() {
-        super();
-        this.exceptionResponseDto = ExceptionResponseDto.builder()
-                .withMeta(
-                        ExceptionResponseDto.Meta.builder()
-                                .withCode(error_code)
-                                .build()
-                ).build();
+        exceptionResponseDto = new ExceptionResponseDto(error_code);
+    }
+
+    public PersonAlreadyExistsException(String message) {
+        super(message);
+        exceptionResponseDto = new ExceptionResponseDto(error_code,message);
     }
 }
