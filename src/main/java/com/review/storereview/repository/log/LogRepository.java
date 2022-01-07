@@ -1,6 +1,6 @@
 package com.review.storereview.repository.log;
 
-import com.review.storereview.dao.log.Api_Log;
+import com.review.storereview.dao.log.ApiLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  *  History     : [2022-01-03] - Temp
  */
 @Repository
-public interface LogRepository extends JpaRepository<Api_Log,Long> {
+public interface LogRepository extends JpaRepository<ApiLog,Long> {
 
 }
