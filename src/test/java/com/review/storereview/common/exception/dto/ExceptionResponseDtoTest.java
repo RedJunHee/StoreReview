@@ -6,15 +6,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ExceptionResponseDtoTestTest {
+class ExceptionResponseDtoTest {
 
     @Test
     void 빌드패턴_테스트()
     {
-        ExceptionResponseDtoTest dto = new ExceptionResponseDtoTest(ApiStatusCode.PARAMETER_CHECK_FAILED);
-        ExceptionResponseDtoTest dto2 = new ExceptionResponseDtoTest(ApiStatusCode.PARAMETER_CHECK_FAILED,"email is null.");
+        ExceptionResponseDto dto = new ExceptionResponseDto(ApiStatusCode.PARAMETER_CHECK_FAILED);
+        ExceptionResponseDto dto2 = new ExceptionResponseDto(ApiStatusCode.PARAMETER_CHECK_FAILED,"email is null.");
 
 
         ObjectMapper om = new ObjectMapper().registerModule(new JavaTimeModule());

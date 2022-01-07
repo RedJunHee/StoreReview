@@ -50,16 +50,9 @@ class UserResponseDtoTest {
         listTest.add(new UserResponseDtoTest.TestClass());
         listTest.add(new UserResponseDtoTest.TestClass());
 
-        ResponseJsonObject resDto = ResponseJsonObject.builder()
-                .withMeta( ResponseJsonObject.Meta.builder().withCode(ApiStatusCode.OK).build() )
-                .withData(new UserResponseDtoTest.TestClass())
-                .build();
+        ResponseJsonObject resDto = new ResponseJsonObject(ApiStatusCode.OK).setData(new UserResponseDtoTest.TestClass());
 
-        ResponseJsonObject resListDto = ResponseJsonObject.builder()
-                .withMeta( ResponseJsonObject.Meta.builder().withCode(ApiStatusCode.OK).build() )
-                .withData(listTest)
-                .build();
-
+        ResponseJsonObject resListDto = new ResponseJsonObject(ApiStatusCode.OK).setData(listTest);
 
         ObjectMapper om = new ObjectMapper();
         String str = om.writeValueAsString(resDto);

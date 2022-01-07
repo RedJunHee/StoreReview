@@ -30,13 +30,10 @@ class UserApiControllerTest {
 
         Optional<User> user = userRepository.findByIdAndPassword(requstDto.getUserId(),requstDto.getPassword());
 
-        ResponseJsonObject resDto = ResponseJsonObject.builder().withMeta(
-                ResponseJsonObject.Meta.builder()
-                        .withCode(ApiStatusCode.OK)
-                        .build()).withData( user).build();
-
-        Assertions.assertThat(user.get().getSuid()).isEqualTo("RE0000000001");
-
+        if(user.isPresent()) {
+            ResponseJsonObject resDto = new ResponseJsonObject(ApiStatusCode.OK).setData(user.get());
+            Assertions.assertThat(user.get().getSuid()).isEqualTo("RE0000000001");
+        }
     }
 
     @Transactional  // 테스트 실행 후 다시 Rollback 된다. (@Commit 붙여줄 경우 테스트 시 실행된 트랜잭션이 커밋되어 롤백되지않는다.)
