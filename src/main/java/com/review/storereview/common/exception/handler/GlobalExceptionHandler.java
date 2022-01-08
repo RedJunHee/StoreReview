@@ -1,6 +1,6 @@
 package com.review.storereview.common.exception.handler;
 
-import com.review.storereview.common.exception.ParameterCheckFailedException;
+import com.review.storereview.common.exception.ParamValidationException;
 import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.common.exception.PersonNotFoundException;
 import com.review.storereview.common.exception.dto.ExceptionResponseDto;
@@ -23,8 +23,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ExceptionResponseDto>(ex.getExceptionResponseDto(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = ParameterCheckFailedException.class)   // api 요청 시 전달하는 파라미터에 문제 발생 시 호출되는 Exception
-    public ResponseEntity<ExceptionResponseDto> handleParameterCheckFailedException(ParameterCheckFailedException ex) {
+    // 파라미터 유효성 검사 문제 Exception
+    @ExceptionHandler(value = ParamValidationException.class)
+    public ResponseEntity<ExceptionResponseDto> handleParamValidationException(ParamValidationException ex) {
 
         return new ResponseEntity<>(ex.getExceptionResponseDto(), HttpStatus.BAD_REQUEST);
     }

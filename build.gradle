@@ -27,6 +27,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 test {
