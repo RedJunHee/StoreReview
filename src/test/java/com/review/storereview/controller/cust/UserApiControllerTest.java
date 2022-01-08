@@ -47,7 +47,7 @@ class UserApiControllerTest {
         userRepository.save(User.builder()          // hibernate: 같은 KEY값은 UPDATE
                 .suid("RE001341155s")
                 .said("KA0223874453")
-                .id("moonz99")
+                .id("")
                 .name("문")
                 .nickname("moonz")
                 .password("1234")

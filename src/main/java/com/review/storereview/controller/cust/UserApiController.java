@@ -1,7 +1,7 @@
 package com.review.storereview.controller.cust;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
-import com.review.storereview.common.exception.ParameterCheckFailedException;
+import com.review.storereview.common.exception.ParamValidationException;
 import com.review.storereview.common.exception.dto.ExceptionResponseDto;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
@@ -12,9 +12,12 @@ import com.review.storereview.dto.request.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @RestController
@@ -32,22 +35,26 @@ public class UserApiController {
      * @return ResponseEntity<ResponseJsonObject>
      */
     @PostMapping("/user/signup")
-    public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto) throws NoSuchAlgorithmException {
+    public ResponseEntity<ResponseJsonObject> save(@ModelAttribute @RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException {
         System.out.println("UserApiController: save 호출");
         // ResponseJsonOBject 사용
         ResponseJsonObject resDto = null;
         ExceptionResponseDto exceptionResDto;
 
-        /** 파라미터 validate 예외처리 (null 체크, id 조건 체크)
-         * 예외 발생 시, [400,"ParameterCheckFailed","문법상 또는 파라미터 오류가 있어서 서버가 요청사항을 처리하지 못함."]
-         */
-        if (userSaveRequestDto == null || !isId(userSaveRequestDto.getId())) {
-            throw new ParameterCheckFailedException();
-        }
+        /// 파라미터 검증
+//        Map<String, Object> errorMap = userValidator.validate(userSaveRequestDto, bindingResult);
+
+        // 검증 실패 시
+//        if (bindingResult.hasErrors()) {
+//            throw new ParamValidationException("회원가입 api 호출 중 에러", errorMap);
+//        }
+//        else {      // 성공 로직
+//            User user = userService.join(userSaveRequestDto);
+//            resDto = new ResponseJsonObject(ApiStatusCode.OK);
+//            return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
+//        }
         User user = userService.join(userSaveRequestDto);
-
         resDto = new ResponseJsonObject(ApiStatusCode.OK);
-
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }
     // id 체크
