@@ -1,6 +1,8 @@
 package com.review.storereview.common;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,5 +21,11 @@ public class AppConfig {
     @Bean  // 어떤 암호화방식 사용할 것인지 빈 등록
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // 기본은  BCryptPasswordEncoder 방식
+    }
+
+    @Bean
+    public ObjectMapper objectMapper()
+    {
+        return  new ObjectMapper().registerModule(new JavaTimeModule());
     }
 }

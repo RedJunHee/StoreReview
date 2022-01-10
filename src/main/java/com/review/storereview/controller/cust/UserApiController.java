@@ -68,8 +68,14 @@ public class UserApiController {
     {
         ResponseJsonObject resDto = null;
         UserResponseDto responseDto;
+
+        // 1. Validation 필요..
+
+
+        // 2. Sign_in 서비스 로직
         User user = userService.sign_in(requstDto);
 
+        // 3. response 데이터 가공
         responseDto = UserResponseDto.builder()
                 .suid(user.getSuid())
                 .said(user.getSaid())
@@ -83,6 +89,7 @@ public class UserApiController {
 
        resDto = new ResponseJsonObject(ApiStatusCode.OK).setData(responseDto);
 
+       // 5.
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }
 }
