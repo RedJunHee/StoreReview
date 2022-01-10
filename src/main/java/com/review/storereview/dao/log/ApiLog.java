@@ -1,11 +1,8 @@
 package com.review.storereview.dao.log;
 
-import com.review.storereview.dao.cust.User;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
-
 
 /** Class       : Api_Log (Model)
  *  Author      : 조 준 희
@@ -16,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 테스트할 경우 PUBLIC으로 설정
-public class Api_Log {
+public class ApiLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,7 +40,7 @@ public class Api_Log {
     private double processTime;
 
     @Builder
-    public Api_Log( String suid, String said, LocalDateTime date, String apiName, char apiStatus, String apiDesc, double processTime) {
+    public ApiLog(String suid, String said, LocalDateTime date, String apiName, char apiStatus, String apiDesc, double processTime) {
         this.suid = suid;
         this.said = said;
         this.date = date;

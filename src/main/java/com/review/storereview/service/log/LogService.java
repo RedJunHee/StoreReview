@@ -1,6 +1,6 @@
 package com.review.storereview.service.log;
 
-import com.review.storereview.dao.log.Api_Log;
+import com.review.storereview.dao.log.ApiLog;
 import com.review.storereview.repository.log.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,9 @@ public class LogService {
     }
 
 
-    public boolean InsertApiLog(Api_Log logData){
+    public boolean InsertApiLog(ApiLog logData){
         try{
-            Api_Log data = logRepository.save(logData);
+            ApiLog data = logRepository.save(logData);
 
             if(data != null)
                 return true;
