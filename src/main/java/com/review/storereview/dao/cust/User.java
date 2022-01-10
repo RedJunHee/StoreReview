@@ -50,7 +50,7 @@ public class User {
     @Column(name="NICKNAME", nullable = false, length = 10)
     private String nickname;
 
-    @Column(name="BIRTH_DATE", nullable = true)
+    @Column(name="BIRTH_DATE", nullable = false)
     private LocalDate birthDate;
 
     @Column(name="GENDER", nullable = false)
