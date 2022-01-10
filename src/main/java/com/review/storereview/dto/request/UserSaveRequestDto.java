@@ -4,9 +4,12 @@ import com.review.storereview.dao.cust.User;
 import com.review.storereview.common.enumerate.Gender;
 import lombok.Builder;
 import lombok.Getter;
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Getter
+@NoArgsConstructor
 public class UserSaveRequestDto {
     private String suid;
     private String said;
@@ -14,13 +17,13 @@ public class UserSaveRequestDto {
     private String password;
     private String name;
     private String nickname;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     private Gender gender;
     private String phone;
 
     @Builder
     public UserSaveRequestDto(String suid, String said, String id, String password
-            , String name, String nickname, LocalDateTime birthDate
+            , String name, String nickname, LocalDate birthDate
             , Gender gender, String phone) {
         this.suid = suid;
         this.said = said;
