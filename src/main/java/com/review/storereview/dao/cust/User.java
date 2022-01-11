@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+
 /** Class       : User (Model)
  *  Author      : 조 준 희
  *  Description : CUST_DB.USER_INFO 테이블에 매필될 Model
@@ -49,7 +50,7 @@ public class User {
     @Column(name="NICKNAME", nullable = false, length = 10)
     private String nickname;
 
-    @Column(name="BIRTH_DATE", nullable = true)
+    @Column(name="BIRTH_DATE", nullable = false)
     private LocalDate birthDate;
 
     @Column(name="GENDER", nullable = false)

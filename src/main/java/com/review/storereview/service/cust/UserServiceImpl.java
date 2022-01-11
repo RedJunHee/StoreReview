@@ -1,11 +1,13 @@
 package com.review.storereview.service.cust;
 
 import com.review.storereview.common.exception.PersonAlreadyExistsException;
+import com.review.storereview.common.exception.PersonNotFoundException;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.repository.cust.BaseUserRepository;
 import com.review.storereview.dto.request.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -55,17 +57,16 @@ public class UserServiceImpl implements BaseUserService {
      * @return User
      */
     @Override
-    public User sign_in(UserSigninRequestDto requestDto) {
+    public User sign_in(UserSigninRequestDto requestDto) throws RuntimeException {
         User loginUser = requestDto.toEntity();
-         //return userRepository.findByIdAndPassword(user.getId(),user.getPassword() );
 
         Optional<User> result = userRepository.findByIdAndPassword(loginUser.getId(),loginUser.getPassword());
 
         // suid & 비밀번호 비교
-        if(result.get().getSuid()==null) {
-            // System.out.println("해당 이메일의 유저가 존재하지 않습니다.");
-            return null; // return false;
+        if(result.get().getSuid() == null) {
+            throw new PersonNotFoundException();
         }
+
         return result.get();
     }
 
