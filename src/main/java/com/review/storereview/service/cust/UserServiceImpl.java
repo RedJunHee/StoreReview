@@ -46,11 +46,14 @@ public class UserServiceImpl implements BaseUserService {
     // 중복 회원 검증
     @Override
     public void validateDuplicateUser(UserSaveRequestDto userSaveRequestDto) {
-//        User user = userRepository.findBySuid(userSaveRequestDto.getSuid());
-        boolean isExist = userRepository.existsBySuid(userSaveRequestDto.getSuid());
-        if (isExist)  // 중복이면 true
+        // 1. SUID, ID 중복 검증
+        boolean isSuidDuplicated = userRepository.existsBySuid(userSaveRequestDto.getSuid());
+        boolean isIdDuplicated = userRepository.existsBySuid(userSaveRequestDto.getSuid());
+
+        if (isSuidDuplicated || isIdDuplicated)  // 중복이면 true
             throw new PersonAlreadyExistsException();
     }
+
 
     /**
      * 로그인 서비스

@@ -22,7 +22,7 @@ public class ParamValidationException extends RuntimeException{
         exceptionResponseDto = ExceptionResponseDto.createMetaDto(errorStatusCode);
     }
 
-//    public ParamValidationException(String message, Map<String, Object> errorMap) {
+//    public ParamValidationException(Map<String, String> errorMap) {
     public ParamValidationException(String message) {
         super(message);
         exceptionResponseDto =  ExceptionResponseDto.createMetaMessageDto(errorStatusCode,message);
