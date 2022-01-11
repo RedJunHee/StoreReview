@@ -12,6 +12,7 @@ spring:
       hibernate:
         format_sql: true
   datasource:
+
   #### CUST_DB DataSource Configuration1
     cust-datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
