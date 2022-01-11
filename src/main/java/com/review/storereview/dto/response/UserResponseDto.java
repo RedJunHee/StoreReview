@@ -4,7 +4,9 @@ import com.review.storereview.common.enumerate.Gender;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 public class UserResponseDto implements BaseResponseDto {
@@ -13,12 +15,12 @@ public class UserResponseDto implements BaseResponseDto {
     private String id;
     private String name;
     private String nickname;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     private Gender gender;
     private String phone;
 
     @Builder
-    public UserResponseDto(String suid, String said, String id, String name, String nickname, LocalDateTime birthDate, Gender gender, String phone) {
+    public UserResponseDto(String suid, String said, String id, String name, String nickname, LocalDate birthDate, Gender gender, String phone) {
         this.suid = suid;
         this.said = said;
         this.id = id;

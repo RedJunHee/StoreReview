@@ -10,7 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /** Class       : User (Model)
  *  Author      : 조 준 희
@@ -50,7 +52,7 @@ public class User {
     private String nickname;
 
     @Column(name="BIRTH_DATE", nullable = false)
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @Column(name="GENDER", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -62,7 +64,7 @@ public class User {
 
     @Builder
     public User(String suid, String said, String id, String password
-            , String name, String nickname, LocalDateTime birthDate
+            , String name, String nickname, LocalDate birthDate
             , Gender gender, String phone) {
         this.suid = suid;
         this.said = said;

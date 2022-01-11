@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ class UserApiControllerTest {
         String password = "dkaghghkehlsvotmdnjem";
         UserSigninRequestDto requstDto = new UserSigninRequestDto(user_id, password);
 
-        Optional<User> user = userRepository.findByIdAndPassword(requstDto.getUserId(),requstDto.getPassword());
+        Optional<User> user = userRepository.findByIdAndPassword(requstDto.getId(),requstDto.getPassword());
 
         if(user.isPresent()) {
             ResponseJsonObject resDto = new ResponseJsonObject(ApiStatusCode.OK).setData(user.get());
@@ -42,7 +43,7 @@ class UserApiControllerTest {
     public void 유저생성_조회() {
         // given
 //        LocalDate date = LocalDate.of(1999, 11, 15);
-        LocalDateTime birthDate = LocalDateTime.now();
+        LocalDate birthDate = LocalDate.now();
 
         userRepository.save(User.builder()          // hibernate: 같은 KEY값은 UPDATE
                 .suid("RE001341155s")

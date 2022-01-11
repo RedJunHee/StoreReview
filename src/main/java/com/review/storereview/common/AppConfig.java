@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AppConfig {
 
     @Bean  // 어떤 암호화방식 사용할 것인지 빈 등록
-    public BCryptPasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // 기본은  BCryptPasswordEncoder 방식
     }
 
