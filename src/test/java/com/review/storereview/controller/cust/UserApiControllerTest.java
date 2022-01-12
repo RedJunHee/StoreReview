@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
@@ -26,13 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @MockBean(JpaMetamodelMappingContext.class)
-@ExtendWith(SpringExtension.class)  // JUnit 프레임워크가 테스트를 실행할 시 내장된 Runner를 실행 -> bean 주입
+@ExtendWith(MockitoExtension.class)  // JUnit 프레임워크가 테스트를 실행할 시 내장된 Runner를 실행 -> bean 주입
 @DisplayName("UserApiController 테스트")
 @WebMvcTest(UserApiController.class)
 class UserApiControllerTest {
 
     private MockMvc mvc;
-    @MockBean private UserServiceImpl userService;
+    @MockBean private UserServiceImpl userService;  // 목 객체
 
     @BeforeEach
     public void setUp() {   // UserApiController를 MockMvc 객체로 만든다.

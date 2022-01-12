@@ -40,22 +40,14 @@ public class UserSaveDtoValidator implements Validator {
             errorsMap.put("id", "아이디를 입력하셔야합니다.");
         }
 
-        // 2. id : 이미 존재하는지 체크
-        if (!ObjectUtils.isEmpty(userSaveRequestDto.getId())) {
-            bindingResult.addError(new FieldError("UserSaveRequestDto"
-                    , "id"
-                    , "이미 존재하는 아이디입니다"));
-            errorsMap.put("id", "이미 존재하는 아이디입니다");
-        }
-
         /*
-        // 3. id : 패턴 체크
+        // 2. id : 패턴 체크
         String idRegex = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";   // 시작은 영문으로만, '_'를 제외한 특수문자 x, 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
         if(Pattern.matches(idRegex, userSaveRequestDto.getId()))
             errors.put();
-        // 4. password : 패턴 체크
+        // 3. password : 패턴 체크
 
-        // 5. phone : 패턴 체크
+        // 4. phone : 패턴 체크
         String phoneRegex = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
         if (Pattern.matches(phoneRegex, userSaveRequestDto.getPhone()))
 

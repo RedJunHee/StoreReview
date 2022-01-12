@@ -12,6 +12,8 @@ public interface BaseUserService extends BaseService {
     @Transactional  // 전체에서 실패하면 Rollback됨. 따로 로직을 짜줘야함.
     User join(UserSaveRequestDto requestDto) throws NoSuchAlgorithmException;
 
+    void validateDuplicateUser(String id);
+
     // 로그인
     User sign_in(UserSigninRequestDto requestDto);
 }

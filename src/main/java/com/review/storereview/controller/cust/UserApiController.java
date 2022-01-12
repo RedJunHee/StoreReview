@@ -37,14 +37,13 @@ public class UserApiController {
         System.out.println("UserApiController: save 호출");
         // ResponseJsonOBject 사용
         ResponseJsonObject resDto = null;
-        ExceptionResponseDto exceptionResDto;
         /// 파라미터 검증
         userSaveDtoValidator.validate(userSaveRequestDto, bindingResult);
 
         // 검증 실패 시
         if (bindingResult.hasErrors()) {
             System.out.println(userSaveDtoValidator.getErrorsMap());
-            throw new ParamValidationException("회원가입 api 호출 중 에러");
+            throw new ParamValidationException("회원가입 api 호출 중 파라미터 에러");
 //            throw new ParamValidationException(userSaveDtoValidator.getErrorMap());
         }
         else {      // 성공 로직
