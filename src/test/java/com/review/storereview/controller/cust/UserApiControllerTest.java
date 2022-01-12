@@ -4,6 +4,7 @@ import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.enumerate.Gender;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
+import com.review.storereview.dto.request.UserSaveRequestDto;
 import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.repository.cust.BaseUserRepository;
 import com.review.storereview.service.cust.UserServiceImpl;

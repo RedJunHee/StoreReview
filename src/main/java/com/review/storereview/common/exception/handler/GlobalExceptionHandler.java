@@ -37,10 +37,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponseDto> handlePersonAlreadyExistsException(PersonAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getExceptionResponseDto(), HttpStatus.CONFLICT);
     }
-
-    @ExceptionHandler(value = AuthenticationException.class)   // 회원가입 시 이미 존재하는 회원이 있을 경우 호출되는 Exception
-    public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
-    }
-
 }
