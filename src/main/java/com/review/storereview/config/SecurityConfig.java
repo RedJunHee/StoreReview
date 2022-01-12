@@ -1,6 +1,7 @@
 package com.review.storereview.config;
 
 import com.review.storereview.common.JwtTokenProvider;
+import com.review.storereview.common.enumerate.Authority;
 import com.review.storereview.common.exception.handler.AuthenticationExceptionHandler;
 import com.review.storereview.common.exception.handler.AuthorizationExceptionHandler;
 import com.review.storereview.filter.AuthorizationCheckFilter;
@@ -46,15 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.authorizationExceptionHandler = authorizationExceptionHandler;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
 
-        // Provider 설정
+        // Provider 추가 설정  기본적으로 DaoAuthenticationProvider가 있음
+        // Default Provider를 설정함. => Default 실패시 DaoAuthenticationProvider의 authenticate가 실행.
         authenticationManagerBuilder.authenticationProvider(jwtTokenProvider);
 
-        // DaoAuthenticationProvider가 사용하는 Service로 설정
-        try {
-            authenticationManagerBuilder.userDetailsService(userDetailsService);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -91,6 +87,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/authenticate").permitAll()
                     .antMatchers("/user/signup").permitAll()
                     .antMatchers("/api/sign_in").permitAll()
+                    .antMatchers("/test/tester").hasRole(Authority.TESTER.getName())
+                    .antMatchers("/test/admin").hasRole(Authority.ADMIN.getName())
                     .anyRequest().authenticated()
                 .and()
                 //AuthenticationFilterChain- UsernamePasswordAuthenticationFilter 전에 실행될 필터 세팅.

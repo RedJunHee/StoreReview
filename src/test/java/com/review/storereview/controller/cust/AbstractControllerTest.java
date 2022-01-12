@@ -28,12 +28,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 public abstract class AbstractControllerTest {
 
-    protected MockMvc mockMvc;
-
+    protected MockMvc authControllerMockMvc;
+    protected MockMvc testControllerMockMvc;
     @Autowired
     private WebApplicationContext context;
 
-    abstract protected Object controller();
+    abstract protected Object authController();
+    abstract protected Object testController();
+
     protected MediaType contentType = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -47,7 +49,14 @@ public abstract class AbstractControllerTest {
         } catch (ServletException e) {
             e.printStackTrace();
         }
-        mockMvc = MockMvcBuilders.standaloneSetup(controller())
+        authControllerMockMvc = MockMvcBuilders.standaloneSetup(authController())
+                // Body 데이터 한글 안깨지기 위한 인코딩 필터 설정.
+                .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+                .addFilter(delegatingFilterProxy)
+                .alwaysDo(print())
+                .build();
+
+        testControllerMockMvc = MockMvcBuilders.standaloneSetup(testController())
                 // Body 데이터 한글 안깨지기 위한 인코딩 필터 설정.
                 .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
                 .addFilter(delegatingFilterProxy)

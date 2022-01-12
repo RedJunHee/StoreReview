@@ -49,7 +49,7 @@ public class AuthController {
 
         try {
             authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        }catch(BadCredentialsException ex)  // 인증 절차 실패시 리턴되는 Exception
+        }catch(AuthenticationException ex)  // 인증 절차 실패시 리턴되는 Exception
         {
             return new ResponseEntity<>(ExceptionResponseDto.createMetaDto(ApiStatusCode.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
         }catch(Exception ex)
@@ -67,12 +67,4 @@ public class AuthController {
         return new ResponseEntity<>(new ResponseJsonObject(ApiStatusCode.OK).setData(new TokenDto(jwt)), httpHeaders, HttpStatus.OK);
     }
 
-    /**
-     * test용 api
-     * @return
-     */
-    @GetMapping("/test")
-    public ResponseEntity<String> test(){
-       return new ResponseEntity<>( "testAPI",HttpStatus.OK);
-    }
 }

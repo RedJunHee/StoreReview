@@ -1,5 +1,6 @@
 package com.review.storereview.common;
 
+import com.review.storereview.common.exception.CustomAuthenticationException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,6 +19,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -35,20 +38,24 @@ public class JwtTokenProvider implements AuthenticationProvider {
     private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
+
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
-    private final UserDetailsService userDetailsService;
 
+    private final UserDetailsService userDetailsService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public JwtTokenProvider(@Value("${jwt.secret}")String secret,
                             @Value("${jwt.token-validity-in-seconds}")long tokenValidityInSeconds,
-                            UserDetailsService userDetailsService) {
+                            UserDetailsService userDetailsService,
+                            PasswordEncoder passwordEncoder) {
         this.secret = secret;
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secret));
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
         this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -61,18 +68,43 @@ public class JwtTokenProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
-        UserDetails userDetails = null ;
         try {
             // Service에서 패스워드비교까지 모두 처리.
-            userDetails = userDetailsService.loadUserByUsername(username);
+            // null일경우 UsernameNotFoundException Throw
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            passwordChecks(userDetails, (UsernamePasswordAuthenticationToken) authentication);
+
+            return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
         }
         catch(UsernameNotFoundException ex)
         {
             throw ex;
         }
-        return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
     }
+    /**
+     * 인증 절차 - 비밀번호 체크
+     * @param userDetails 데이터 베이스에서 검색한 유저의 정보
+     * @param authentication 인증 요청한 요청 정보
+     * @throws AuthenticationException
+     */
+    private void passwordChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException
+    {
+        if (authentication.getCredentials() == null) {
+            this.logger.debug("Failed to authenticate since no credentials provided");
+//            throw new BadCredentialsException(this.messages
+//                    .getMessage("JwtTokenProvider.badCredentials", "Bad credentials"));
+            throw new BadCredentialsException("Bad credentials");
+        }
+        String presentedPassword = authentication.getCredentials().toString();
+        if (!this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
+            this.logger.debug("Failed to authenticate since password does not match stored value");
+//            throw new BadCredentialsException(this.messages
+//                    .getMessage("JwtTokenProvider.badCredentials", "Bad credentials"));
+            throw new BadCredentialsException("Bad credentials");
+        }
 
+    }
 
     /**
      *  authentication 타입이 UsernamePasswordAuthentiacationToken인 경우만 지원하는 필터 명시

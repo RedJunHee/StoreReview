@@ -44,9 +44,8 @@ public class AuthService implements UserDetailsService {
         Optional<User> result = userRepository.findOneById(username);
 
         return result.map(user -> createUser(username, user))
-                .orElseThrow(() ->  new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다.") );
+                .orElseThrow(() ->  new UsernameNotFoundException(username + " -> 일치하는 사용자가 없습니다..") );
     }
-
     /**
      * DTO.User객체를 UserDetails객체로 변환.
      * @param username
@@ -59,7 +58,7 @@ public class AuthService implements UserDetailsService {
 //        }
         List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 
-        grantedAuthorities.add(new SimpleGrantedAuthority(Authority.ROLE_USER.toString()));
+        grantedAuthorities.add(new SimpleGrantedAuthority(Authority.TESTER.getFullName()));
 
         return new org.springframework.security.core.userdetails.User(user.getId(),
                 user.getPassword(),
