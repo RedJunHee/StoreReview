@@ -45,6 +45,7 @@ public class UserSaveDtoValidator implements Validator {
         String idRegex = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$";   // 시작은 영문으로만, '_'를 제외한 특수문자 x, 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
         if(Pattern.matches(idRegex, userSaveRequestDto.getId()))
             errors.put();
+
         // 3. password : 패턴 체크
 
         // 4. phone : 패턴 체크
