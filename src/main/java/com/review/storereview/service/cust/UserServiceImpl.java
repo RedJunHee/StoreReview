@@ -38,8 +38,7 @@ public class UserServiceImpl implements BaseUserService {
      */
     @Override
     public User join(UserSaveRequestDto userSaveRequestDto)  {
-        // 중복 회원 검증
-        validateDuplicateUser(userSaveRequestDto);
+        validateDuplicateUser(userSaveRequestDto.getId());          // 중복 회원 검증
 
         /* 인코딩 및 PW 재설정 -> 추후 SUID, SAID 인코딩 팔요
         String encodedPW = passwordEncoder.encode(userSaveRequestDto.getPassword());
@@ -53,11 +52,13 @@ public class UserServiceImpl implements BaseUserService {
 
     // 중복 회원 검증
     @Override
-    public void validateDuplicateUser(UserSaveRequestDto userSaveRequestDto) {
-        boolean isExist = userRepository.existsBySuid(userSaveRequestDto.getSuid());
+    public void validateDuplicateUser(String id) {
+        System.out.println("validateDuplicateUser 호출됨");
+        boolean isExist = userRepository.existsById(id);
         if (isExist)  // 중복이면 true
             throw new PersonAlreadyExistsException();
     }
+
 
     /**
      * 로그인 서비스

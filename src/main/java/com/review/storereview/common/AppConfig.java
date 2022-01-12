@@ -1,6 +1,7 @@
 package com.review.storereview.common;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,8 @@ public class AppConfig {
     @Bean
     public ObjectMapper objectMapper()
     {
-        return  new ObjectMapper().registerModule(new JavaTimeModule());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);   // Java 객체를 JSON으로 Serialize할 때 null값은 제외
+        return  objectMapper.registerModule(new JavaTimeModule());
     }
 }
