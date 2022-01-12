@@ -55,7 +55,7 @@ public class UserApiController {
 
 
     @PutMapping(value = "/api/sign_in")
-    public ResponseEntity<ResponseJsonObject> sign_in(@RequestBody UserSigninRequestDto requstDto)
+    public ResponseEntity<ResponseJsonObject> sign_in(@RequestBody UserSigninRequestDto requestDto)
     {
         ResponseJsonObject resDto = null;
         UserResponseDto responseDto;
@@ -64,7 +64,7 @@ public class UserApiController {
 
 
         // 2. Sign_in 서비스 로직
-        User user = userService.sign_in(requstDto);
+        User user = userService.sign_in(requestDto);
 
         // 3. response 데이터 가공
         responseDto = UserResponseDto.builder()
