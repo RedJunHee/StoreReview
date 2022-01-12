@@ -52,6 +52,8 @@ public class UserServiceImpl implements BaseUserService {
         if (isExist)  // 중복이면 true
             throw new PersonAlreadyExistsException();
     }
+
+
     /**
      * 로그인 서비스
      * @return User
