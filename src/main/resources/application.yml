@@ -51,5 +51,6 @@ logging:
       type:
         descriptor:
           sql: trace
-
+  level:
+    root: info
 

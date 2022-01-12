@@ -7,10 +7,7 @@ import com.review.storereview.service.cust.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class GlobalExceptionHandlerTest {
@@ -22,7 +19,7 @@ class GlobalExceptionHandlerTest {
     public void 중복회원생성_예외() throws RuntimeException{
         // given
         LocalDate birthDate = LocalDate.now();
-        UserSaveRequestDto userDto = UserSaveRequestDto.builder().suid("AE001341155s").said("test1").id("banan99").name("뭉지").nickname("moon").password("123456").birthDate(birthDate).gender(Gender.W).phone("01013572468")
+        UserSaveRequestDto userDto = UserSaveRequestDto.builder().suid("EE001341155s").said("test1").id("banan99").name("뭉지").nickname("moon").password("123456").birthDate(birthDate).gender(Gender.W).phone("01013572468")
                 .build();
         System.out.println(userDto.getSuid());
         assertThrows(PersonAlreadyExistsException.class,
