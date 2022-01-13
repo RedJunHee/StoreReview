@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class ApiLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long logId;
 
     @Column(name="SUID", nullable = false, length = 12)
     private String suid;

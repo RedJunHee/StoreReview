@@ -33,7 +33,7 @@ public class User {
 
     @NotBlank(message = "아이디는 Null일 수 없습니다")
     @Column(name="USER_ID", nullable = false, length = 12)
-    private String id;
+    private String userId;
 
     @NotBlank
     @Size(min = 5, max = 15, message = "비밀번호는 5~15자 입니다")
@@ -61,12 +61,12 @@ public class User {
     private String phone;
 
     @Builder
-    public User(String suid, String said, String id, String password
+    public User(String suid, String said, String userId, String password
             , String name, String nickname, LocalDate birthDate
             , Gender gender, String phone) {
         this.suid = suid;
         this.said = said;
-        this.id = id;
+        this.userId = userId;
         this.password = password;
         this.name = name;
         this.nickname = nickname;

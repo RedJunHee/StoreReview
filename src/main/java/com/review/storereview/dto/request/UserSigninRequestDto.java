@@ -9,18 +9,18 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class UserSigninRequestDto {
-    private String id;
+    private String userId;
     private String password;
 
     @Builder
-    public UserSigninRequestDto(String id, String password) {
-        this.id = id;
+    public UserSigninRequestDto(String userId, String password) {
+        this.userId = userId;
         this.password = password;
     }
 
     public User toEntity(){
         return User.builder()
-                .id(id)
+                .userId(userId)
                 .password(password)
                 .build();
     }
@@ -28,7 +28,7 @@ public class UserSigninRequestDto {
     @Override
     public String toString() {
         return "{" +
-                "id='" + id + '\'' +
+                "userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

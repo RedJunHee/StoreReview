@@ -23,7 +23,7 @@ public class MngCodeInfo {
 
     // 1. id 컬럼
     // 2. 테이블과 매핑될 컬럼 = "CODE_ID"
-    // 3. GenerationType.IDENTITY DBMS에게 키 생성 권한을 맡김. /
+    // 3. GenerationType.IDENTITY DBMS에게 키 생성 권한을 맡김.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "SEQ")
@@ -45,7 +45,7 @@ public class MngCodeInfo {
     private Integer sortOrder;
 
     // 1. 테이블과 매핑될 컬럼 = "USE_YN"/
-    @Column(name = "USE_YN", nullable = false, columnDefinition = "dDefault 'N'")
+    @Column(name = "USE_YN", nullable = false, columnDefinition = "Default 'N'")
     @Enumerated(EnumType.STRING)
     private UseYN useYN = UseYN.N; // 처음에는 모두 N으로 생성!
 

@@ -30,7 +30,7 @@ class BaseUserRepositoryTest {
         String password = "1234567";
         UserSigninRequestDto requstDto = new UserSigninRequestDto(user_id, password);
 
-        Optional<User> user = userRepository.findByIdAndPassword(requstDto.getUserId(),requstDto.getPassword());
+        Optional<User> user = userRepository.findByUserIdAndPassword(requstDto.getUserId(),requstDto.getPassword());
 
         if(user.isPresent()) {
             ResponseJsonObject resDto = new ResponseJsonObject(ApiStatusCode.OK).setData(user.get());
@@ -43,7 +43,7 @@ class BaseUserRepositoryTest {
     public void 회원가입_테스트() {
         LocalDate birthDate = LocalDate.of(1999, 11, 15);
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()     // hibernate: 같은 KEY값은 UPDATE
-                .suid("RE001341155s").said("KA0223874453").id("moonz99").name("문").nickname("moonz").password("1234567")
+                .suid("RE001341155s").said("KA0223874453").userId("moonz99").name("문").nickname("moonz").password("1234567")
                 .birthDate(birthDate).gender(Gender.W).phone("01012345678")
                 .build();
         userRepository.save(userSaveRequestDto.toEntity());

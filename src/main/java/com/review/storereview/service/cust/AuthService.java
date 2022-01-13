@@ -41,7 +41,7 @@ public class AuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String username) throws AuthenticationException {
 
-        Optional<User> result = userRepository.findOneById(username);
+        Optional<User> result = userRepository.findOneByUserId(username);
 
         return result.map(user -> createUser(username, user))
                 .orElseThrow(() ->  new UsernameNotFoundException(username + " -> 일치하는 사용자가 없습니다..") );
@@ -60,7 +60,7 @@ public class AuthService implements UserDetailsService {
 
         grantedAuthorities.add(new SimpleGrantedAuthority(Authority.TESTER.getFullName()));
 
-        return new org.springframework.security.core.userdetails.User(user.getId(),
+        return new org.springframework.security.core.userdetails.User(user.getUserId(),
                 user.getPassword(),
                 grantedAuthorities);
     }

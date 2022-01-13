@@ -4,6 +4,6 @@ import com.review.storereview.dao.cust.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BaseRepository extends JpaRepository<User, String> {
-    User findBySuid(String suid);     // SUID를 id로 지정.
+    User findBySuid(String suid);
 
 }

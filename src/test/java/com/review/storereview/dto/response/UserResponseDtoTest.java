@@ -11,16 +11,16 @@ import java.util.List;
 class UserResponseDtoTest {
 
     class TestClass implements BaseResponseDto {
-        String id = "testId";
+        String userId = "testId";
         int seq = 12313;
         String name = "조준희";
 
-        public String getId() {
-            return id;
+        public String getUserId() {
+            return userId;
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setUserId(String userId) {
+            this.userId = userId;
         }
 
         public int getSeq() {

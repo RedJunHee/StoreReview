@@ -1,38 +1,33 @@
 package com.review.storereview.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.common.enumerate.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+
 
 @Getter
 @NoArgsConstructor
 public class UserSaveRequestDto {
     private String suid;
     private String said;
-    private String id;
+    private String userId;
     private String password;
     private String name;
     private String nickname;
-
     private LocalDate birthDate;
     private Gender gender;
     private String phone;
 
     @Builder
-    public UserSaveRequestDto(String suid, String said, String id, String password
+    public UserSaveRequestDto(String suid, String said, String userId, String password
             , String name, String nickname, LocalDate birthDate
             , Gender gender, String phone) {
         this.suid = suid;
         this.said = said;
-        this.id = id;
+        this.userId = userId;
         this.password = password;
         this.name = name;
         this.nickname = nickname;
@@ -46,7 +41,7 @@ public class UserSaveRequestDto {
         return User.builder()
                 .suid(suid)
                 .said(said)
-                .id(id)
+                .userId(userId)
                 .password(password)
                 .name(name)
                 .nickname(nickname)

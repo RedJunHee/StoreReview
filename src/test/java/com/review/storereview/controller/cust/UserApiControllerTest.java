@@ -13,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -64,7 +63,7 @@ class UserApiControllerTest {
                         User.builder()
                                 .suid("DE001341155s")
                                 .said("KA0223874453")
-                                .id("banan99")
+                                .userId("banan99")
                                 .name("문윤지")
                                 .nickname("moonz")
                                 .password("12345678")
@@ -84,7 +83,7 @@ class UserApiControllerTest {
                                         "{"
                                                 + " \"suid\" : \"DE001341155s\", "
                                                 + " \"said\" : \"KA0223874453\", "
-                                                + " \"id\" : \"banan99\", "
+                                                + " \"userId\" : \"banan99\", "
                                                 + " \"name\" : \"문윤지\", "
                                                 + " \"nickname\" : \"moonz\", "
                                                 + " \"password\" : \"12345678\", "
@@ -110,7 +109,7 @@ class UserApiControllerTest {
                         User.builder()
                                 .suid("RE001341155s")
                                 .said("KA0223874453")
-                                .id("banan99")
+                                .userId("banan99")
                                 .name("문윤지")
                                 .nickname("moonz")
                                 .password("12345678")
@@ -130,7 +129,7 @@ class UserApiControllerTest {
                                                     "{"
                                                             + " \"suid\" : \"RE001341155s\", "
                                                             + " \"said\" : \"KA0223874453\", "
-                                                            + " \"id\" : \"banan99\", "
+                                                            + " \"userId\" : \"banan99\", "
                                                             + " \"name\" : \"문윤지\", "
                                                             + " \"nickname\" : \"moonz\", "
                                                             + " \"password\" : \"12345678\", "
