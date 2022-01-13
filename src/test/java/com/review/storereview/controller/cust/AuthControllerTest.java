@@ -31,7 +31,7 @@ class AuthControllerTest extends AbstractControllerTest {
     // 패스워드 유효하지 않는 파람
     String invalidPasswordParam;
     // 아이디 유효하지 않는 파람
-    String invalidIdParam;
+    String invalidUserIdParam;
     // 아이디 패스워드 모두 유효하지 않는 파람
     String invalidAuthParam;
 
@@ -49,11 +49,11 @@ class AuthControllerTest extends AbstractControllerTest {
     @BeforeEach
     public void paramSetup()  throws Exception{
         // 테스터 계정의 비밀번호는 "test"
-        validAuthParam = "{\"id\":\"test@review.com\",\"password\":\"9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
+        validAuthParam = "{\"userId\":\"test@review.com\",\"password\":\"9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
 
-        invalidPasswordParam = "{\"id\":\"test@review.com\",\"password\":\"9F86D081884C7D659333sA2F0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
-        invalidIdParam = "{\"id\":\"tessssst@review.com\",\"password\":\"9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
-        invalidAuthParam = "{\"id\":\"tessssst@review.com\",\"password\":\"9F86D081884C7D659A2FEAAsssdAD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
+        invalidPasswordParam = "{\"userId\":\"test@review.com\",\"password\":\"9F86D081884C7D659333sA2F0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
+        invalidUserIdParam = "{\"userId\":\"tessssst@review.com\",\"password\":\"9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
+        invalidAuthParam = "{\"userId\":\"tessssst@review.com\",\"password\":\"9F86D081884C7D659A2FEAAsssdAD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
     }
 
     @Test
@@ -97,7 +97,7 @@ class AuthControllerTest extends AbstractControllerTest {
     public void 아이디_유효하지_않음() throws Exception
     {
         authControllerMockMvc.perform(post("/authenticate")
-                .content(invalidIdParam).contentType(this.contentType))
+                .content(invalidUserIdParam).contentType(this.contentType))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.meta.statusCode",is(401))) // Json Meta.statusCode 값 비교
                 .andExpect(jsonPath("$.meta.errorType",is("UnAuthorized"))); // Json Meta.errorType 값 비교
