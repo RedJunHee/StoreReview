@@ -34,5 +34,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponseDto> handlePersonAlreadyExistsException(PersonAlreadyExistsException ex) {
         return new ResponseEntity<>(ex.getExceptionResponseDto(), HttpStatus.CONFLICT);
     }
-
 }

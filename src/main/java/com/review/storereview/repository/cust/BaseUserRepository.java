@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 @Repository
 public interface BaseUserRepository extends BaseRepository, JpaRepository<User, String> {
-    Optional<User> findByIdAndPassword(String id, String password);
-    boolean existsBySuid(String Suid);    // existsBySuid로 Suid찾았는데 null
+    Optional<User> findOneByUserId(String userId);
+    Optional<User> findByUserIdAndPassword(String userId, String password);
+    boolean existsByUserId(String userId);
 
 }

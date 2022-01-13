@@ -13,7 +13,7 @@ public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="REVIEW_ID")
-    private Long id;
+    private Long reviewId;
 
     @ManyToOne(fetch=FetchType.LAZY)      // Review To User
     @JoinColumn(name="SAID")

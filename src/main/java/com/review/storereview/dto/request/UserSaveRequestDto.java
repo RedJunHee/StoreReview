@@ -5,7 +5,6 @@ import com.review.storereview.common.enumerate.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 
 @Getter
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 public class UserSaveRequestDto {
     private String suid;
     private String said;
-    private String id;
+    private String userId;
     private String password;
     private String name;
     private String nickname;
@@ -22,12 +21,12 @@ public class UserSaveRequestDto {
     private String phone;
 
     @Builder
-    public UserSaveRequestDto(String suid, String said, String id, String password
+    public UserSaveRequestDto(String suid, String said, String userId, String password
             , String name, String nickname, LocalDate birthDate
             , Gender gender, String phone) {
         this.suid = suid;
         this.said = said;
-        this.id = id;
+        this.userId = userId;
         this.password = password;
         this.name = name;
         this.nickname = nickname;
@@ -41,7 +40,7 @@ public class UserSaveRequestDto {
         return User.builder()
                 .suid(suid)
                 .said(said)
-                .id(id)
+                .userId(userId)
                 .password(password)
                 .name(name)
                 .nickname(nickname)
