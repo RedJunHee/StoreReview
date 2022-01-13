@@ -1,5 +1,6 @@
 package com.review.storereview.service.cust;
 
+import com.review.storereview.common.enumerate.Authority;
 import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.common.exception.PersonNotFoundException;
 import com.review.storereview.dao.cust.User;
@@ -7,12 +8,17 @@ import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.repository.cust.BaseUserRepository;
 import com.review.storereview.dto.request.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.security.NoSuchAlgorithmException;
 
 @Service
 public class UserServiceImpl implements BaseUserService {
