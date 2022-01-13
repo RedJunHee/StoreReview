@@ -18,8 +18,8 @@ public class UserServiceImpl implements BaseUserService {
     //private final BCryptPasswordEncoder passwordEncoder;     // 암호화
 
     @Autowired
-    public UserServiceImpl(BaseUserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(BaseUserRepository UserRepository) {
+        this.userRepository = UserRepository;
     }
 
     /**
@@ -43,13 +43,12 @@ public class UserServiceImpl implements BaseUserService {
 
     // 중복 회원 검증
     @Override
-    public void validateDuplicateUser(String id) {
+    public void validateDuplicateUser(String userId) {
         System.out.println("validateDuplicateUser 호출됨");
-        boolean isExist = userRepository.existsById(id);
+        boolean isExist = userRepository.existsByUserId(userId);
         if (isExist)  // 중복이면 true
             throw new PersonAlreadyExistsException();
     }
-
 
     /**
      * 로그인 서비스

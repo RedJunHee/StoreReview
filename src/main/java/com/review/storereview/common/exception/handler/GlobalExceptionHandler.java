@@ -1,11 +1,14 @@
 package com.review.storereview.common.exception.handler;
 
+import com.review.storereview.common.exception.CustomAuthenticationException;
 import com.review.storereview.common.exception.ParamValidationException;
 import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.common.exception.PersonNotFoundException;
 import com.review.storereview.common.exception.dto.ExceptionResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;

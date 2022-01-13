@@ -12,6 +12,7 @@ spring:
       hibernate:
         format_sql: true
   datasource:
+
   #### CUST_DB DataSource Configuration1
     cust-datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -36,7 +37,20 @@ spring:
       jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/LOG_DB
       username: admin
       password: review123
+jwt:
+  header: Authorization
+  #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
+  #echo 'com-review-storereview-project-jwt-token-secret-key-com-review-storereview-project-jwt-token-secret-key'|base64
+  secret: Y29tLXJldmlldy1zdG9yZXJldmlldy1wcm9qZWN0LWp3dC10b2tlbi1zZWNyZXQta2V5LWNvbS1yZXZpZXctc3RvcmVyZXZpZXctcHJvamVjdC1qd3QtdG9rZW4tc2VjcmV0LWtleQ==
+  token-validity-in-seconds: 86400
 
 logging:
+  org:
+    hibernate:
+      SQL: debug
+      type:
+        descriptor:
+          sql: trace
   level:
     root: info
+

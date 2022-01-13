@@ -11,5 +11,4 @@ public interface BaseUserRepository extends BaseRepository, JpaRepository<User, 
     Optional<User> findOneByUserId(String userId);
     Optional<User> findByUserIdAndPassword(String userId, String password);
     boolean existsByUserId(String userId);
-
 }

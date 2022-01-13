@@ -19,11 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AppConfig {
 
     @Bean  // 어떤 암호화방식 사용할 것인지 빈 등록
-    public BCryptPasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // 기본은  BCryptPasswordEncoder 방식
     }
 
-    @Bean   // ObjectMapper (Aop) 객체의 생성 비용이 큰 객체이므로 Bean으로 생성 및 관리
+    @Bean
     public ObjectMapper objectMapper()
     {
         ObjectMapper objectMapper = new ObjectMapper();
