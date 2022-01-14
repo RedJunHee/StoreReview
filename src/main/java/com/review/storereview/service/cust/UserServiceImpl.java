@@ -34,18 +34,7 @@ public class UserServiceImpl implements BaseUserService {
     public void join(UserSaveRequestDto userSaveRequestDto)  {
         // 1. 중복 회원 검증 (id)
         validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
-        // 2. SUID 및 SAID 생성 (Char + 10자리 숫자-자동 증가)
-        userSaveRequestDto.setSuid(
-                SUID_CHAR + String.format("%010d", ++SUID_NUM)             // SI0000000001
-        );
-        userSaveRequestDto.setSaid(
-                SAID_CHAR_RV + String.format("%010d", ++SAID_NUM)             // RV0000000001
-        );
 
-        /* 인코딩 및 PW 재설정 -> 추후 SUID, SAID 인코딩 팔요
-        String encodedPW = passwordEncoder.encode(userSaveRequestDto.getPassword());
-        userSaveRequestDto.setPasswordEncoding(encodedPW);
-         */
         userRepository.save(userSaveRequestDto.toEntity());
     }
 
