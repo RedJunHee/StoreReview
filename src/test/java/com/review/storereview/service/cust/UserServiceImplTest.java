@@ -32,7 +32,7 @@ class UserServiceImplTest {
                 .birthDate(birthDate).gender(Gender.W).phone("01012345678")
                 .build();
 
-        doThrow(new PersonAlreadyExistsException()).when(userService).validateDuplicateUser(userSaveRequestDto.getUserId());
+        doThrow(new PersonAlreadyExistsException()).when(userService).validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
     }
 
     @Transactional  // 테스트 실행 후 다시 Rollback 된다. (@Commit 붙여줄 경우 테스트 시 실행된 트랜잭션이 커밋되어 롤백되지않는다.)

@@ -6,21 +6,18 @@ import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.repository.cust.BaseUserRepository;
 import com.review.storereview.dto.request.UserSaveRequestDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements BaseUserService {
 
     private final BaseUserRepository userRepository;
     //private final BCryptPasswordEncoder passwordEncoder;     // 암호화
-
-    @Autowired
-    public UserServiceImpl(BaseUserRepository UserRepository) {
-        this.userRepository = UserRepository;
-    }
 
     /**
      * 회원 가입 서비스
@@ -29,7 +26,8 @@ public class UserServiceImpl implements BaseUserService {
      */
     @Override
     public User join(UserSaveRequestDto userSaveRequestDto)  {
-        validateDuplicateUser(userSaveRequestDto.getUserId());          // 중복 회원 검증
+        // 중복 회원 검증 (id)
+        validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
 
         /* 인코딩 및 PW 재설정 -> 추후 SUID, SAID 인코딩 팔요
         String encodedPW = passwordEncoder.encode(userSaveRequestDto.getPassword());
@@ -43,7 +41,7 @@ public class UserServiceImpl implements BaseUserService {
 
     // 중복 회원 검증
     @Override
-    public void validateDuplicateUser(String userId) {
+    public void validateDuplicateUserByUserId(String userId) {
         System.out.println("validateDuplicateUser 호출됨");
         boolean isExist = userRepository.existsByUserId(userId);
         if (isExist)  // 중복이면 true

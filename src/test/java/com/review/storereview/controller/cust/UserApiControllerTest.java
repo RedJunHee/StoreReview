@@ -1,7 +1,9 @@
 package com.review.storereview.controller.cust;
 
+import com.review.storereview.common.JwtTokenProvider;
 import com.review.storereview.common.enumerate.Gender;
 import com.review.storereview.common.exception.ParamValidationException;
+import com.review.storereview.config.SecurityConfig;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.service.cust.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +35,8 @@ class UserApiControllerTest {
 
     private MockMvc mvc;
     @MockBean private UserServiceImpl userService;  // 목 객체
+    @MockBean private SecurityConfig securityConfig;
+    @MockBean private JwtTokenProvider jwtTokenProvider;
 
     @BeforeEach
     public void setUp() {   // UserApiController를 MockMvc 객체로 만든다.
@@ -61,8 +65,8 @@ class UserApiControllerTest {
         given(userService.join(any()))
                 .willReturn(
                         User.builder()
-                                .suid("DE001341155s")
-                                .said("KA0223874453")
+                                .suid("")
+                                .said("")
                                 .userId("banan99")
                                 .name("문윤지")
                                 .nickname("moonz")
@@ -81,13 +85,13 @@ class UserApiControllerTest {
                                 .characterEncoding("UTF-8")
                                 .content(
                                         "{"
-                                                + " \"suid\" : \"DE001341155s\", "
-                                                + " \"said\" : \"KA0223874453\", "
+                                                + " \"suid\" : \"\", "
+                                                + " \"said\" : \"\", "
                                                 + " \"userId\" : \"banan99\", "
                                                 + " \"name\" : \"문윤지\", "
                                                 + " \"nickname\" : \"moonz\", "
                                                 + " \"password\" : \"12345678\", "
-                                                + " \"birthDate\" : \"1999-11-15T00:00\", "
+                                                + " \"birthDate\" : \"1999-11-15\", "
                                                 + " \"gender\" : \"W\", "
                                                 + " \"phone\" : \"01012345678\" "
                                                 + "}"));

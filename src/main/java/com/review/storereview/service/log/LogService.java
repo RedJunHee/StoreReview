@@ -21,7 +21,7 @@ public class LogService {
         this.logRepository = logRepository;
     }
 
-
+    // ApiLog 데이터 save
     public boolean InsertApiLog(ApiLog logData){
         try{
             ApiLog data = logRepository.save(logData);

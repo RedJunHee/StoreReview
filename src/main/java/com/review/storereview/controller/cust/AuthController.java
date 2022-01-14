@@ -44,7 +44,7 @@ public class AuthController {
     public ResponseEntity<Object> authorize(@RequestBody UserSigninRequestDto loginDto){
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getId(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getPassword());
         Authentication authentication = null ;
 
         try {

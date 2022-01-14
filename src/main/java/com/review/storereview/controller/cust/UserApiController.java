@@ -19,11 +19,15 @@ import java.security.NoSuchAlgorithmException;
 @RestController
 public class UserApiController {
     private final BaseUserService userService;
-    private final UserSaveDtoValidator userSaveDtoValidator = new UserSaveDtoValidator();
+    private final UserSaveDtoValidator userSaveDtoValidator;
+
+    private static int SUID_NUM = 0;
+    private static String SUID_CHAR = "RV"; // REVIEW
 
     @Autowired
     public UserApiController(BaseUserService userService) {
         this.userService = userService;
+        this.userSaveDtoValidator = new UserSaveDtoValidator();
     }
 
     /**
@@ -31,13 +35,11 @@ public class UserApiController {
      * @param userSaveRequestDto
      * @return ResponseEntity<ResponseJsonObject>
      */
-
     @PostMapping("/user/signup")
     public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException {
         System.out.println("UserApiController: save 호출");
-        // ResponseJsonOBject 사용
-        ResponseJsonObject resDto = null;
-        // 파라미터 검증
+        ResponseJsonObject resDto = null;   // ResponseJsonOBject 사용
+        // 1. 파라미터 검증
         userSaveDtoValidator.validate(userSaveRequestDto, bindingResult);
 
         // 검증 실패 시
@@ -47,6 +49,9 @@ public class UserApiController {
 //            throw new ParamValidationException(userSaveDtoValidator.getErrorMap());
         }
         else {      // 성공 로직
+            // 2. SUID 생성 (RV + 10자리 숫자)
+//            String suid = SUID_CHAR + String.format("%010d", ++SUID_NUM);       // RV0000000001
+            userSaveRequestDto.setSuid(SUID_CHAR + String.format("%010d", ++SUID_NUM));
             User user = userService.join(userSaveRequestDto);
             resDto = new ResponseJsonObject(ApiStatusCode.OK);
             return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);

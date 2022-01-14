@@ -6,17 +6,12 @@ import com.review.storereview.common.exception.handler.AuthenticationExceptionHa
 import com.review.storereview.common.exception.handler.AuthorizationExceptionHandler;
 import com.review.storereview.filter.AuthorizationCheckFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -34,7 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationExceptionHandler authenticationExceptionHandler;
     private final AuthorizationExceptionHandler authorizationExceptionHandler;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
 
     @Autowired
     public SecurityConfig( JwtTokenProvider jwtTokenProvider
@@ -64,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf().disable()
                 .formLogin() .disable()
+                //  예외 처리 지정
                 .exceptionHandling()
                     .authenticationEntryPoint(authenticationExceptionHandler)       //401 Error Handler
                     .accessDeniedHandler(authorizationExceptionHandler)                //403 Error Handler
@@ -72,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .headers()
                 .frameOptions()
-                .sameOrigin()
+                .sameOrigin()       // 동일 도메인에서는 iframe 접근 가능
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .and()
@@ -84,14 +79,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  */
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/authenticate").permitAll()
+                    .antMatchers("/authenticate").permitAll()    // 인증 절차 없이 접근 허용(로그인 관련 url)
                     .antMatchers("/user/signup").permitAll()
                     .antMatchers("/api/sign_in").permitAll()
                     .antMatchers("/test/tester").hasRole(Authority.TESTER.getName())
                     .antMatchers("/test/admin").hasRole(Authority.ADMIN.getName())
-                    .anyRequest().authenticated()
+                    .anyRequest().authenticated()       // 그 외 나머지 리소스들은 무조건 인증을 완료해야 접근 가능
                 .and()
-                //AuthenticationFilterChain- UsernamePasswordAuthenticationFilter 전에 실행될 필터 세팅.
+                //AuthenticationFilterChain- UsernamePasswordAuthenticationFilter 전에 실행될 커스텀 필터 등록
                 .addFilterBefore(new AuthorizationCheckFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
                 //.apply(new JwtSecurityConfig(jwtTokenProvider));
     }
