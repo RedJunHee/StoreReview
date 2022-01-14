@@ -54,8 +54,7 @@ public class UserApiController {
 
 
     @PutMapping(value = "/api/sign_in")
-    public ResponseEntity<ResponseJsonObject> sign_in(@RequestBody UserSigninRequestDto requestDto)
-    {
+    public ResponseEntity<ResponseJsonObject> sign_in(@RequestBody UserSigninRequestDto requestDto) throws Exception {
         ResponseJsonObject resDto = null;
         UserResponseDto responseDto;
 
