@@ -50,8 +50,9 @@ public class UserApiController {
         }
         else {      // 성공 로직
             // 2. SUID 생성 (RV + 10자리 숫자)
-//            String suid = SUID_CHAR + String.format("%010d", ++SUID_NUM);       // RV0000000001
-            userSaveRequestDto.setSuid(SUID_CHAR + String.format("%010d", ++SUID_NUM));
+            userSaveRequestDto.setSuid(
+                    SUID_CHAR + String.format("%010d", ++SUID_NUM)             // RV0000000001
+            );
             User user = userService.join(userSaveRequestDto);
             resDto = new ResponseJsonObject(ApiStatusCode.OK);
             return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);

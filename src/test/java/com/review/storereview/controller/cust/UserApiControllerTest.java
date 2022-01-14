@@ -4,6 +4,7 @@ import com.review.storereview.common.JwtTokenProvider;
 import com.review.storereview.common.enumerate.Gender;
 import com.review.storereview.common.exception.ParamValidationException;
 import com.review.storereview.config.SecurityConfig;
+import com.review.storereview.controller.TestController;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.service.cust.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,14 +12,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockFilterConfig;
+import org.springframework.security.config.BeanIds;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
+
+import javax.servlet.ServletException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,18 +39,49 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @MockBean(JpaMetamodelMappingContext.class)
 @ExtendWith(MockitoExtension.class)  // JUnit 프레임워크가 테스트를 실행할 시 내장된 Runner를 실행 -> bean 주입
 @DisplayName("UserApiController 테스트")
-@WebMvcTest(UserApiController.class)
-class UserApiControllerTest {
-
+//@WebMvcTest(UserApiController.class)      // @SpringBootTest와 함께 사용  X
+class UserApiControllerTest extends AbstractControllerTest{
     private MockMvc mvc;
     @MockBean private UserServiceImpl userService;  // 목 객체
-    @MockBean private SecurityConfig securityConfig;
-    @MockBean private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    public AuthController authController;
+    @Autowired
+    public TestController testController;
+    @MockBean private WebApplicationContext context;
+
+    @Override
+    protected Object authController() {
+        return authController;
+    }
+    @Override
+    protected Object testController() {
+        return testController;
+    }
 
     @BeforeEach
     public void setUp() {   // UserApiController를 MockMvc 객체로 만든다.
         mvc = MockMvcBuilders.standaloneSetup(new UserApiController(userService))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true)) // charset을 UTF-8로 설정 (option)
+                .build();
+        DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
+        try {
+            delegatingFilterProxy.init(new MockFilterConfig(context.getServletContext(), BeanIds.SPRING_SECURITY_FILTER_CHAIN));
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+        authControllerMockMvc = MockMvcBuilders.standaloneSetup(authController())
+                // Body 데이터 한글 안깨지기 위한 인코딩 필터 설정.
+                .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+                .addFilter(delegatingFilterProxy)
+                .alwaysDo(print())
+                .build();
+
+        testControllerMockMvc = MockMvcBuilders.standaloneSetup(testController())
+                // Body 데이터 한글 안깨지기 위한 인코딩 필터 설정.
+                .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+                .addFilter(delegatingFilterProxy)
+                .alwaysDo(print())
                 .build();
     }
 
