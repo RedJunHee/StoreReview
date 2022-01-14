@@ -102,19 +102,6 @@ class UserApiControllerTest extends AbstractControllerTest{
     public void 회원가입_컨트롤러테스트() throws Exception {    // mvc.perform() -> throws Exception
         // given
         final LocalDate birthDate = LocalDate.of(1999, 11, 15);
-        given(userService.join(any()))
-                .willReturn(
-                        User.builder()
-                                .suid("")
-                                .said("")
-                                .userId("banan99")
-                                .name("문윤지")
-                                .nickname("moonz")
-                                .password("12345678")
-                                .birthDate(birthDate)
-                                .gender(Gender.W)
-                                .phone("01012345678")
-                                .build());
 
         // when
         final ResultActions actions =
@@ -148,19 +135,7 @@ class UserApiControllerTest extends AbstractControllerTest{
     public void 중복회원가입_컨트롤러테스트() throws Exception {
         // given
         final LocalDate birthDate = LocalDate.of(1999, 11, 15);
-        given(userService.join(any()))
-                .willReturn(
-                        User.builder()
-                                .suid("RE001341155s")
-                                .said("KA0223874453")
-                                .userId("banan99")
-                                .name("문윤지")
-                                .nickname("moonz")
-                                .password("12345678")
-                                .birthDate(birthDate)
-                                .gender(Gender.W)
-                                .phone("01012345678")
-                                .build());
+        userService.join(any());
 
         // when
         org.assertj.core.api.Assertions.assertThatThrownBy( () ->
@@ -177,7 +152,7 @@ class UserApiControllerTest extends AbstractControllerTest{
                                                             + " \"name\" : \"문윤지\", "
                                                             + " \"nickname\" : \"moonz\", "
                                                             + " \"password\" : \"12345678\", "
-                                                            + " \"birthDate\" : \"1999-11-15T00:00\", "
+                                                            + " \"birthDate\" : \"1999-11-15\", "
                                                             + " \"gender\" : \"W\", "
                                                             + " \"phone\" : \"01012345678\" "
                                                             + "}"))

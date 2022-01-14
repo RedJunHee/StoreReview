@@ -74,4 +74,12 @@ public class User {
         this.gender = gender;
         this.phone = phone;
     }
+
+    public void setSuid(String suid) {
+        this.suid = suid;
+    }
+
+    public void setSaid(String said) {
+        this.said = said;
+    }
 }

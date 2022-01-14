@@ -18,7 +18,7 @@ public class ResponseJsonObject {
 
     // data
     private Object data;
-    public Object getData() {return data;}
+    public Object getData() {return data;}      // data = null일 때는 필드에 나타나지 않음
     public ResponseJsonObject setData(Object val) {this.data = val; return this;}
 
     public ResponseJsonObject(ApiStatusCode metaStatusCode) {

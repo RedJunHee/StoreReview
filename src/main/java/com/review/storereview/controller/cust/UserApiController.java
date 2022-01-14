@@ -21,9 +21,6 @@ public class UserApiController {
     private final BaseUserService userService;
     private final UserSaveDtoValidator userSaveDtoValidator;
 
-    private static int SUID_NUM = 0;
-    private static String SUID_CHAR = "RV"; // REVIEW
-
     @Autowired
     public UserApiController(BaseUserService userService) {
         this.userService = userService;
@@ -49,11 +46,7 @@ public class UserApiController {
 //            throw new ParamValidationException(userSaveDtoValidator.getErrorMap());
         }
         else {      // 성공 로직
-            // 2. SUID 생성 (RV + 10자리 숫자)
-            userSaveRequestDto.setSuid(
-                    SUID_CHAR + String.format("%010d", ++SUID_NUM)             // RV0000000001
-            );
-            User user = userService.join(userSaveRequestDto);
+            userService.join(userSaveRequestDto);
             resDto = new ResponseJsonObject(ApiStatusCode.OK);
             return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
         }

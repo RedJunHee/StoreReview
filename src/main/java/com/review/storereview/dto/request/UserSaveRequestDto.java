@@ -60,4 +60,7 @@ public class UserSaveRequestDto {
     public void setSuid(String suid) {
         this.suid = suid;
     }
+    public void setSaid(String said) {
+        this.said = said;
+    }
 }
