@@ -32,7 +32,7 @@ public class UserSaveDtoValidator implements Validator {
 
         // 검증 로직
         // 1. id : null 체크
-        if (ObjectUtils.isEmpty(userSaveRequestDto.getId())) {
+        if (ObjectUtils.isEmpty(userSaveRequestDto.getUserId())) {
             bindingResult.addError(new FieldError("UserSaveRequestDto"
             , "id"
             , "아이디를 입력하셔야합니다."));

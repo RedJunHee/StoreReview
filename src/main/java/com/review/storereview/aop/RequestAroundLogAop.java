@@ -39,8 +39,6 @@ public class RequestAroundLogAop {
     @Around(value = "execution(* com.review.storereview.controller.*.*Controller.*(..))")
     public Object ApiLog(ProceedingJoinPoint joinPoint) throws Throwable { // 파라미터 : 프록시 대상 객체의 메서드를 호출할 때 사용
 
-        final long timeStamp = System.currentTimeMillis();
-
         Object[] arguments   = joinPoint.getArgs();
         String  inputParam = Arrays.toString(arguments);
         String  outputMessage = "" ;
@@ -51,7 +49,7 @@ public class RequestAroundLogAop {
         String suid = "TEST00000001";
         String said = "TEST00000002";
         String methodName  = joinPoint.getSignature().getName();   // 메소드 이름 => Api명
-        final char status = 'Y'; // 성공 케이스
+        final char apiStatus = 'Y'; // 성공 케이스
         StringBuilder apiResultDescription = new StringBuilder();
         long elapsedTime = 0L;
 
@@ -82,8 +80,8 @@ public class RequestAroundLogAop {
 
             elapsedTime = stopWatch.getTotalTimeMillis();
 
-            //API_LOG담을 객체 생성
-            ApiLog data = new ApiLog(suid,said,date,methodName,status,apiResultDescription.toString(),elapsedTime*0.001);
+            //API_LOG담을 객체 생성 ( "SUID", "SAID", 2022-01-14T12:55:22, "save", 'Y', [INPUT] [메서드 input] [OUTPUT] [메서드 output] , 3.0
+            ApiLog data = new ApiLog(suid, said, date, methodName, apiStatus, apiResultDescription.toString(),elapsedTime*0.001);
 
             // INSERT
             logService.InsertApiLog(data);

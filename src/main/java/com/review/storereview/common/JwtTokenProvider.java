@@ -1,6 +1,5 @@
 package com.review.storereview.common;
 
-import com.review.storereview.common.exception.CustomAuthenticationException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -36,11 +35,10 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider implements AuthenticationProvider {
 
     private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
-
-    private static final String AUTHORITIES_KEY = "auth";
+    private static final String AUTHORITIES_KEY = "auth";   // 사용자 권한 체크 위함
 
     private final String secret;
-    private final long tokenValidityInMilliseconds;
+    private final long tokenExpiryInMilliseconds;
     private Key key;
 
     private final UserDetailsService userDetailsService;
@@ -48,12 +46,12 @@ public class JwtTokenProvider implements AuthenticationProvider {
 
     @Autowired
     public JwtTokenProvider(@Value("${jwt.secret}")String secret,
-                            @Value("${jwt.token-validity-in-seconds}")long tokenValidityInSeconds,
+                            @Value("${jwt.token-validity-in-seconds}")long tokenExpiryInSeconds,
                             UserDetailsService userDetailsService,
                             PasswordEncoder passwordEncoder) {
         this.secret = secret;
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secret));
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+        this.tokenExpiryInMilliseconds = tokenExpiryInSeconds * 1000;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -128,7 +126,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date validity = new Date(now + this.tokenExpiryInMilliseconds);
 
         // Payload
         Map<String,Object> payload = new HashMap<String,Object>();

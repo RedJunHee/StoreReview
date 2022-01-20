@@ -56,4 +56,11 @@ public class UserSaveRequestDto {
         this.password = encodingPassword;
      }
      */
+
+    public void setSuid(String suid) {
+        this.suid = suid;
+    }
+    public void setSaid(String said) {
+        this.said = said;
+    }
 }

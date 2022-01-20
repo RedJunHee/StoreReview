@@ -1,7 +1,7 @@
 package com.review.storereview.common.exception;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
-import com.review.storereview.common.exception.dto.ExceptionResponseDto;
+import com.review.storereview.dto.ResponseJsonObject;
 
 import java.util.Map;
 
@@ -12,20 +12,19 @@ import java.util.Map;
 public class ParamValidationException extends RuntimeException{
 //    private Map<String, Object> errorMap;       // 파라미터 에러 메시지 (1개 이상의 파라미터에서 발생할 수 있음)
     private final ApiStatusCode errorStatusCode = ApiStatusCode.PARAMETER_CHECK_FAILED;
-    private final ExceptionResponseDto exceptionResponseDto ;
+    private final ResponseJsonObject responseJsonObject;
 
-    public ExceptionResponseDto getExceptionResponseDto(){
-        return exceptionResponseDto;
+    public ResponseJsonObject getResponseJsonObject(){
+        return responseJsonObject;
     }
-
+    // 아마 삭제 예정
     public ParamValidationException() {
-        exceptionResponseDto = ExceptionResponseDto.createMetaDto(errorStatusCode);
+        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode);
     }
 
-//    public ParamValidationException(Map<String, String> errorMap) {
-    public ParamValidationException(String message) {
-        super(message);
-        exceptionResponseDto =  ExceptionResponseDto.createMetaMessageDto(errorStatusCode,message);
-//        exceptionResponseDto = ExceptionResponseDto.createMetaMapDto(errorCode, errorMap);
+    public ParamValidationException(Map<String, String> parameterErrorMsg) {      // 파라미터 에러 메시지 (1개 이상의 파라미터에서 발생할 수 있음)
+        responseJsonObject = ResponseJsonObject.withParameterMsg(errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage(), parameterErrorMsg);
+
+//        super(parameterErrorMsg);
     }
 }

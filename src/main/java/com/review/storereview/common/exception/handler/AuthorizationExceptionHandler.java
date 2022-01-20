@@ -39,7 +39,7 @@ public class AuthorizationExceptionHandler implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         ServletOutputStream out = response.getOutputStream();
-        om.writeValue(out,new CustomAuthorizationException(accessDeniedException.getMessage()).getExceptionResponseDto());
+        om.writeValue(out,new CustomAuthorizationException(accessDeniedException.getMessage()).getResponseJsonObject());
         out.flush();
     }
 

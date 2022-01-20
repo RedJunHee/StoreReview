@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.*;
 
+import java.util.HashMap;
+
 class ParamValidationExceptionTest {
 
     ObjectMapper om ;
@@ -21,12 +23,11 @@ class ParamValidationExceptionTest {
     {
         ParamValidationException ex =  Assertions.assertThrows(ParamValidationException.class, ()
         ->{
-            throw new ParamValidationException("parameter email is null.");
-//            throw new ParamValidationException("parameter email is null.", null);
+            throw new ParamValidationException(new HashMap<String, String>(null));  // 추가 수정 필요!!
         });
 
         try {
-            System.out.println(om.writeValueAsString(ex.getExceptionResponseDto()));
+            System.out.println(om.writeValueAsString(ex.getResponseJsonObject()));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -42,7 +43,7 @@ class ParamValidationExceptionTest {
         });
 
         try {
-            System.out.println(om.writeValueAsString(ex.getExceptionResponseDto()));
+            System.out.println(om.writeValueAsString(ex.getResponseJsonObject()));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
