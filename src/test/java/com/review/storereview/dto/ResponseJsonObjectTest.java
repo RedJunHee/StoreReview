@@ -1,4 +1,4 @@
-package com.review.storereview.common.exception.dto;
+package com.review.storereview.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,13 +6,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import org.junit.jupiter.api.Test;
 
-class ExceptionResponseDtoTest {
+class ResponseJsonObjectTest {
 
     @Test
     void 빌드패턴_테스트()
     {
-        ExceptionResponseDto dto = ExceptionResponseDto.createMetaDto(ApiStatusCode.PARAMETER_CHECK_FAILED);
-        ExceptionResponseDto dto2 = ExceptionResponseDto.createMetaMessageDto(ApiStatusCode.PARAMETER_CHECK_FAILED,"email is null.");
+        ResponseJsonObject dto = ResponseJsonObject.withStatusCode(ApiStatusCode.PARAMETER_CHECK_FAILED);
+        ResponseJsonObject dto2 = ResponseJsonObject.withError(ApiStatusCode.PARAMETER_CHECK_FAILED, ApiStatusCode.PARAMETER_CHECK_FAILED.getType(), ApiStatusCode.PARAMETER_CHECK_FAILED.getMessage());
 
 
         ObjectMapper om = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -22,7 +22,6 @@ class ExceptionResponseDtoTest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
 
     }
 

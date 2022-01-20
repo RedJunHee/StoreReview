@@ -42,12 +42,12 @@ public class UserApiController {
         // 검증 실패 시
         if (bindingResult.hasErrors()) {
             System.out.println(userSaveDtoValidator.getErrorsMap());
-            throw new ParamValidationException("회원가입 api 호출 중 파라미터 에러");
+            throw new ParamValidationException(userSaveDtoValidator.getErrorsMap());
 //            throw new ParamValidationException(userSaveDtoValidator.getErrorMap());
         }
         else {      // 성공 로직
             userService.join(userSaveRequestDto);
-            resDto = new ResponseJsonObject(ApiStatusCode.OK);
+            resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK);
             return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
         }
     }
@@ -76,7 +76,7 @@ public class UserApiController {
                 .phone(user.getPhone())
                 .build();
 
-       resDto = new ResponseJsonObject(ApiStatusCode.OK).setData(responseDto);
+       resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(responseDto);
 
        // 5.
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
@@ -86,7 +86,7 @@ public class UserApiController {
     {
         ResponseJsonObject resDto = null;
 
-        resDto = new ResponseJsonObject(ApiStatusCode.OK).setData("DATA!!");
+        resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData("DATA!!");
 
         // 5.
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);

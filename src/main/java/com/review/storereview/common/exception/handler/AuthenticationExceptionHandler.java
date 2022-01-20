@@ -37,7 +37,7 @@ public class AuthenticationExceptionHandler  implements AuthenticationEntryPoint
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         ServletOutputStream out = response.getOutputStream();
-        om.writeValue(out,new CustomAuthenticationException(authException.getMessage()).getExceptionResponseDto());
+        om.writeValue(out,new CustomAuthenticationException(authException.getMessage()).getResponseJsonObject());
         out.flush();
     }
 }

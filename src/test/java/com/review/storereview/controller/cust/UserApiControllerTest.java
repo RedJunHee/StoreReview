@@ -1,11 +1,7 @@
 package com.review.storereview.controller.cust;
 
-import com.review.storereview.common.JwtTokenProvider;
-import com.review.storereview.common.enumerate.Gender;
-import com.review.storereview.common.exception.ParamValidationException;
-import com.review.storereview.config.SecurityConfig;
+import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.controller.TestController;
-import com.review.storereview.dao.cust.User;
 import com.review.storereview.service.cust.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
@@ -31,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -100,10 +94,7 @@ class UserApiControllerTest extends AbstractControllerTest{
     @Test
     @DisplayName("회원가입 Controller 테스트")
     public void 회원가입_컨트롤러테스트() throws Exception {    // mvc.perform() -> throws Exception
-        // given
-        final LocalDate birthDate = LocalDate.of(1999, 11, 15);
 
-        // when
         final ResultActions actions =
                 mvc.perform(        // perform() : MockMvcRequestBuilders를 통해서 구현한 Request를 테스트
                         post("/user/signup")
@@ -157,6 +148,6 @@ class UserApiControllerTest extends AbstractControllerTest{
                                                             + " \"phone\" : \"01012345678\" "
                                                             + "}"))
                         .andExpect(status().isOk()))
-                        .hasCause(new ParamValidationException("회원가입 api 호출 중 에러"));
+                        .hasCause(new PersonAlreadyExistsException());
                 }
 }

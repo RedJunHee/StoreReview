@@ -33,7 +33,12 @@ public class UserServiceImpl implements BaseUserService {
     @Override
     public void join(UserSaveRequestDto userSaveRequestDto)  {
         // 1. 중복 회원 검증 (id)
-        validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
+//        validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
+
+        System.out.println("validateDuplicateUser 호출됨");
+        boolean isExist = userRepository.existsByUserId(userSaveRequestDto.getUserId());
+        if (isExist)  // 중복이면 true
+            throw new PersonAlreadyExistsException();
 
         userRepository.save(userSaveRequestDto.toEntity());
     }

@@ -1,7 +1,7 @@
 package com.review.storereview.common.exception;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
-import com.review.storereview.common.exception.dto.ExceptionResponseDto;
+import com.review.storereview.dto.ResponseJsonObject;
 
 /**
  * Class       : CustomAuthenticationException
@@ -12,20 +12,19 @@ import com.review.storereview.common.exception.dto.ExceptionResponseDto;
  */
 public class CustomAuthenticationException   {
     private final ApiStatusCode errorStatusCode = ApiStatusCode.UNAUTHORIZED;
-    private final ExceptionResponseDto exceptionResponseDto;
+    private final ResponseJsonObject responseJsonObject;
 
-    public ExceptionResponseDto getExceptionResponseDto(){
-        return exceptionResponseDto;
+    public ResponseJsonObject getResponseJsonObject(){
+        return responseJsonObject;
     }
     
 
     public CustomAuthenticationException() {
-        exceptionResponseDto = ExceptionResponseDto.createMetaDto(errorStatusCode);
+        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode);
     }
 
     public CustomAuthenticationException(String message) {
-        exceptionResponseDto =  ExceptionResponseDto.createMetaMessageDto(errorStatusCode,message);
-//        exceptionResponseDto = ExceptionResponseDto.createMetaMapDto(errorCode, errorMap);
+        responseJsonObject = ResponseJsonObject.withError(errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage());
     }
 
 }

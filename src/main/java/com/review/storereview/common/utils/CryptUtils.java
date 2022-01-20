@@ -8,7 +8,6 @@ public class CryptUtils {
     /** Aes 인스턴스 */
     private static Aes aes = new Aes();
 
-    /** Aes 인스턴스를 반환 */
     public static Aes getAES() {
         return aes;
     }
