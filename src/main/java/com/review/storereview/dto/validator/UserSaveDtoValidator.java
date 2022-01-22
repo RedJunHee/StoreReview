@@ -38,6 +38,7 @@ public class UserSaveDtoValidator implements Validator {
             , "아이디를 입력하셔야합니다."));
 //            errorMap.put(bindingResult.getFieldError().getField(), bindingResult.getFieldError().getDefaultMessage());
             errorsMap.put("id", "아이디를 입력하셔야합니다.");
+            System.out.println(errorsMap.entrySet());
         }
 
         /*

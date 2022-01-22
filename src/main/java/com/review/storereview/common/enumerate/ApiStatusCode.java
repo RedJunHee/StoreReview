@@ -21,6 +21,7 @@ public enum ApiStatusCode {
     ,FORBIDDEN (403, "Forbidden", "Forbidden, 사용권한 없음.")
     ,PERSON_NOT_FOUND(409,"Person Not Found", "사용자 정보를 찾을 수 없습니다.")
     ,PERSON_ALREADY_EXISTS(411, "Person already exists", "이미 존재하는 회원입니다.")
+    ,REVIEW_NOT_FOUND(404, "Review Not Found", "게시물을 찾을 수 없습니다.")
     ,SYSTEM_ERROR(599,"SystemError", "시스템오류.")
     ;
 

@@ -10,6 +10,7 @@ import com.review.storereview.dto.request.UserSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,7 +21,7 @@ public class UserServiceImpl implements BaseUserService {
     private static String SUID_CHAR = "SI"; // Service Id
     private static int SAID_NUM = 0;
     private static String SAID_CHAR_RV = "RV"; // 일반 회원가입의 SAID는 "REVIEW"
-
+    private User findUserId = null;
     private static String KEY = "12345678901234567890123456789012"; // 암호화를 위한 key (256bit , 32byte 문자열)
     private final BaseUserRepository userRepository;
     //private final BCryptPasswordEncoder passwordEncoder;     // 암호화
@@ -33,13 +34,9 @@ public class UserServiceImpl implements BaseUserService {
     @Override
     public void join(UserSaveRequestDto userSaveRequestDto)  {
         // 1. 중복 회원 검증 (id)
-//        validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
+        validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
 
-        System.out.println("validateDuplicateUser 호출됨");
-        boolean isExist = userRepository.existsByUserId(userSaveRequestDto.getUserId());
-        if (isExist)  // 중복이면 true
-            throw new PersonAlreadyExistsException();
-
+        // 2. DB 저장
         userRepository.save(userSaveRequestDto.toEntity());
     }
 
@@ -62,8 +59,8 @@ public class UserServiceImpl implements BaseUserService {
 
         Optional<User> result = userRepository.findByUserIdAndPassword(loginUser.getUserId(),loginUser.getPassword());
 
-        // suid & 비밀번호 비교
-        if(result.get().getSuid() == null) {
+        // null 체크
+        if(!result.isPresent()) {
             throw new PersonNotFoundException();
         }
         User user = result.get();
@@ -75,4 +72,11 @@ public class UserServiceImpl implements BaseUserService {
         return user;
     }
 
+    public User listUserIdBySuid(String suid) {
+        List<Object[]> resultUserId = userRepository.findUserIdBySuid(suid);
+        Object[] objects = resultUserId.get(0);
+        findUserId = (User) objects[0];
+
+        return findUserId;
+    }
 }

@@ -16,4 +16,7 @@ public interface BaseUserService extends BaseService {
 
     // 로그인
     User sign_in(UserSigninRequestDto requestDto) throws Exception;
+
+    // suid로 userId 찾기
+    User listUserIdBySuid(String suid);
 }

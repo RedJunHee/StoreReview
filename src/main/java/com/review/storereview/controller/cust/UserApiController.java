@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedList;
 
 @RestController
 public class UserApiController {
@@ -39,14 +40,17 @@ public class UserApiController {
         // 1. 파라미터 검증
         userSaveDtoValidator.validate(userSaveRequestDto, bindingResult);
 
-        // 검증 실패 시
+        // 1-1. 검증 실패 로직
         if (bindingResult.hasErrors()) {
             System.out.println(userSaveDtoValidator.getErrorsMap());
             throw new ParamValidationException(userSaveDtoValidator.getErrorsMap());
 //            throw new ParamValidationException(userSaveDtoValidator.getErrorMap());
         }
-        else {      // 성공 로직
+        else {      // 1-2. 검증 성공 로직
+            // 2. join 서비스 로직
             userService.join(userSaveRequestDto);
+
+            // 3. responseDto 생성
             resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK);
             return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
         }
