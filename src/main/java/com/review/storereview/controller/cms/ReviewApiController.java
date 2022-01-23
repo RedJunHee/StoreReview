@@ -27,7 +27,7 @@ public class ReviewApiController {
     }
 
     /**
-     * TODO 특정 가게에 대한 전체 리뷰 조회 컨트롤러
+     * {@Summary 특정 가게에 대한 전체 리뷰 조회 컨트롤러}
      * @param placeId
      */
     @GetMapping("/places/{placeId}")
@@ -65,7 +65,7 @@ public class ReviewApiController {
     }
 
     /**
-     * TODO 한개의 리뷰 조회 컨트롤러
+     * {@Summary 한개의 리뷰 조회 컨트롤러 }
      * @param reviewId
      */
     @GetMapping("/reviews/{reviewId}")
@@ -86,7 +86,7 @@ public class ReviewApiController {
     }
 
     /**
-     * TODO 리뷰 작성 컨트롤러
+     * {@Summary 리뷰 작성 컨트롤러}
      * @param reviewUploadRequestDto
      */
     @PostMapping("/review")
@@ -107,7 +107,7 @@ public class ReviewApiController {
     }
 
     /**
-     * TODO 리뷰 업데이트 컨트롤러
+     * {@Summary 리뷰 업데이트 컨트롤러}
      * @param reviewId
      * @param reviewUpdateRequestDto
      */
@@ -129,7 +129,7 @@ public class ReviewApiController {
     }
 
     /**
-     * TODO 리뷰 제거 컨트롤러
+     * {@Summary 리뷰 제거 컨트롤러}
      * @param reviewId
      */
     @DeleteMapping("/reviews/{reviewId}")
