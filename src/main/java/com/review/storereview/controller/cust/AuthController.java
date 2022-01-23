@@ -1,5 +1,6 @@
 package com.review.storereview.controller.cust;
 
+import com.review.storereview.common.JWTAuthenticationToken;
 import com.review.storereview.common.JwtTokenProvider;
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.dto.ResponseJsonObject;
@@ -41,10 +42,10 @@ public class AuthController {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getPassword());
-        Authentication authentication = null ;
+        JWTAuthenticationToken authentication = null ;
 
         try {
-            authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            authentication = (JWTAuthenticationToken) authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         }catch(AuthenticationException ex)  // 인증 절차 실패시 리턴되는 Exception
         {
             return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);

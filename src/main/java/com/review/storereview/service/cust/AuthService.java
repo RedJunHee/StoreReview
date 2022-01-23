@@ -1,6 +1,7 @@
 package com.review.storereview.service.cust;
 
 import com.review.storereview.common.enumerate.Authority;
+import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.repository.cust.BaseUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,16 +53,18 @@ public class AuthService implements UserDetailsService {
      * @param user
      * @return
      */
-    private org.springframework.security.core.userdetails.User createUser(String username, User user) {
+    private JWTUserDetails createUser(String username, User user) {
 //        if (!user.isActivated()) {
 //            throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
 //        }
         List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 
-        grantedAuthorities.add(new SimpleGrantedAuthority(Authority.TESTER.getFullName()));
 
-        return new org.springframework.security.core.userdetails.User(user.getUserId(),
+        // 데이터베이스 권한을 가져와서 할당해주어야함.
+        grantedAuthorities.add(new SimpleGrantedAuthority(Authority.USER.getFullName()));
+
+        return new JWTUserDetails(user.getUserId(),
                 user.getPassword(),
-                grantedAuthorities);
+                grantedAuthorities,user.getSuid(), user.getSaid());
     }
 }
