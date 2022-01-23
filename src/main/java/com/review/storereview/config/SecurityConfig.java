@@ -82,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/authenticate").permitAll()    // 인증 절차 없이 접근 허용(로그인 관련 url)
                     .antMatchers("/user/signup").permitAll()
                     .antMatchers("/api/sign_in").permitAll()
-                    .antMatchers("/test/tester").hasRole(Authority.TESTER.getName())
+                    .antMatchers("/test/tester").hasRole(Authority.USER.getName())
                     .antMatchers("/test/admin").hasRole(Authority.ADMIN.getName())
                     .anyRequest().authenticated()       // 그 외 나머지 리소스들은 무조건 인증을 완료해야 접근 가능
                 .and()
