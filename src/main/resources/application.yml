@@ -44,6 +44,9 @@ jwt:
   secret: Y29tLXJldmlldy1zdG9yZXJldmlldy1wcm9qZWN0LWp3dC10b2tlbi1zZWNyZXQta2V5LWNvbS1yZXZpZXctc3RvcmVyZXZpZXctcHJvamVjdC1qd3QtdG9rZW4tc2VjcmV0LWtleQ==
   token-validity-in-seconds: 86400
 
+#ReviewService를 SHA256암호화 후 앞에서 32Byte
+aes-secret: 184EBFA87C052FB66887177B429201CE
+
 logging:
   org:
     hibernate:

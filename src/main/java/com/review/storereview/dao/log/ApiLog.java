@@ -33,7 +33,7 @@ public class ApiLog {
     @Column(name="API_STATUS")
     private char apiStatus;
 
-    @Column(name="API_DESC", length = 100)
+    @Column(name="API_DESC", length = 400)
     private  String apiDesc;
 
     @Column(name="PROCESS_TIME")

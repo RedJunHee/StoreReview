@@ -43,9 +43,14 @@ public class AuthController {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getPassword());
         JWTAuthenticationToken authentication = null ;
+        String jwt = "";
 
         try {
             authentication = (JWTAuthenticationToken) authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            jwt = tokenProvider.createTokenFromAuthentication(authentication);
         }catch(AuthenticationException ex)  // 인증 절차 실패시 리턴되는 Exception
         {
             return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
@@ -53,10 +58,6 @@ public class AuthController {
         {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR, ApiStatusCode.SYSTEM_ERROR.getType(), ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }   // 체크 필요!
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.createTokenFromAuthentication(authentication);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AuthorizationCheckFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
