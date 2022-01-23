@@ -39,7 +39,6 @@ public class Review extends BaseTimeEntity {
     @Convert(converter = StringListConverter.class)
     private List<String> imgUrl;
 
-
     @Builder
     public Review (User suid, User said, String placeId, Integer stars, String content, List<String> imgUrl) {
         this.suid = suid;
@@ -61,5 +60,19 @@ public class Review extends BaseTimeEntity {
 
     public void update(String content) {
         this.content = content;
+    }
+
+    // for Test
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId=" + reviewId +
+                ", said=" + said +
+                ", suid=" + suid +
+                ", placeId='" + placeId + '\'' +
+                ", stars=" + stars +
+                ", content='" + content + '\'' +
+                ", imgUrl=" + imgUrl +
+                '}';
     }
 }

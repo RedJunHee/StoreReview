@@ -18,6 +18,7 @@ public class ReviewUploadRequestDto {
     public ReviewUploadRequestDto(String placeId, String content, List<String> imgUrl) {
         this.placeId = placeId;
         this.content = content;
+        this.imgUrl = imgUrl;
     }
 
     // Dto에서 필요한 부분을 entity화
@@ -25,6 +26,7 @@ public class ReviewUploadRequestDto {
         return Review.builder()
                 .placeId(placeId)
                 .content(content)
+                .imgUrl(imgUrl)
                 .build();
     }
 }
