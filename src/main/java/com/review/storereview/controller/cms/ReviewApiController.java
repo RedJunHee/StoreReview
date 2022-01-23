@@ -7,8 +7,9 @@ import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.dto.response.ReviewResponseDto;
+import com.review.storereview.repository.cust.BaseUserRepository;
 import com.review.storereview.service.cms.ReviewServiceImpl;
-import com.review.storereview.service.cust.BaseUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,13 @@ import java.util.List;
 @RestController
 public class ReviewApiController {
     private final ReviewServiceImpl reviewService;
-    private final BaseUserService userService;
+    private final BaseUserRepository userRepository;
     private List<ReviewResponseDto> reviewsResponseDtoList;
 
-    public ReviewApiController(ReviewServiceImpl reviewService, BaseUserService userService) {
+    @Autowired
+    public ReviewApiController(ReviewServiceImpl reviewService, BaseUserRepository userRepository) {
         this.reviewService = reviewService;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -41,7 +43,11 @@ public class ReviewApiController {
         // 3. responseDto 생성 및 리스트화
         for (Review review : findReviews) {
             // 3.1. userId 조회
-            User userId = userService.listUserIdBySuid(review.getSuid());
+//            User userId = userService.listUserIdBySuid(review.getSuid());
+            List<Object[]> resultUserId = userRepository.findUserIdBySuid(review.getSuid());
+            Object[] objects = resultUserId.get(0);
+            User userId = (User) objects[0];
+
             // 3.2. responseDto 생성
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
                     review.getReviewId(),
@@ -72,7 +78,7 @@ public class ReviewApiController {
     public ResponseEntity<ResponseJsonObject> findOneReview(@PathVariable Long reviewId) {
         // 1. 조회 서비스 로직 (리뷰 조회 - userId 조회)
         Review findReview = reviewService.listReview(reviewId);
-        User userId = userService.listUserIdBySuid(findReview.getSuid());
+        User userId = reviewService.listUserIdBySuid(findReview.getSuid());
 
         // 2. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
@@ -93,7 +99,7 @@ public class ReviewApiController {
     public ResponseEntity<ResponseJsonObject> uploadReview(@RequestBody ReviewUploadRequestDto reviewUploadRequestDto) {
         // 1. 업로드 서비스 로직 (리뷰 업로드 - userId 조회)
         Review savedReview = reviewService.uploadReview(reviewUploadRequestDto);
-        User userId = userService.listUserIdBySuid(savedReview.getSuid());
+        User userId = reviewService.listUserIdBySuid(savedReview.getSuid());
 
         // 2. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
@@ -115,7 +121,7 @@ public class ReviewApiController {
     public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequestDto reviewUpdateRequestDto) {
         // 1. 리뷰 업데이트 서비스 로직
         Review updatedReview = reviewService.updateReview(reviewId, reviewUpdateRequestDto);
-        User userId = userService.listUserIdBySuid(updatedReview.getSuid());
+        User userId = reviewService.listUserIdBySuid(updatedReview.getSuid());
 
         // 2. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(

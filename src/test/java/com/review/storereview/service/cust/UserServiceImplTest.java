@@ -46,6 +46,7 @@ class UserServiceImplTest {
         LocalDate birthDate = LocalDate.now();
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder().userId("banan99").name("뭉지").nickname("moon").password("123456").birthDate(birthDate).gender(Gender.W).phone("01013572468")
                 .build();
+
         userService.join(userSaveRequestDto);
         try {
             userService.join(userSaveRequestDto);

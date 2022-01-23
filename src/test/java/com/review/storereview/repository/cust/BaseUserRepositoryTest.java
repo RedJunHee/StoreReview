@@ -42,13 +42,16 @@ class BaseUserRepositoryTest {
     @DisplayName("회원가입 레파지토리 테스트")
     public void 회원가입_테스트() {
         LocalDate birthDate = LocalDate.of(1999, 11, 15);
-        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()     // hibernate: 같은 KEY값은 UPDATE
+
+        // jwt를 통해 전달된 암호화&인코딩된 suid를 복호화&디코딩 후 설정하고 저장해야하기 때문에 User로 회원정보 입력
+        User user = User.builder()
+                .suid("SI0000000001").said("RV0000000001")
                 .userId("moonz99").name("문").nickname("moonz").password("1234567")
                 .birthDate(birthDate).gender(Gender.W).phone("01012345678")
                 .build();
-        userRepository.save(userSaveRequestDto.toEntity());
-        System.out.println("조회값 : " + result.get().getSuid());
 
-        Assertions.assertThat(result.get().getNickname()).isEqualTo("moonz");
+        User savedUser = userRepository.save(user);
+
+        Assertions.assertThat(savedUser.getNickname()).isEqualTo("moonz");
     }
 }

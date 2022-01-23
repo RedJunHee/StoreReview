@@ -2,9 +2,11 @@ package com.review.storereview.service.cms;
 
 import com.review.storereview.common.exception.ReviewNotFoundException;
 import com.review.storereview.dao.cms.Review;
+import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.repository.cms.BaseReviewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +16,11 @@ import java.util.Optional;
 
 @Service
 public class ReviewServiceImpl {
-    private final BaseReviewRepository reviewRepository;
 
+    private BaseReviewRepository reviewRepository;
+
+    private User findUserId = null; // userId 조회
+    @Autowired
     public ReviewServiceImpl(BaseReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
@@ -79,6 +84,14 @@ public class ReviewServiceImpl {
 
        // 2. 리뷰 데이터 제거
         reviewRepository.delete(findReview);
+    }
+
+    public User listUserIdBySuid(String suid) {
+        List<Object[]> resultUserId = reviewRepository.findUserIdBySuid(suid);
+        Object[] objects = resultUserId.get(0);
+        findUserId = (User) objects[0];
+
+        return findUserId;
     }
 }
 
