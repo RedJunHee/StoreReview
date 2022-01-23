@@ -1,5 +1,6 @@
 package com.review.storereview.common;
 
+import com.review.storereview.dao.JWTUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -69,11 +70,11 @@ public class JwtTokenProvider implements AuthenticationProvider {
         try {
             // Service에서 패스워드비교까지 모두 처리.
             // null일경우 UsernameNotFoundException Throw
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            JWTUserDetails userDetails = (JWTUserDetails)(userDetailsService.loadUserByUsername(username));
 
-            passwordChecks(userDetails, (UsernamePasswordAuthenticationToken) authentication);
+           // passwordChecks(userDetails, (UsernamePasswordAuthenticationToken) authentication);
 
-            return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+            return new JWTAuthenticationToken(username, password, userDetails.getAuthorities(),userDetails.getSuid(),userDetails.getSaid());
         }
         catch(UsernameNotFoundException ex)
         {
@@ -119,7 +120,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
      * @param authentication
      * @return AccessToken
      */
-    public String createTokenFromAuthentication(Authentication authentication)
+    public String createTokenFromAuthentication(JWTAuthenticationToken authentication)
     {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -128,15 +129,11 @@ public class JwtTokenProvider implements AuthenticationProvider {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenExpiryInMilliseconds);
 
-        // Payload
-        Map<String,Object> payload = new HashMap<String,Object>();
-        payload.put("data","asd");
-
-
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
-                .claim("data","SimpleData!!")
+                .claim("suid",authentication.getSuid())
+                .claim("said",authentication.getSaid())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
