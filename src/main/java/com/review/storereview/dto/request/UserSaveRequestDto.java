@@ -11,8 +11,6 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class UserSaveRequestDto {
-    private String suid;
-    private String said;
     private String userId;
     private String password;
     private String name;
@@ -22,11 +20,9 @@ public class UserSaveRequestDto {
     private String phone;
 
     @Builder
-    public UserSaveRequestDto(String suid, String said, String userId, String password
+    public UserSaveRequestDto(String userId, String password
             , String name, String nickname, LocalDate birthDate
             , Gender gender, String phone) {
-        this.suid = suid;
-        this.said = said;
         this.userId = userId;
         this.password = password;
         this.name = name;
@@ -39,8 +35,6 @@ public class UserSaveRequestDto {
     // Dto에서 필요한 부분을 entity화
     public User toEntity() {
         return User.builder()
-                .suid(suid)
-                .said(said)
                 .userId(userId)
                 .password(password)
                 .name(name)
@@ -57,10 +51,4 @@ public class UserSaveRequestDto {
      }
      */
 
-    public void setSuid(String suid) {
-        this.suid = suid;
-    }
-    public void setSaid(String said) {
-        this.said = said;
-    }
 }

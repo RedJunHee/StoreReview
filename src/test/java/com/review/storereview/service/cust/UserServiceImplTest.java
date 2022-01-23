@@ -30,7 +30,7 @@ class UserServiceImplTest {
     public void 유저_생성(@Mock UserServiceImpl userService) {
         // given
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()     // hibernate: 같은 KEY값은 UPDATE
-                .suid("RE001341155s").said("KA0223874453").userId("moonz99").name("문").nickname("moonz").password("1234567")
+                .userId("moonz99").name("문").nickname("moonz").password("1234567")
                 .birthDate(birthDate).gender(Gender.W).phone("01012345678")
                 .build();
 
@@ -44,9 +44,9 @@ class UserServiceImplTest {
     public void 중복회원생성_예외() throws RuntimeException {
         // given
         LocalDate birthDate = LocalDate.now();
-        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder().suid("EE001341155s").said("test1").userId("banan99").name("뭉지").nickname("moon").password("123456").birthDate(birthDate).gender(Gender.W).phone("01013572468")
+        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder().userId("banan99").name("뭉지").nickname("moon").password("123456").birthDate(birthDate).gender(Gender.W).phone("01013572468")
                 .build();
-        System.out.println(userSaveRequestDto.getSuid());
+
         userService.join(userSaveRequestDto);
         try {
             userService.join(userSaveRequestDto);
