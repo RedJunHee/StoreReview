@@ -7,6 +7,8 @@ import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.request.TokenDto;
 import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.filter.AuthorizationCheckFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class AuthController {
-
+    private final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final JwtTokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -53,9 +55,12 @@ public class AuthController {
             jwt = tokenProvider.createTokenFromAuthentication(authentication);
         }catch(AuthenticationException ex)  // 인증 절차 실패시 리턴되는 Exception
         {
+            logger.debug("AuthController Auth 체크 실패 "+ ex.getMessage());
+            ex.printStackTrace();
             return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
         }catch(Exception ex)
         {
+            ex.printStackTrace();
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR, ApiStatusCode.SYSTEM_ERROR.getType(), ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }   // 체크 필요!
 
