@@ -9,7 +9,6 @@ import org.springframework.validation.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /** Class       : UserSaveDtoValidator (DTO)
  *  Author      : 문 윤 지

@@ -31,9 +31,9 @@ public class ResponseJsonObject {
     public ResponseJsonObject setData(Object val) {this.data = val; return this;}
 
     // 생성자
-/*    public ResponseJsonObject(ApiStatusCode metaStatusCode) {
+    public ResponseJsonObject(ApiStatusCode metaStatusCode) {
         this.meta = new Meta(metaStatusCode);
-    }*/
+    }
 
     /**
      * 성공일 때 호출될 정적 팩터리 메서드

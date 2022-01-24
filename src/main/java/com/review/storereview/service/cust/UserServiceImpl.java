@@ -9,8 +9,6 @@ import com.review.storereview.dto.request.UserSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements BaseUserService {
@@ -43,6 +41,7 @@ public class UserServiceImpl implements BaseUserService {
 
         // 2. DB 저장
         userRepository.save(user);
+        System.out.println("사용자 정보 DB 저장 완료");
     }
 
     // 중복 회원 검증

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+//@Repository
 public interface BaseReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByPlaceIdOrderByCreatedAtDesc(String placeId);
     Review findByReviewId(Long reviewId);

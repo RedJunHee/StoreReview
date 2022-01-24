@@ -97,7 +97,7 @@ class UserApiControllerTest extends AbstractControllerTest{
 
         final ResultActions actions =
                 mvc.perform(        // perform() : MockMvcRequestBuilders를 통해서 구현한 Request를 테스트
-                        post("/user/signup")
+                        post("/api/signup")
                                 .contentType(MediaType.APPLICATION_JSON)    // 미디어타입 설정
                                 .accept(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8")

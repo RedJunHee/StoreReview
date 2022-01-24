@@ -33,7 +33,7 @@ public class UserApiController {
      * @param userSaveRequestDto
      * @return ResponseEntity<ResponseJsonObject>
      */
-    @PostMapping("/user/signup")
+    @PostMapping("/api/signup")
     public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException {
         System.out.println("UserApiController: save 호출");
         ResponseJsonObject resDto = null;   // ResponseJsonOBject 사용
@@ -44,7 +44,6 @@ public class UserApiController {
         if (bindingResult.hasErrors()) {
             System.out.println(userSaveDtoValidator.getErrorsMap());
             throw new ParamValidationException(userSaveDtoValidator.getErrorsMap());
-//            throw new ParamValidationException(userSaveDtoValidator.getErrorMap());
         }
         else {      // 1-2. 검증 성공 로직
             // 2. join 서비스 로직
