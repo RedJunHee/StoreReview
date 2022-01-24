@@ -1,5 +1,6 @@
 package com.review.storereview.common;
 
+import com.review.storereview.common.utils.CryptUtils;
 import com.review.storereview.dao.JWTUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -44,17 +45,19 @@ public class JwtTokenProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
     private PasswordEncoder passwordEncoder;
-
+    private final CryptUtils cryptUtils;
     @Autowired
     public JwtTokenProvider(@Value("${jwt.secret}")String secret,
                             @Value("${jwt.token-validity-in-seconds}")long tokenExpiryInSeconds,
                             UserDetailsService userDetailsService,
-                            PasswordEncoder passwordEncoder) {
+                            PasswordEncoder passwordEncoder,
+                            CryptUtils cryptUtils) {
         this.secret = secret;
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(this.secret));
         this.tokenExpiryInMilliseconds = tokenExpiryInSeconds * 1000;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.cryptUtils = cryptUtils;
     }
 
     /**
@@ -72,7 +75,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
             // null일경우 UsernameNotFoundException Throw
             JWTUserDetails userDetails = (JWTUserDetails)(userDetailsService.loadUserByUsername(username));
 
-           // passwordChecks(userDetails, (UsernamePasswordAuthenticationToken) authentication);
+            passwordChecks(userDetails, (UsernamePasswordAuthenticationToken) authentication);
 
             return new JWTAuthenticationToken(username, password, userDetails.getAuthorities(),userDetails.getSuid(),userDetails.getSaid());
         }
@@ -120,7 +123,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
      * @param authentication
      * @return AccessToken
      */
-    public String createTokenFromAuthentication(JWTAuthenticationToken authentication)
+    public String createTokenFromAuthentication(JWTAuthenticationToken authentication) throws Exception
     {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -129,14 +132,22 @@ public class JwtTokenProvider implements AuthenticationProvider {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenExpiryInMilliseconds);
 
-        return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .claim("suid",authentication.getSuid())
-                .claim("said",authentication.getSaid())
-                .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
-                .compact();
+        String jwt ="";
+        try {
+            jwt = Jwts.builder()
+                    .setSubject(authentication.getName())
+                    .claim(AUTHORITIES_KEY, authorities)
+                    .claim("suid", cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(), authentication.getSuid()))
+                    .claim("said", cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(), authentication.getSaid()))
+                    .signWith(key, SignatureAlgorithm.HS512)
+                    .setExpiration(validity)
+                    .compact();
+        }catch(Exception e) {
+            logger.debug("JWT Token 생성 Exception "+ e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+        return jwt;
     }
 
 

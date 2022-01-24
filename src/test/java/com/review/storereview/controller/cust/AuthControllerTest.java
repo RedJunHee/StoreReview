@@ -72,14 +72,14 @@ class AuthControllerTest extends AbstractControllerTest {
      * @throws Exception
      */
     @Test
-    @DisplayName("아이디, 패스워드 모두 유효함.")
+    @DisplayName("아이디, 패스워드 모두 유효함. ")
     @Transactional
     public void 아이디_패스워드_모두_유효() throws Exception
     {
         authControllerMockMvc.perform(post("/authenticate")
                 .content(validAuthParam).contentType(this.contentType))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.meta.code",is(200)))
+                .andExpect(jsonPath("$.meta.statusCode",is(200)))
                 .andExpect(jsonPath("$..['token']").exists());
     }
 
