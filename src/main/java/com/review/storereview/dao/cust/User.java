@@ -1,10 +1,7 @@
 package com.review.storereview.dao.cust;
 
 import com.review.storereview.common.enumerate.Gender;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.*;
@@ -21,13 +18,14 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Table(name= "USER_INFO")
+@IdClass(UserId.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
-    @NotBlank  // null, " ", "" 허용 X
     @Id
     @Column(name="SUID", nullable = false)
     private String suid;
 
+    @Id
     @Column(name="SAID", nullable = false, length = 12)
     private String said;
 

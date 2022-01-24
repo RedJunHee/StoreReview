@@ -4,6 +4,7 @@ import com.review.storereview.dao.BaseTimeEntity;
 import com.review.storereview.dao.cust.User;
 import lombok.*;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Table(name="COMMENT")
 @Getter
@@ -12,29 +13,39 @@ import javax.persistence.*;
 public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long Id;
 
-    @ManyToOne(fetch=FetchType.LAZY)         // Comment to Board
-    @JoinColumn(name="REVIEW_ID")
-    private Review review;
+    @Column(name="REVIEW")
+    private Long review;
 
-    @ManyToOne(fetch=FetchType.LAZY)      // Comment To User
-    @JoinColumn(name="SAID")
-    private User said;
+    @Column(name="SUID")
+    private String suid;
 
-    @ManyToOne(fetch=FetchType.LAZY)      // Comment To User
-    @JoinColumn(name="SUID")
-    private User suid;
+    @Column(name="SAID")
+    private String said;
 
     @Column(name = "CONTENT", length = 300)
     private String content;
 
+    @Column(name = "USER_ID")
+    private String userId;
+
+    @Column(name = "CREATED_AT")
+    private LocalDateTime createdAt;
+
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
+
     @Builder
-    public Comment(Review review, User suid, User said, String content) {
+
+    public Comment(Long id, Long review, String suid, String said, String content, String userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        Id = id;
         this.review = review;
         this.suid = suid;
         this.said = said;
         this.content = content;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
-
 }
