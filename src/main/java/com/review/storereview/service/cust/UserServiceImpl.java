@@ -1,12 +1,12 @@
 package com.review.storereview.service.cust;
 
 import com.review.storereview.common.exception.PersonAlreadyExistsException;
-import com.review.storereview.common.exception.PersonNotFoundException;
 import com.review.storereview.dao.cust.User;
-import com.review.storereview.dto.request.UserSigninRequestDto;
+import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.repository.cust.BaseUserRepository;
 import com.review.storereview.dto.request.UserSaveRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,8 +20,8 @@ public class UserServiceImpl implements BaseUserService {
 
 //    private static String KEY = "12345678901234567890123456789012"; // 암호화를 위한 key (256bit , 32byte 문자열)
     private final BaseUserRepository userRepository;
-    //private final BCryptPasswordEncoder passwordEncoder;     // 암호화
-
+    private final BCryptPasswordEncoder passwordEncoder;     // 암호화
+    private ResponseJsonObject resDto;
     /**
      * 회원 가입 서비스
      * @param userSaveRequestDto
@@ -39,7 +39,11 @@ public class UserServiceImpl implements BaseUserService {
         user.setSuid(suid);
         user.setSaid(said);
 
-        // 2. DB 저장
+        // 3. 해쉬 암호화된 비밀번호 인코딩 (bcrypt)
+        String encodedPwd = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPwd);
+
+        // 4. DB 저장
         userRepository.save(user);
         System.out.println("사용자 정보 DB 저장 완료");
     }
@@ -49,20 +53,11 @@ public class UserServiceImpl implements BaseUserService {
     public void validateDuplicateUserByUserId(String userId) {
         System.out.println("validateDuplicateUser 호출됨");
         boolean isExist = userRepository.existsByUserId(userId);
+
         if (isExist)  // 중복이면 true
             throw new PersonAlreadyExistsException();
+//            throw new ResponseEntity<ResponseJsonObject>(new PersonAlreadyExistsException().getResponseJsonObject(), HttpStatus.CONFLICT);
     }
-
-    /**
-     * 로그인 서비스
-     * @return User
-     */
-    @Override
-    public User sign_in(UserSigninRequestDto requestDto) throws Exception {
-        User loginUser = requestDto.toEntity();
-
-        User result = userRepository.findByUserIdAndPassword(loginUser.getUserId(),loginUser.getPassword())
-                .orElseThrow(PersonNotFoundException::new);
 
 /*
         // SUID, SAID 암호화(AES-256 : 암호화&복호화 가능 알고리즘)
@@ -70,6 +65,4 @@ public class UserServiceImpl implements BaseUserService {
         user.setSaid(aes.encrypt(KEY, result.getSaid()));
         user.setSuid(aes.encrypt(KEY, result.getSuid()));
 */
-        return result;
-    }
 }

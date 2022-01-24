@@ -75,6 +75,14 @@ public class ResponseJsonObject {
         return new ResponseJsonObject(meta);
     }
 
+    @Override
+    public String toString() {
+        return "ResponseJsonObject{" +
+                "meta=" + meta.toString() +
+                ", data=" + data +
+                '}';
+    }
+
     //meta Class
     public static class Meta {
         // statusCode (not null)
@@ -96,9 +104,8 @@ public class ResponseJsonObject {
         //    "password": "크기가 5와 20 사이여야 합니다"
         // }
         private Map parameterErrorMsg = null;
-        public String getParameterErrorMsg() {
-            //
-            return "1";
+        public Map getParameterErrorMsg() {
+            return parameterErrorMsg;
         }
 
         /**
@@ -109,5 +116,14 @@ public class ResponseJsonObject {
             this.statusCode = statusCode;
         }
 
+        @Override
+        public String toString() {
+            return "Meta{" +
+                    "statusCode=" + statusCode +
+                    ", errorType='" + errorType + '\'' +
+                    ", errorMsg='" + errorMsg + '\'' +
+                    ", parameterErrorMsg=" + parameterErrorMsg +
+                    '}';
+        }
     }
 }

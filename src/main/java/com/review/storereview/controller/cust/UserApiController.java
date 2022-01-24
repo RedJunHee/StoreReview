@@ -2,6 +2,7 @@ package com.review.storereview.controller.cust;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParamValidationException;
+import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.request.UserSigninRequestDto;
@@ -43,7 +44,10 @@ public class UserApiController {
         // 1-1. 검증 실패 로직
         if (bindingResult.hasErrors()) {
             System.out.println(userSaveDtoValidator.getErrorsMap());
-            throw new ParamValidationException(userSaveDtoValidator.getErrorsMap());
+            throw new PersonAlreadyExistsException();   // exceptionHandler에서 Controller 단에서 발생하는 예외를 잡아줌
+//            resDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
+//
+//            return new ResponseEntity<>(resDto, HttpStatus.BAD_REQUEST);
         }
         else {      // 1-2. 검증 성공 로직
             // 2. join 서비스 로직
@@ -51,39 +55,10 @@ public class UserApiController {
 
             // 3. responseDto 생성
             resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK);
-            return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
+            return new ResponseEntity<>(resDto, HttpStatus.OK);
         }
     }
 
-
-    @PutMapping(value = "/api/sign_in")
-    public ResponseEntity<ResponseJsonObject> sign_in(@RequestBody UserSigninRequestDto requestDto) throws Exception {
-        ResponseJsonObject resDto = null;
-        UserResponseDto responseDto;
-
-        // 1. Validation 필요..
-
-
-        // 2. Sign_in 서비스 로직
-        User user = userService.sign_in(requestDto);
-
-        // 3. response 데이터 가공
-        responseDto = UserResponseDto.builder()
-                .suid(user.getSuid())
-                .said(user.getSaid())
-                .birthDate(user.getBirthDate())
-                .userId(user.getUserId())
-                .gender(user.getGender())
-                .name(user.getName())
-                .nickname(user.getNickname())
-                .phone(user.getPhone())
-                .build();
-
-       resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(responseDto);
-
-       // 5.
-        return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
-    }
     @PutMapping(value = "/api/test")
     public ResponseEntity<ResponseJsonObject> test()
     {

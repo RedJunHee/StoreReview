@@ -17,10 +17,9 @@ import java.time.LocalDate;
  *  Description : CUST_DB.USER_INFO 테이블에 매필될 Model
  *  History     : [2021-12-21] - TEMP
  */
-
-@Entity
-@Getter
 @Table(name= "USER_INFO")
+@Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @NotBlank  // null, " ", "" 허용 X
@@ -32,7 +31,7 @@ public class User {
     private String said;
 
     @NotBlank(message = "아이디는 Null일 수 없습니다")
-    @Column(name="USER_ID", nullable = false, length = 12)
+    @Column(name="USER_ID", nullable = false, length = 12, unique = true)
     private String userId;
 
     @NotBlank
@@ -82,4 +81,6 @@ public class User {
     public void setSaid(String said) {
         this.said = said;
     }
+
+    public void setPassword(String password) { this.password = password; }
 }

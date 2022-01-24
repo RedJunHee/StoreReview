@@ -5,7 +5,6 @@ import com.review.storereview.dao.BaseTimeEntity;
 import com.review.storereview.dao.cust.User;
 import lombok.*;
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Table(name="REVIEW")
@@ -15,7 +14,7 @@ import java.util.List;
 public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="REVIEW_ID")
+    @Column(name="ID")
     private Long reviewId;
 
     @ManyToOne(fetch=FetchType.LAZY)      // Review To User

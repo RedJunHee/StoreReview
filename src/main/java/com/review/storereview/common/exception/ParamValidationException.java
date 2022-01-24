@@ -22,9 +22,12 @@ public class ParamValidationException extends RuntimeException{
         responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode);
     }
 
-    public ParamValidationException(Map<String, String> parameterErrorMsg) {      // 파라미터 에러 메시지 (1개 이상의 파라미터에서 발생할 수 있음)
+    public ParamValidationException(Map<String, String> parameterErrorMsg) {
         responseJsonObject = ResponseJsonObject.withParameterMsg(errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage(), parameterErrorMsg);
 
+    }
+    public ResponseJsonObject getResponseJsonObject(Map<String, String> parameterErrorMsg) {      // 파라미터 에러 메시지 (1개 이상의 파라미터에서 발생할 수 있음)
+        return responseJsonObject;
 //        super(parameterErrorMsg);
     }
 }
