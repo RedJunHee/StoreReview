@@ -14,7 +14,7 @@ import java.util.List;
 public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="ID")
+    @Column(name="REVIEW_ID")
     private Long reviewId;
 
     @ManyToOne(fetch=FetchType.LAZY)      // Review To User
@@ -25,7 +25,7 @@ public class Review extends BaseTimeEntity {
     @JoinColumn(name="SUID")
     private User suid;
 
-    @Column(name="PLACE_ID", length = 20)
+    @Column(name="PLACE_ID", length = 20, nullable = false)
     private String placeId;
 
     @Column(name = "STARS", nullable = false)

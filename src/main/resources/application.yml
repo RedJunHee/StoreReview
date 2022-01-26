@@ -4,39 +4,21 @@ spring:
     allow-bean-definition-overriding: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       use-new-id-generator-mappings: false
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     open-in-view: true
     show-sql: true
     properties:
       hibernate:
         format_sql: true
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/STOREREVIEW_DB
+    username: admin
+    password: review123
 
-  #### CUST_DB DataSource Configuration1
-    cust-datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/CUST_DB
-      username: admin
-      password: review123
-    #### CMS_DB DataSource Configuration2
-    cms-datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/CMS_DB
-      username: admin
-      password: review123
-    #### MNG_DB DataSource Configuration3
-    mng-datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/MNG_DB
-      username: admin
-      password: review123
-    #### LOG_DB DataSource Configuration4
-    log-datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/LOG_DB
-      username: admin
-      password: review123
 jwt:
   header: Authorization
   #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.

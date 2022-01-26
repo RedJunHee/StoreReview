@@ -14,11 +14,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-@EnableJpaRepositories(
+/*@EnableJpaRepositories(
         basePackages = {"com.review.storereview.repository.mng"},
         entityManagerFactoryRef = "MNGEntityManagerFactory",
         transactionManagerRef = "MNGTransactionManager"
-)
+)*/
 public class MngJpaConfig {
 
     @Bean

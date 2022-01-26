@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="COMMENT_ID")
     private Long commentId;
 
     @ManyToOne(fetch=FetchType.LAZY)         // Comment to Board

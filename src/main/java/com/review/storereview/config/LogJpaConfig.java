@@ -17,13 +17,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 
-@Configuration
+/*@Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = {"com.review.storereview.repository.log"},       // 해당 DataSource를 적용할 패키지 경로
         entityManagerFactoryRef = "LOGEntityManagerFactory",
         transactionManagerRef = "LOGTransactionManager"
-)
+)*/
 public class LogJpaConfig {
 
     @Bean

@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-//@Service
+@Service
 public class ReviewServiceImpl {
 
     private final BaseReviewRepository baseReviewRepository;

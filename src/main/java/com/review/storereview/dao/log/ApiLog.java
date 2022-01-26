@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class ApiLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="LOG_ID")
     private Long logId;
 
     @Column(name="SUID", nullable = false, length = 12)
@@ -33,7 +34,7 @@ public class ApiLog {
     @Column(name="API_STATUS")
     private char apiStatus;
 
-    @Column(name="API_DESC", length = 400)
+    @Column(name="API_DESC", length = 4000)
     private  String apiDesc;
 
     @Column(name="PROCESS_TIME")
