@@ -1,7 +1,7 @@
-package com.review.storereview.service.log;
+package com.review.storereview.service.cms;
 
-import com.review.storereview.dao.log.ApiLog;
-import com.review.storereview.repository.log.LogRepository;
+import com.review.storereview.dao.cms.ApiLog;
+import com.review.storereview.repository.cms.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

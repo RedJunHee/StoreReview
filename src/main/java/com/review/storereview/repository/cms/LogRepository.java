@@ -1,6 +1,6 @@
-package com.review.storereview.repository.log;
+package com.review.storereview.repository.cms;
 
-import com.review.storereview.dao.log.ApiLog;
+import com.review.storereview.dao.cms.ApiLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

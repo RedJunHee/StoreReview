@@ -1,6 +1,6 @@
 package com.review.storereview.dto.request;
 
-import com.review.storereview.dao.cust.User;
+import com.review.storereview.dao.cms.User;
 import com.review.storereview.common.enumerate.Gender;
 import lombok.Builder;
 import lombok.Getter;
