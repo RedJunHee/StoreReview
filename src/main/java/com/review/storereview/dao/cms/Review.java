@@ -49,16 +49,18 @@ public class Review extends BaseTimeEntity {
     }
 
     // ReviewUpdateRequestDto에서 필요
-    public Review(String content) {
+    public Review(String content, List<String> imgUrl) {
         this.content = content;
+        this.imgUrl = imgUrl;
     }
 
     public String getSuid() {
         return  String.valueOf(suid);
     }
 
-    public void update(String content) {
+    public void update(String content, List<String> imgUrl) {
         this.content = content;
+        this.imgUrl = imgUrl;
     }
 
     // for Test

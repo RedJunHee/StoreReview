@@ -65,13 +65,13 @@ public class ReviewServiceImpl {
 
     /** {@Summary 리뷰 업데이트 Service} */
     @Transactional
-    public Review updateReview(Long reviewId, ReviewUpdateRequestDto reviewUpdateRequestDto) {
+    public Review updateReview(Long reviewId, ReviewUpdateRequestDto updateRequestDto) {
         // 1. 리뷰 데이터 조회 & null 체크
         Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
                 .orElseThrow(ReviewNotFoundException::new);
 
         // 2. 리뷰 데이터 수정
-        findReview.update(reviewUpdateRequestDto.toEntity().getContent());
+        findReview.update(updateRequestDto.toEntity().getContent(), updateRequestDto.toEntity().getImgUrl());
 
         return findReview;
     }
