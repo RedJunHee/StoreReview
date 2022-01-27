@@ -1,14 +1,10 @@
-package com.review.storereview.controller.cust;
+package com.review.storereview.controller.cms;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParamValidationException;
-import com.review.storereview.common.exception.PersonAlreadyExistsException;
-import com.review.storereview.dao.cust.User;
 import com.review.storereview.dto.ResponseJsonObject;
-import com.review.storereview.dto.request.UserSigninRequestDto;
-import com.review.storereview.dto.response.UserResponseDto;
 import com.review.storereview.dto.validator.UserSaveDtoValidator;
-import com.review.storereview.service.cust.BaseUserService;
+import com.review.storereview.service.cms.BaseUserService;
 import com.review.storereview.dto.request.UserSaveRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
 
 @RestController
 public class UserApiController {

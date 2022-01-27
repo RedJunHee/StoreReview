@@ -1,6 +1,6 @@
-package com.review.storereview.service.cust;
+package com.review.storereview.service.cms;
 
-import com.review.storereview.dao.cust.User;
+import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.request.UserSaveRequestDto;
 import com.review.storereview.dto.request.UserSigninRequestDto;
 import com.review.storereview.service.BaseService;

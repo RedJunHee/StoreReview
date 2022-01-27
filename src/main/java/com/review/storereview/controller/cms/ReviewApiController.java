@@ -2,12 +2,12 @@ package com.review.storereview.controller.cms;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.dao.cms.Review;
-import com.review.storereview.dao.cust.User;
+import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.dto.response.ReviewResponseDto;
-import com.review.storereview.repository.cust.BaseUserRepository;
+import com.review.storereview.repository.cms.BaseUserRepository;
 import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,8 +51,8 @@ public class ReviewApiController {
             // 3.2. responseDto 생성
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
                     review.getReviewId(),
-                    review.getSaid(),
-                    userId,
+                    review.getUser().getSaid(),
+                    userId.getUserId(),
                     review.getStars(),
                     review.getContent(),
                     review.getImgUrl(),
@@ -82,7 +82,7 @@ public class ReviewApiController {
 
         // 2. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                findReview.getReviewId(), findReview.getSaid(), userId,
+                findReview.getReviewId(), findReview.getUser().getSaid(), userId.getUserId(),
                 findReview.getStars(), findReview.getContent(),
                 findReview.getImgUrl(),
                 findReview.getCreatedAt(), findReview.getUpdatedAt());
@@ -103,7 +103,7 @@ public class ReviewApiController {
 
         // 2. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                savedReview.getReviewId(), savedReview.getSaid(), userId,
+                savedReview.getReviewId(), savedReview.getUser().getSaid(), userId.getUserId(),
                 savedReview.getStars(), savedReview.getContent(),
                 savedReview.getImgUrl(),
                 savedReview.getCreatedAt(), savedReview.getUpdatedAt());
@@ -125,7 +125,7 @@ public class ReviewApiController {
 
         // 2. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                updatedReview.getReviewId(), updatedReview.getSaid(), userId,
+                updatedReview.getReviewId(), updatedReview.getUser().getSaid(), userId.getUserId(),
                 updatedReview.getStars(), updatedReview.getContent(),
                 updatedReview.getImgUrl(),
                 updatedReview.getCreatedAt(), updatedReview.getUpdatedAt());

@@ -1,4 +1,4 @@
-package com.review.storereview.controller.cust;
+package com.review.storereview.controller.cms;
 
 import com.review.storereview.controller.TestController;
 import org.junit.jupiter.api.BeforeEach;

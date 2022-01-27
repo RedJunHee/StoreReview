@@ -2,7 +2,7 @@ package com.review.storereview.service.cms;
 
 import com.review.storereview.common.exception.ReviewNotFoundException;
 import com.review.storereview.dao.cms.Review;
-import com.review.storereview.dao.cust.User;
+import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.repository.cms.BaseReviewRepository;

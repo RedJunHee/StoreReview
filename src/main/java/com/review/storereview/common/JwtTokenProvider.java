@@ -137,8 +137,10 @@ public class JwtTokenProvider implements AuthenticationProvider {
             jwt = Jwts.builder()
                     .setSubject(authentication.getName())
                     .claim(AUTHORITIES_KEY, authorities)
-                    .claim("suid", cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(), authentication.getSuid()))
-                    .claim("said", cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(), authentication.getSaid()))
+                    .claim("suid",  authentication.getSuid())
+                    .claim("said", authentication.getSaid())
+                    //.claim("suid", cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(), authentication.getSuid()))
+                    //.claim("said", cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(), authentication.getSaid()))
                     .signWith(key, SignatureAlgorithm.HS512)
                     .setExpiration(validity)
                     .compact();

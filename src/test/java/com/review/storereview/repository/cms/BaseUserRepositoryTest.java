@@ -1,11 +1,11 @@
-package com.review.storereview.repository.cust;
+package com.review.storereview.repository.cms;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.enumerate.Gender;
-import com.review.storereview.dao.cust.User;
+import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.ResponseJsonObject;
-import com.review.storereview.dto.request.UserSaveRequestDto;
 import com.review.storereview.dto.request.UserSigninRequestDto;
+import com.review.storereview.repository.cms.BaseUserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @DisplayName("User Repository Test")
 class BaseUserRepositoryTest {

@@ -1,4 +1,4 @@
-package com.review.storereview.dao.log;
+package com.review.storereview.dao.cms;
 
 import lombok.*;
 import javax.persistence.*;

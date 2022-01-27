@@ -14,10 +14,12 @@ spring:
       hibernate:
         format_sql: true
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/STOREREVIEW_DB
-    username: admin
-    password: review123
+    #### CMS_DB DataSource Configuration2
+    cms-datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/STOREREVIEW_DB
+      username: admin
+      password: review123
 
 jwt:
   header: Authorization

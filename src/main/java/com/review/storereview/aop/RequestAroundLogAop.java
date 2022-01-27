@@ -2,8 +2,8 @@ package com.review.storereview.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.review.storereview.dao.log.ApiLog;
-import com.review.storereview.service.log.LogService;
+import com.review.storereview.dao.cms.ApiLog;
+import com.review.storereview.service.cms.LogService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

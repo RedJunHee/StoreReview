@@ -16,13 +16,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-/*@Configuration
+@Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = {"com.review.storereview.repository.cms"},
         entityManagerFactoryRef = "CMSEntityManagerFactory",
         transactionManagerRef = "CMSTransactionManager"
-)*/
+)
 public class CmsJpaConfig {
     /**
      *  아래와 같이 Datasource 값 세팅을 Java Config로 수동 설정할 때는 spring.datasource.jdbc-url로 설정해야 HikariCP가 인식한다. (SpringBoot 2.0부터 HikariCP가 기본으로 변경됨)
