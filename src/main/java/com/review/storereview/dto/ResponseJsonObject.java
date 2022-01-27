@@ -14,7 +14,7 @@ import java.util.Map;
 
 //Jackson어노테이션 json에 없는 프로퍼티 설정시 에러 무시 true
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ResponseJsonObject {
+public class ResponseJsonObject extends Throwable {
     // meta
     private Meta meta = null;
 

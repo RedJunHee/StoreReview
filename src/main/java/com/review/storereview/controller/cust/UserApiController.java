@@ -44,10 +44,9 @@ public class UserApiController {
         // 1-1. 검증 실패 로직
         if (bindingResult.hasErrors()) {
             System.out.println(userSaveDtoValidator.getErrorsMap());
-            throw new PersonAlreadyExistsException();   // exceptionHandler에서 Controller 단에서 발생하는 예외를 잡아줌
-//            resDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
-//
-//            return new ResponseEntity<>(resDto, HttpStatus.BAD_REQUEST);
+            ResponseJsonObject exceptionDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
+//            throw exceptionDto;  // exceptionHandler에서 Controller 단에서 발생하는 예외를 잡아줌
+            return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
         }
         else {      // 1-2. 검증 성공 로직
             // 2. join 서비스 로직

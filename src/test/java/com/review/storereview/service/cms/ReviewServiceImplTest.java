@@ -63,9 +63,11 @@ class ReviewServiceImplTest {
 
     @Test
     void 리뷰_수정() {
-        ReviewUpdateRequestDto reviewUpdateRequestDto = new ReviewUpdateRequestDto("리뷰 업데이트 서비스 테스트");
+        List<String> updatedImgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com"));
+        ReviewUpdateRequestDto reviewUpdateRequestDto = new ReviewUpdateRequestDto("리뷰 업데이트 서비스 테스트", updatedImgUrl);
+
         // when : 조회
-        Long reviewId = 4L;
+        Long reviewId = 3L;
         Review findOneReview =  reviewService.listReview(reviewId);
         // verify
         Assertions.assertThat(findOneReview.getContent()).isEqualTo("리뷰 서비스 테스트");
