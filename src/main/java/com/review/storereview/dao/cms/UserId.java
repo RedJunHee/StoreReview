@@ -1,7 +1,8 @@
-package com.review.storereview.dao.cust;
+package com.review.storereview.dao.cms;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,8 +15,11 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserId implements Serializable {
+    @Column(name="SUID", nullable = false)
     private String suid;
+    @Column(name="SAID", nullable = false)
     private String said;
 
 

@@ -1,9 +1,10 @@
 package com.review.storereview.dto.response;
 
-import com.review.storereview.dao.cust.User;
+import com.review.storereview.common.utils.StringUtil;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,34 @@ public class CommentResponseDto {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 
+        public Long getCommentId() {
+            return commentId;
+        }
+
+        public String getSuid() {
+            return suid;
+        }
+
+        public String getSsid() {
+            return ssid;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getCreatedAt() {
+            return StringUtil.DateTimeToString(createdAt);
+        }
+
+        public String getUpdatedAt() {
+            return StringUtil.DateTimeToString(updatedAt);
+        }
+
         public comment(Long commentId, String suid, String ssid, String content, String userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
             this.commentId = commentId;
             this.suid = suid;
@@ -39,8 +68,16 @@ public class CommentResponseDto {
     private List<comment> comments;
     private Long totalCount;
 
+    public List<comment> getComments() {
+        return comments;
+    }
+
+    public Long getTotalCount() {
+        return totalCount;
+    }
 
     public CommentResponseDto(Long totalCount) {
+        comments = new ArrayList<comment>();
         this.totalCount = totalCount;
     }
 

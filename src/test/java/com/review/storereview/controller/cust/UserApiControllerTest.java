@@ -2,7 +2,9 @@ package com.review.storereview.controller.cust;
 
 import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.controller.TestController;
-import com.review.storereview.service.cust.UserServiceImpl;
+import com.review.storereview.controller.cms.AuthController;
+import com.review.storereview.controller.cms.UserApiController;
+import com.review.storereview.service.cms.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

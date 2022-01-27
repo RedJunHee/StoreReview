@@ -1,4 +1,4 @@
-package com.review.storereview.dao.cust;
+package com.review.storereview.dao.cms;
 
 import com.review.storereview.common.enumerate.Gender;
 import lombok.*;

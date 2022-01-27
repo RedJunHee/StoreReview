@@ -1,10 +1,9 @@
 package com.review.storereview.dto.request;
 
-import com.review.storereview.dao.cust.User;
+import com.review.storereview.dao.cms.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor

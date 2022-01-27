@@ -29,7 +29,7 @@ public class CommentService {
     }
 
     public Page<Comment> findAllComments(Long reviewId, PageRequest pageRequest) {
-            Page<Comment> comments = commentRepository.findAllByReview(reviewId, pageRequest);
+            Page<Comment> comments = commentRepository.findAllByReviewId(reviewId, pageRequest);
         return comments;
     }
 }

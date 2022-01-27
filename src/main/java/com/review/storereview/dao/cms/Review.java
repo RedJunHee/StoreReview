@@ -2,10 +2,8 @@ package com.review.storereview.dao.cms;
 
 import com.review.storereview.common.utils.StringListConverter;
 import com.review.storereview.dao.BaseTimeEntity;
-import com.review.storereview.dao.cust.User;
 import lombok.*;
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Table(name="REVIEW")
@@ -18,13 +16,10 @@ public class Review extends BaseTimeEntity {
     @Column(name="REVIEW_ID")
     private Long reviewId;
 
-    @ManyToOne(fetch=FetchType.LAZY)      // Review To User
-    @JoinColumn(name="SAID")
-    private User said;
-
-    @ManyToOne(fetch=FetchType.LAZY)      // Review To User
-    @JoinColumn(name="SUID")
-    private User suid;
+    @OneToOne(fetch=FetchType.EAGER)      // Review To User
+    @JoinColumns({@JoinColumn(name="SUID", referencedColumnName = "SUID"),
+                    @JoinColumn(name="SAID", referencedColumnName = "SAID")})
+    private User user;
 
     @Column(name="PLACE_ID", length = 20)
     private String placeId;
@@ -40,9 +35,8 @@ public class Review extends BaseTimeEntity {
     private List<String> imgUrl;
 
     @Builder
-    public Review (User suid, User said, String placeId, Integer stars, String content, List<String> imgUrl) {
-        this.suid = suid;
-        this.said = said;
+    public Review (User user, String placeId, Integer stars, String content, List<String> imgUrl) {
+        this.user = user;
         this.placeId = placeId;
         this.stars = stars;
         this.content = content;
@@ -55,7 +49,7 @@ public class Review extends BaseTimeEntity {
     }
 
     public String getSuid() {
-        return  String.valueOf(suid);
+        return  user.getSuid();
     }
 
     public void update(String content) {
@@ -67,8 +61,8 @@ public class Review extends BaseTimeEntity {
     public String toString() {
         return "Review{" +
                 "reviewId=" + reviewId +
-                ", said=" + said +
-                ", suid=" + suid +
+                ", said=" + user.getSaid() +
+                ", suid=" + user.getSuid() +
                 ", placeId='" + placeId + '\'' +
                 ", stars=" + stars +
                 ", content='" + content + '\'' +

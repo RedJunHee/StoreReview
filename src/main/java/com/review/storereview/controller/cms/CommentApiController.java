@@ -9,6 +9,7 @@ import com.review.storereview.service.cms.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +39,7 @@ public class CommentApiController {
     {
 
         // 페이지 요청 객체 생성
-        PageRequest pageRequest = PageRequest.of(pageNo, 5);
+        PageRequest pageRequest = PageRequest.of(pageNo, 5, Sort.by("createdAt").descending());
 
         // 리뷰에 달린 코멘트 정보 모두 조회
 
@@ -53,10 +54,10 @@ public class CommentApiController {
             commentResponseDto.addComment(
                     new CommentResponseDto.comment(
                             comment.getId()
-                            ,comment.getSuid()
-                            ,comment.getSaid()
+                            ,comment.getUser().getSuid()
+                            ,comment.getUser().getSaid()
                             ,comment.getContent()
-                            ,comment.getUserId()
+                            ,comment.getUser().getUserId()
                             ,comment.getCreatedAt()
                             ,comment.getUpdatedAt()
                     )

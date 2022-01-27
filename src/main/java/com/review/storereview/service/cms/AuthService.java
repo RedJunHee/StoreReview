@@ -1,9 +1,9 @@
-package com.review.storereview.service.cust;
+package com.review.storereview.service.cms;
 
 import com.review.storereview.common.enumerate.Authority;
 import com.review.storereview.dao.JWTUserDetails;
-import com.review.storereview.dao.cust.User;
-import com.review.storereview.repository.cust.BaseUserRepository;
+import com.review.storereview.dao.cms.User;
+import com.review.storereview.repository.cms.BaseUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
