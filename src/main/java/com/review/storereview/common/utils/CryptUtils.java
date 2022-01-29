@@ -9,7 +9,11 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-
+/**
+ * {@Summary en&de-crypt, 암호화 util 클래스 }
+ * Author      : 문 윤 지
+ * History     : [2022-01-14]
+ */
 @Component
 public class CryptUtils {
 

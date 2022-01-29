@@ -1,10 +1,13 @@
 package com.review.storereview.dto.response;
 
-import com.review.storereview.dao.cms.User;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
+/**
+ * {@Summary Review api 응답 객체 }
+ * Class       : ReviewResponseDto
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
+ */
 public class ReviewResponseDto {
 
     private List<ReviewResponseDto> reviewsResponseDtoList;

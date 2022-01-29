@@ -21,6 +21,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * {@Summary Review Api Controller 테스트 코드 }
+ * Class       : ReviewApiControllerTest
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
+ */
 @WebMvcTest
 class ReviewApiControllerTest {
     @Autowired

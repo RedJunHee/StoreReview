@@ -7,8 +7,10 @@ import lombok.Getter;
 import java.util.List;
 
 /**
- * 리뷰 작성 요청 클래스 (DTO)
- * INPUT : [place_id, content]
+ * {@Summary 리뷰 작성 요청 클래스 (DTO) }
+ * INPUT : [placeId, imgUrl, content, stars]
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
  */
 @Getter
 public class ReviewUploadRequestDto {

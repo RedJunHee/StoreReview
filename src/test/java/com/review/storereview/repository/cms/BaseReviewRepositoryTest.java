@@ -17,6 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * {@Summary Review Repository 테스트 코드 }
+ * Class       : BaseReviewRepositoryTest
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
+ */
 //@ExtendWith(SpringExtension.class)
 //@DataJpaTest   // JPA 관련된 설정만 로드, @Transactional 내장, @Entity 스캔
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

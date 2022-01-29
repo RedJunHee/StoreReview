@@ -22,6 +22,9 @@ import static org.mockito.Mockito.when;
 
 /**
  * {@Summary Service Layer 단위 테스트}
+ * Class       : ReviewServiceImplTest
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
  */
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceImplTest {

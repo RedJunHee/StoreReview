@@ -19,7 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * {@Summary 리뷰 api 요청 컨트롤러 }
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
+ */
 @RestController
 public class ReviewApiController {
     private final ReviewServiceImpl reviewService;

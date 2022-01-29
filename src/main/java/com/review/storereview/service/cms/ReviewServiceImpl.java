@@ -17,7 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * {@Summary Review Service Layer }
+ * Class       : ReviewServiceImpl
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
+ */
 @Service
 public class ReviewServiceImpl {
 
