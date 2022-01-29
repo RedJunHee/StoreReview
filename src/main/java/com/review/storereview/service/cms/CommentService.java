@@ -32,4 +32,11 @@ public class CommentService {
             Page<Comment> comments = commentRepository.findAllByReviewId(reviewId, pageRequest);
         return comments;
     }
+
+    public Comment save(Comment comment)
+    {
+        Comment saveComment = commentRepository.save(comment);
+
+        return saveComment;
+    }
 }

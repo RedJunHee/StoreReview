@@ -65,6 +65,8 @@ public class AuthService implements UserDetailsService {
 
         return new JWTUserDetails(user.getUserId(),
                 user.getPassword(),
-                grantedAuthorities,user.getSuid(), user.getSaid());
+                grantedAuthorities,
+                user.getSuid(),
+                user.getSaid());
     }
 }

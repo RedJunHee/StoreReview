@@ -23,7 +23,7 @@ import java.io.IOException;
  * Description : 요청의 header 내에 jwt 토큰이 Bearer 토큰으로 들어있는지 체크
  * History     : [2022-01-10] - 조 준희 - Class Create
  */
-public class AuthorizationCheckFilter extends GenericFilterBean {
+public class AuthorizationCheckFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationCheckFilter.class);
 
@@ -35,11 +35,28 @@ public class AuthorizationCheckFilter extends GenericFilterBean {
         this.tokenProvider = provider;
     }
 
+//    @Override
+//    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+//        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+//        String jwt = resolveToken(httpServletRequest);
+//        String requestURI = httpServletRequest.getRequestURI();
+//
+//        // token이 유효한지 확인
+//        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+//            Authentication authentication = tokenProvider.getAuthentication(jwt);
+//            SecurityContextHolder.getContext().setAuthentication(authentication);       // token에 authentication 정보 삽입
+//            logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+//        } else {
+//            logger.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+//        }
+//
+//        chain.doFilter(request, response);
+//    }
+
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String jwt = resolveToken(httpServletRequest);
-        String requestURI = httpServletRequest.getRequestURI();
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String jwt = resolveToken(request);
+        String requestURI = request.getRequestURI();
 
         // token이 유효한지 확인
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
@@ -50,7 +67,7 @@ public class AuthorizationCheckFilter extends GenericFilterBean {
             logger.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request) {

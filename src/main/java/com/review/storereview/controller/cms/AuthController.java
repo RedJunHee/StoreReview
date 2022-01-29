@@ -1,6 +1,5 @@
 package com.review.storereview.controller.cms;
 
-import com.review.storereview.common.JWTAuthenticationToken;
 import com.review.storereview.common.JwtTokenProvider;
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.dto.ResponseJsonObject;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,11 +43,11 @@ public class AuthController {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUserId(), loginDto.getPassword());
-        JWTAuthenticationToken authentication = null ;
+        Authentication authentication = null ;
         String jwt = "";
 
         try {
-            authentication = (JWTAuthenticationToken) authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            authentication =  authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
