@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Component
@@ -28,6 +29,15 @@ public class CryptUtils {
     public CryptUtils(@Value("${aes-secret}") String secretKey) {
         this.secretKey = secretKey;
     }
+
+    public static String Base64Encoding(String input)
+    {
+        return Base64.getEncoder().encodeToString( input.getBytes());
+    }
+    public static String Base64Decoding(String input){
+        return Base64.getDecoder().decode(input.getBytes()).toString();
+    }
+
 
     /** AES 암호화 지원*/
     public static class Aes {

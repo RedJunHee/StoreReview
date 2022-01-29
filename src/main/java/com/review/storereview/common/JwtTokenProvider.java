@@ -77,7 +77,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
 
             passwordChecks(userDetails, (UsernamePasswordAuthenticationToken) authentication);
 
-            return new JWTAuthenticationToken(username, password, userDetails.getAuthorities(),userDetails.getSuid(),userDetails.getSaid());
+            return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
         }
         catch(UsernameNotFoundException ex)
         {
@@ -123,7 +123,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
      * @param authentication
      * @return AccessToken
      */
-    public String createTokenFromAuthentication(JWTAuthenticationToken authentication) throws Exception
+    public String createTokenFromAuthentication(Authentication authentication) throws Exception
     {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -132,13 +132,15 @@ public class JwtTokenProvider implements AuthenticationProvider {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenExpiryInMilliseconds);
 
+        JWTUserDetails userDetails = (JWTUserDetails) authentication.getPrincipal();
+
         String jwt ="";
         try {
             jwt = Jwts.builder()
                     .setSubject(authentication.getName())
                     .claim(AUTHORITIES_KEY, authorities)
-                    .claim("suid",  authentication.getSuid())
-                    .claim("said", authentication.getSaid())
+                    .claim("suid",  userDetails.getSuid())
+                    .claim("said", userDetails.getSaid())
                     //.claim("suid", cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(), authentication.getSuid()))
                     //.claim("said", cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(), authentication.getSaid()))
                     .signWith(key, SignatureAlgorithm.HS512)
@@ -171,7 +173,10 @@ public class JwtTokenProvider implements AuthenticationProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        String suid = claims.get("suid").toString();
+        String said = claims.get("said").toString();
+
+        JWTUserDetails principal = new JWTUserDetails(claims.getSubject(), "", authorities, suid, said);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }

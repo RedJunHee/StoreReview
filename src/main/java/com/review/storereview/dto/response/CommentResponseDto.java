@@ -2,6 +2,7 @@ package com.review.storereview.dto.response;
 
 import com.review.storereview.common.utils.StringUtil;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,76 +14,25 @@ import java.util.List;
  * Description : Class Description
  * History     : [2022-01-24] - 조 준희 - Class Create
  */
+@Getter
 public class CommentResponseDto {
 
+    private Long commentId;
+    private String suid;
+    private String said;
+    private String content;
+    private String userId;
+    private String createdAt;
+    private String updatedAt;
+
     @Builder
-    public static class comment
-    {
-        private Long commentId;
-        private String suid;
-        private String ssid;
-        private String content;
-        private String userId;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-
-        public Long getCommentId() {
-            return commentId;
-        }
-
-        public String getSuid() {
-            return suid;
-        }
-
-        public String getSsid() {
-            return ssid;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public String getCreatedAt() {
-            return StringUtil.DateTimeToString(createdAt);
-        }
-
-        public String getUpdatedAt() {
-            return StringUtil.DateTimeToString(updatedAt);
-        }
-
-        public comment(Long commentId, String suid, String ssid, String content, String userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
-            this.commentId = commentId;
-            this.suid = suid;
-            this.ssid = ssid;
-            this.content = content;
-            this.userId = userId;
-            this.createdAt = createdAt;
-            this.updatedAt = updatedAt;
-        }
-    }
-
-    private List<comment> comments;
-    private Long totalCount;
-
-    public List<comment> getComments() {
-        return comments;
-    }
-
-    public Long getTotalCount() {
-        return totalCount;
-    }
-
-    public CommentResponseDto(Long totalCount) {
-        comments = new ArrayList<comment>();
-        this.totalCount = totalCount;
-    }
-
-    public void addComment(comment comment)
-    {
-        this.comments.add(comment);
+    public CommentResponseDto(Long commentId, String suid, String said, String content, String userId, String createdAt, String updatedAt) {
+        this.commentId = commentId;
+        this.suid = suid;
+        this.said = said;
+        this.content = content;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }
