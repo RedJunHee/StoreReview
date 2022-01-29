@@ -27,7 +27,8 @@ class ReviewServiceImplTest {
     @Mock BaseReviewRepository reviewRepository;
     @InjectMocks ReviewServiceImpl reviewService;
     List<String> imgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com","http://s3-img-url-test2.com"));
-    ReviewUploadRequestDto uploadRequestDto = new ReviewUploadRequestDto("1234", "리뷰 서비스 테스트", imgUrl);
+    Integer stars = 3;
+    ReviewUploadRequestDto uploadRequestDto = new ReviewUploadRequestDto("1234", "리뷰 서비스 테스트", stars, imgUrl);
 
     @Test
     void 리뷰_업로드() {
@@ -64,7 +65,8 @@ class ReviewServiceImplTest {
     @Test
     void 리뷰_수정() {
         List<String> updatedImgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com"));
-        ReviewUpdateRequestDto reviewUpdateRequestDto = new ReviewUpdateRequestDto("리뷰 업데이트 서비스 테스트", updatedImgUrl);
+        Integer stars=1;
+        ReviewUpdateRequestDto reviewUpdateRequestDto = new ReviewUpdateRequestDto("리뷰 업데이트 서비스 테스트", updatedImgUrl, stars);
 
         // when : 조회
         Long reviewId = 3L;

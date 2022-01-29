@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /** Class       : User (Model)
@@ -19,7 +20,7 @@ import java.time.LocalDate;
 @Entity
 @IdClass(UserId.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User implements Serializable {
     @Id
     @Column(name="SUID", nullable = false)
     private String suid;
@@ -28,12 +29,10 @@ public class User {
     @Column(name="SAID", nullable = false, length = 12)
     private String said;
 
-    @NotBlank(message = "아이디는 Null일 수 없습니다")
     @Column(name="USER_ID", nullable = false, length = 12, unique = true)
     private String userId;
 
     @NotBlank
-    @Size(min = 5, max = 15, message = "비밀번호는 5~15자 입니다")
     @Column(name="PASSWORD", nullable = false, length = 100)
     private String password;
 

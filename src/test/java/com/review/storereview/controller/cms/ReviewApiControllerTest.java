@@ -29,11 +29,11 @@ class ReviewApiControllerTest {
     @MockBean
     private ReviewServiceImpl reviewService;
     List<String> imgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com","http://s3-img-url-test2.com"));
-
+    Integer stars = 4;
     @Test
     @DisplayName("리뷰 등록 확인")
     void uploadReview() throws Exception {
-        ReviewUploadRequestDto requestDto = new ReviewUploadRequestDto("1234", "테스트 업로드", imgUrl);
+        ReviewUploadRequestDto requestDto = new ReviewUploadRequestDto("1234", "테스트 업로드", stars, imgUrl);
         final ResultActions actions =
                 mockMvc.perform(post("/review")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -89,8 +89,9 @@ class ReviewApiControllerTest {
     void updateReview() throws Exception {
         Long reviewId = 1L;
         List<String> updatedImgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com"));
+        Integer stars = 3;
 
-        ReviewUpdateRequestDto requestDto = new ReviewUpdateRequestDto("수정된 리뷰 테스트", updatedImgUrl);
+        ReviewUpdateRequestDto requestDto = new ReviewUpdateRequestDto("수정된 리뷰 테스트", updatedImgUrl, stars);
         final ResultActions actions =
                 mockMvc.perform(put("/reviews/{" + reviewId + "}")
                         .contentType(MediaType.APPLICATION_JSON)

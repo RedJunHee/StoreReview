@@ -14,17 +14,18 @@ public class ParamValidationException extends RuntimeException{
     private final ApiStatusCode errorStatusCode = ApiStatusCode.PARAMETER_CHECK_FAILED;
     private final ResponseJsonObject responseJsonObject;
 
-    public ResponseJsonObject getResponseJsonObject(){
-        return responseJsonObject;
-    }
     // 아마 삭제 예정
     public ParamValidationException() {
         responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode);
     }
 
     public ParamValidationException(Map<String, String> parameterErrorMsg) {
-        responseJsonObject = ResponseJsonObject.withParameterMsg(errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage(), parameterErrorMsg);
-
+        System.out.println("ParamValidationException.ParamValidationException 호출됨");
+        responseJsonObject = ResponseJsonObject.withParameterMsg(
+                errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage(), parameterErrorMsg
+        );
     }
-
+    public ResponseJsonObject getResponseJsonObject(){
+        return responseJsonObject;
+    }
 }

@@ -103,10 +103,10 @@ class UserApiControllerTest extends AbstractControllerTest{
                                 .characterEncoding("UTF-8")
                                 .content(
                                         "{"
-                                                + " \"userId\" : \"banan99@naver.com\", "
+                                                + " \"userId\" : \"@naver.com\", "
                                                 + " \"name\" : \"문윤지\", "
                                                 + " \"nickname\" : \"moonz\", "
-                                                + " \"password\" : \"12345678\", "
+                                                + " \"password\" : \"moonmoon00!\", "
                                                 + " \"birthDate\" : \"1999-11-15\", "
                                                 + " \"gender\" : \"W\", "
                                                 + " \"phone\" : \"01012345678\" "
@@ -115,7 +115,7 @@ class UserApiControllerTest extends AbstractControllerTest{
                 .andDo(print())
                 .andExpect(status().isOk())      // HttpStatus.OK(200)
                 .andExpect(content().contentType("application/json;charset=utf-8"))     // contentType 검증
-                .andExpect(jsonPath("$.meta.code").value(200));     // response 검증
+                .andExpect(jsonPath("$.meta.statusCode").value(400));     // response 검증
     }
 
     // 중복 회원가입 테스트

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 public class UserSaveDtoValidator implements Validator {
     // 검증 오류 결과 보관
-    private Map<String, String> errorsMap = new HashMap<>();
+    private static Map<String, String> errorsMap = new HashMap<>();
 
     @Override
     public boolean supports(Class<?> clazz) {   // 해당 클래스를 지원하는 Validator인지 확인
@@ -56,7 +56,7 @@ public class UserSaveDtoValidator implements Validator {
         // 패턴 : 영문, 숫자, 특수문자 포함된 비밀번호
         String pwdRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,20}$";
         if(!Pattern.matches(pwdRegex, userSaveRequestDto.getPassword())) {
-            defaultMessage = "비밀번호는 영문, 숫자, 특수문자를 포함해 작성해야 합니다.";
+            defaultMessage = "비밀번호는 영문, 숫자, 특수문자를 포함해야 하며 8자와 20자 사이로 작성해야 합니다.";
             bindingResult.addError(new FieldError("UserSaveRequestDto"
                     , "password"
                     , defaultMessage));

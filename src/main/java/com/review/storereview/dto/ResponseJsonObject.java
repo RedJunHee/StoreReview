@@ -93,7 +93,7 @@ public class ResponseJsonObject extends Throwable {
         private String errorType =null;
         public String getErrorType() { return statusCode.getType(); }
 
-        // error Message  (null)  ex) "
+        // error Message  (null)  ex) "문법상 또는 파라미터 오류가 있어서 서버가 요청사항을 처리하지 못함."
         private String errorMsg =null;
         public String getErrorMsg() {
             return statusCode.getMessage();
@@ -118,12 +118,23 @@ public class ResponseJsonObject extends Throwable {
 
         @Override
         public String toString() {
-            return "Meta{" +
+            if (errorType == null && errorMsg == null)      // 성공이면
+                return  "Meta{" +
+                        "statusCode=" + statusCode +
+                        '}';
+            else if (parameterErrorMsg != null)      // 파라미터 에러이면
+                return "Meta{" +
                     "statusCode=" + statusCode +
                     ", errorType='" + errorType + '\'' +
                     ", errorMsg='" + errorMsg + '\'' +
                     ", parameterErrorMsg=" + parameterErrorMsg +
                     '}';
+            else                                                                   // 그 외 에러이면
+                return "Meta{" +
+                        "statusCode=" + statusCode +
+                        ", errorType='" + errorType + '\'' +
+                        ", errorMsg='" + errorMsg + '\'' +
+                        '}';
         }
     }
 }

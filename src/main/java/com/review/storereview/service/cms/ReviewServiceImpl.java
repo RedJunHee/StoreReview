@@ -1,12 +1,15 @@
 package com.review.storereview.service.cms;
 
+import com.review.storereview.common.JWTAuthenticationToken;
 import com.review.storereview.common.exception.ReviewNotFoundException;
+import com.review.storereview.common.utils.CryptUtils;
 import com.review.storereview.dao.cms.Review;
 import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.repository.cms.BaseReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +21,6 @@ import java.util.Optional;
 public class ReviewServiceImpl {
 
     private final BaseReviewRepository baseReviewRepository;
-
     private User findUserId = null; // userId 조회
     @Autowired
     public ReviewServiceImpl(BaseReviewRepository baseReviewRepository) {
@@ -57,21 +59,38 @@ public class ReviewServiceImpl {
 
     /**{@Summary 리뷰 업로드 Service} */
     @Transactional
-    public Review uploadReview(ReviewUploadRequestDto reviewUploadRequestDto) {
-        // 리뷰 데이터 저장
-        Review savedReview = baseReviewRepository.save(reviewUploadRequestDto.toEntity());
-        return savedReview;
+    public Review uploadReview(ReviewUploadRequestDto requestDto) {
+        // 1. 인증된 사용자 토큰 값
+        JWTAuthenticationToken authenticationToken = (JWTAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        // 2. 리뷰 데이터 저장
+        Review review = new Review().builder()
+                .placeId(requestDto.getPlaceId())
+                .content(requestDto.getContent())
+                .stars(requestDto.getStars())
+                .imgUrl(requestDto.getImgUrl())
+                .user(User.builder()
+                        .userId(authenticationToken.getName())  // Name == userId(이메일)
+                        .suid(authenticationToken.getSuid())
+                        .said(authenticationToken.getSaid())
+                        .build())
+                .build();
+
+        return baseReviewRepository.save(review);
     }
 
     /** {@Summary 리뷰 업데이트 Service} */
     @Transactional
     public Review updateReview(Long reviewId, ReviewUpdateRequestDto updateRequestDto) {
-        // 1. 리뷰 데이터 조회 & null 체크
+        // 1. 인코딩된 content 디코딩
+        String decodedContent = CryptUtils.Base64Decoding(updateRequestDto.getContent());
+
+        // 2. 리뷰 데이터 조회 & null 체크
         Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
                 .orElseThrow(ReviewNotFoundException::new);
 
-        // 2. 리뷰 데이터 수정
-        findReview.update(updateRequestDto.toEntity().getContent(), updateRequestDto.toEntity().getImgUrl());
+        // 3. 리뷰 데이터 수정
+        findReview.update(decodedContent, updateRequestDto.toEntity().getImgUrl()
+            , updateRequestDto.toEntity().getStars());
 
         return findReview;
     }
@@ -86,12 +105,5 @@ public class ReviewServiceImpl {
         baseReviewRepository.delete(findReview);
     }
 
-    public User listUserIdBySuid(String suid) {
-        List<Object[]> resultUserId = baseReviewRepository.findUserIdBySuid(suid);
-        Object[] objects = resultUserId.get(0);
-        findUserId = (User) objects[0];
-
-        return findUserId;
-    }
 }
 
