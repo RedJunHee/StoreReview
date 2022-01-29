@@ -4,20 +4,21 @@ spring:
     allow-bean-definition-overriding: true
   jpa:
     hibernate:
-      ddl-auto: none
-      use-new-id-generator-mappings: false
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: none
+      use-new-id-generator-mappings: false
     open-in-view: true
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
     #### CMS_DB DataSource Configuration2
     cms-datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/STOREREVIEW_DB
+      url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/STOREREVIEW_DB
       username: admin
       password: review123
 
