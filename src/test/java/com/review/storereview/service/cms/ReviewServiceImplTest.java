@@ -2,6 +2,7 @@ package com.review.storereview.service.cms;
 
 import com.review.storereview.common.exception.ReviewNotFoundException;
 import com.review.storereview.dao.cms.Review;
+import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.repository.cms.BaseReviewRepository;
@@ -30,24 +31,35 @@ class ReviewServiceImplTest {
     Integer stars = 3;
     ReviewUploadRequestDto uploadRequestDto = new ReviewUploadRequestDto("1234", "리뷰 서비스 테스트", stars, imgUrl);
 
+    Review review = new Review().builder()
+            .placeId(uploadRequestDto.getPlaceId())
+            .content(uploadRequestDto.getContent())
+            .stars(uploadRequestDto.getStars())
+            .imgUrl(uploadRequestDto.getImgUrl())
+            .user(User.builder()
+                    .userId("moonz@naver.com")  // Name == userId(이메일)
+                    .suid("RT0000000001")
+                    .said("TE0000000001")
+                    .build())
+            .build();
     @Test
     void 리뷰_업로드() {
         // when
-        Review testUploadedReview = reviewService.uploadReview(uploadRequestDto);
+        Review testUploadedReview = reviewService.uploadReview(review);
 
         // verify
-        Assertions.assertThat(testUploadedReview.getContent()).isEqualTo("1234567890");
+        Assertions.assertThat(testUploadedReview.getContent()).isEqualTo("리뷰 서비스 테스트");
         // 출력
-        System.out.println(testUploadedReview.toString());
+        System.out.println(testUploadedReview);
     }
 
     @Test
     void 리뷰_조회() {
         //when
-        Long reviewId = 4L;
+        Long reviewId = 1L;
         Review findOneReview =  reviewService.listReview(reviewId);
         // verify
-        Assertions.assertThat(findOneReview.getContent()).isEqualTo("리뷰 서비스 테스트");
+        Assertions.assertThat(findOneReview.getContent()).isEqualTo("테스트 리뷰입니다.");
         // 출력
         System.out.println(findOneReview.toString());
     }
@@ -57,9 +69,10 @@ class ReviewServiceImplTest {
         // when
         String placeId = "1234";
         List<Review> findReviews = reviewService.listAllReviews(placeId);
-        for (Review r : findReviews)
+        for (Review review : findReviews)
             // verify
-            Assertions.assertThat(r.getPlaceId()).isEqualTo(placeId);
+            System.out.println(review.toString());
+            Assertions.assertThat(review.getPlaceId()).isEqualTo(placeId);
     }
 
     @Test
@@ -72,7 +85,7 @@ class ReviewServiceImplTest {
         Long reviewId = 3L;
         Review findOneReview =  reviewService.listReview(reviewId);
         // verify
-        Assertions.assertThat(findOneReview.getContent()).isEqualTo("리뷰 서비스 테스트");
+        Assertions.assertThat(findOneReview.getContent()).isEqualTo("테스트 리뷰입니다.");
 
         // when
         Review updatedReview = reviewService.updateReview(reviewId, reviewUpdateRequestDto);

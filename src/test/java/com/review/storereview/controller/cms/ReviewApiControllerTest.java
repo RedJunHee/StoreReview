@@ -30,6 +30,7 @@ class ReviewApiControllerTest {
     private ReviewServiceImpl reviewService;
     List<String> imgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com","http://s3-img-url-test2.com"));
     Integer stars = 4;
+
     @Test
     @DisplayName("리뷰 등록 확인")
     void uploadReview() throws Exception {

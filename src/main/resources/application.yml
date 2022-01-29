@@ -13,12 +13,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
     database: mysql
   datasource:
     #### CMS_DB DataSource Configuration2
     cms-datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/STOREREVIEW_DB
+      jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/STOREREVIEW_DB
       username: admin
       password: review123
 

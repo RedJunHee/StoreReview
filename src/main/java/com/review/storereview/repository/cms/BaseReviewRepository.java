@@ -12,6 +12,4 @@ public interface BaseReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByPlaceIdOrderByCreatedAtDesc(String placeId);
     Review findByReviewId(Long reviewId);
 
-    @Query(value="SELECT USER_ID FROM USER_INFO", nativeQuery = true)
-    List<Object[]> findUserIdBySuid(String userId);     // userId 조인
 }

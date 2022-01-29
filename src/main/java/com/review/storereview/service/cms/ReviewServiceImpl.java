@@ -1,14 +1,15 @@
 package com.review.storereview.service.cms;
 
-import com.review.storereview.common.JWTAuthenticationToken;
 import com.review.storereview.common.exception.ReviewNotFoundException;
 import com.review.storereview.common.utils.CryptUtils;
+import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cms.Review;
 import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.repository.cms.BaseReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,6 @@ import java.util.Optional;
 public class ReviewServiceImpl {
 
     private final BaseReviewRepository baseReviewRepository;
-    private User findUserId = null; // userId 조회
     @Autowired
     public ReviewServiceImpl(BaseReviewRepository baseReviewRepository) {
         this.baseReviewRepository = baseReviewRepository;
@@ -59,22 +59,8 @@ public class ReviewServiceImpl {
 
     /**{@Summary 리뷰 업로드 Service} */
     @Transactional
-    public Review uploadReview(ReviewUploadRequestDto requestDto) {
-        // 1. 인증된 사용자 토큰 값
-        JWTAuthenticationToken authenticationToken = (JWTAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        // 2. 리뷰 데이터 저장
-        Review review = new Review().builder()
-                .placeId(requestDto.getPlaceId())
-                .content(requestDto.getContent())
-                .stars(requestDto.getStars())
-                .imgUrl(requestDto.getImgUrl())
-                .user(User.builder()
-                        .userId(authenticationToken.getName())  // Name == userId(이메일)
-                        .suid(authenticationToken.getSuid())
-                        .said(authenticationToken.getSaid())
-                        .build())
-                .build();
-
+    public Review uploadReview(Review review) {
+        // 리뷰 데이터 저장
         return baseReviewRepository.save(review);
     }
 

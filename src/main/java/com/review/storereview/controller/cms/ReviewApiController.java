@@ -2,6 +2,7 @@ package com.review.storereview.controller.cms;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.utils.CryptUtils;
+import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cms.Review;
 import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.ResponseJsonObject;
@@ -13,6 +14,8 @@ import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,12 +44,11 @@ public class ReviewApiController {
         // 2. placeAvgStars 계산
         Double placeAvgStars = reviewService.AveragePlaceStars(findReviews);
 
-        // 3. responseDto 생성 및 리스트화
+        // 3. responseDto 생성 및 리스트 추가
         for (Review review : findReviews) {
             // 3.1. content 인코딩
             String encodedContent = CryptUtils.Base64Encoding(review.getContent());
-
-            // 3.1. responseDto 생성
+            // 3.2. responseDto 생성
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
                     review.getReviewId(),
                     review.getUser().getSaid(),
@@ -57,10 +59,9 @@ public class ReviewApiController {
                     review.getCreatedAt(),
                     review.getUpdatedAt()
             );
-            // 3.2. placeAvgStar 세팅
+            // 3.3. placeAvgStar 세팅
             reviewResponseDto.setPlaceAvgStar(placeAvgStars);
-
-            // 3.3. 리스트에 추가
+            // 3.4. 리스트에 추가
             reviewsResponseDtoList.add(reviewResponseDto);
         }
 
@@ -98,12 +99,28 @@ public class ReviewApiController {
     public ResponseEntity<ResponseJsonObject> uploadReview(@RequestBody ReviewUploadRequestDto requestDto) {
         // 1. 인코딩된 content 디코딩
         String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
-        // 2. 리뷰 생성
-        Review savedReview = reviewService.uploadReview(requestDto);
-        // 3. content 인코딩
+        // 2. 인증된 사용자 토큰 값
+        // 2-1. 인증된 사용자의 인증 객체 가져오기
+        Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
+        // 2-2. 인증 객체의 유저정보 가져오기
+        JWTUserDetails userDetails = (JWTUserDetails) authenticationToken.getPrincipal();
+        // 3. 리뷰 생성
+        Review review = new Review().builder()
+                .placeId(requestDto.getPlaceId())
+                .content(requestDto.getContent())
+                .stars(requestDto.getStars())
+                .imgUrl(requestDto.getImgUrl())
+                .user(User.builder()
+                        .userId(authenticationToken.getName())  // Name == userId(이메일)
+                        .suid(userDetails.getSuid())
+                        .said(userDetails.getSaid())
+                        .build())
+                .build();
+        Review savedReview = reviewService.uploadReview(review);
+        // 4. content 인코딩
         String encodedContent = CryptUtils.Base64Encoding(savedReview.getContent());
 
-        // 4. responseDto 생성
+        // 5. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
                 savedReview.getReviewId(), savedReview.getUser().getSaid(), savedReview.getUser().getUserId(),
                 savedReview.getStars(), encodedContent,
