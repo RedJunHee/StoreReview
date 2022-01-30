@@ -31,7 +31,7 @@ public class UserApiController {
      * @return ResponseEntity<ResponseJsonObject>
      */
     @PostMapping("/api/signup")
-    public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException, ResponseJsonObject {
+    public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException {
         System.out.println("UserApiController: save 호출");
         ResponseJsonObject resDto = null;   // ResponseJsonOBject 사용
         // 1. 파라미터 검증
