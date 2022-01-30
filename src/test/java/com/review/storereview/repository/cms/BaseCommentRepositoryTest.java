@@ -33,7 +33,7 @@ class BaseCommentRepositoryTest {
 
         PageRequest pageRequest = PageRequest.of(page, 5);
 
-        Page<Comment> comments = commentRepository.findAllByReviewId(reviewId,pageRequest);
+        Page<Comment> comments = commentRepository.findAllByReviewIdAndIsDelete(reviewId,0,pageRequest);
 
 
 //        System.out.println("토탈 사이즈 : " + comments.getTotalElements());
