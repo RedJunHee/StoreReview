@@ -9,7 +9,6 @@ import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.dto.response.ReviewResponseDto;
-import com.review.storereview.repository.cms.BaseUserRepository;
 import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,13 +26,11 @@ import java.util.List;
 @RestController
 public class ReviewApiController {
     private final ReviewServiceImpl reviewService;
-    private final BaseUserRepository userRepository;
     private List<ReviewResponseDto> reviewsResponseDtoList;
 
     @Autowired
-    public ReviewApiController(ReviewServiceImpl reviewService, BaseUserRepository userRepository) {
+    public ReviewApiController(ReviewServiceImpl reviewService) {
         this.reviewService = reviewService;
-        this.userRepository = userRepository;
     }
 
     /**

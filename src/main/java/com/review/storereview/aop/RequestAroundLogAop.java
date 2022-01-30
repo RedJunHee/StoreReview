@@ -84,7 +84,7 @@ public class RequestAroundLogAop {
             ApiLog data = new ApiLog(suid, said, date, methodName, apiStatus, apiResultDescription.toString(),elapsedTime*0.001);
 
             // INSERT
-            logService.InsertApiLog(data);
+//            logService.InsertApiLog(data);
 
         }
 
