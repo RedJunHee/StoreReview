@@ -18,7 +18,6 @@ import java.util.List;
 public class CommentResponseDto {
 
     private Long commentId;
-    private String suid;
     private String said;
     private String content;
     private String userId;
@@ -26,9 +25,8 @@ public class CommentResponseDto {
     private String updatedAt;
 
     @Builder
-    public CommentResponseDto(Long commentId, String suid, String said, String content, String userId, String createdAt, String updatedAt) {
+    public CommentResponseDto(Long commentId, String said, String content, String userId, String createdAt, String updatedAt) {
         this.commentId = commentId;
-        this.suid = suid;
         this.said = said;
         this.content = content;
         this.userId = userId;

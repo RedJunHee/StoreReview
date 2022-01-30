@@ -1,5 +1,6 @@
 package com.review.storereview.common.utils;
 
+import io.jsonwebtoken.io.Decoders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,10 +37,17 @@ public class CryptUtils {
 
     public static String Base64Encoding(String input)
     {
-        return Base64.getEncoder().encodeToString( input.getBytes());
+        byte[] targetBytes = input.getBytes(); // Base64 인코딩 ///////////////////////////////////////////////////
+        Base64.Encoder encoder = Base64.getEncoder();
+        byte[] encodedBytes = encoder.encode(targetBytes);
+
+        return new String(encodedBytes);
     }
     public static String Base64Decoding(String input){
-        return Base64.getDecoder().decode(input.getBytes()).toString();
+        byte[] targetBytes = input.getBytes();
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] decodedBytes = decoder.decode(targetBytes);
+        return new String(decodedBytes);
     }
 
 

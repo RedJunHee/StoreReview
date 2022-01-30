@@ -79,9 +79,14 @@ public class RequestAroundLogAop {
             stopWatch.stop();
 
             elapsedTime = stopWatch.getTotalTimeMillis();
+            String apiDesc = "";
+            if(apiResultDescription.length() > 8000)
+                apiDesc = apiResultDescription.toString().substring(0,8000);
+            else
+                apiDesc = apiResultDescription.toString();
 
             //API_LOG담을 객체 생성 ( "SUID", "SAID", 2022-01-14T12:55:22, "save", 'Y', [INPUT] [메서드 input] [OUTPUT] [메서드 output] , 3.0
-            ApiLog data = new ApiLog(suid, said, date, methodName, apiStatus, apiResultDescription.toString(),elapsedTime*0.001);
+            ApiLog data = new ApiLog(suid, said, date, methodName, apiStatus, apiDesc,elapsedTime*0.001);
 
             // INSERT
             logService.InsertApiLog(data);

@@ -16,13 +16,14 @@ public enum ApiStatusCode {
     //COMMON CODE
     NONE (0,"","")
     ,OK (200,"OK","성공.")
+    ,CREATED (201,"Created","리소스 생성 완료.")
     ,CONTENT_NOT_FOUND (204,"Content Not Found", "컨텐츠 없음.")
     ,PARAMETER_CHECK_FAILED (400,"Bad Request","문법상 또는 파라미터 오류가 있어서 서버가 요청사항을 처리하지 못함.")
     ,UNAUTHORIZED (401, "UnAuthorized", "Unauthorized, 사용자 인증 실패.")
     ,FORBIDDEN (403, "Forbidden", "Forbidden, 사용권한 없음.")
     ,PERSON_ALREADY_EXISTS(411, "Person already exists", "이미 존재하는 사용자입니다.")
     ,REVIEW_NOT_FOUND(404, "Review Not Found", "해당 게시물을 찾을 수 없습니다.")
-    ,SYSTEM_ERROR(599,"SystemError", "시스템오류.")
+    ,SYSTEM_ERROR(599,"System Error", "시스템오류.")
     ;
 
     //Enum 필드
