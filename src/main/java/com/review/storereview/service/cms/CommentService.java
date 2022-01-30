@@ -28,8 +28,8 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public Page<Comment> findAllComments(Long reviewId, PageRequest pageRequest) {
-            Page<Comment> comments = commentRepository.findAllByReviewId(reviewId, pageRequest);
+    public Page<Comment> findAllCommentsAndIsDelete(Long reviewId, Integer IsDelete, PageRequest pageRequest) {
+            Page<Comment> comments = commentRepository.findAllByReviewIdAndIsDelete(reviewId, IsDelete, pageRequest);
         return comments;
     }
 

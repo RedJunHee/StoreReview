@@ -33,13 +33,24 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
 
+    @Column(name = "IS_DELETE")
+    private Integer isDelete;
+
+
+    public void setisDelete(Integer isdelete)
+    {
+        isDelete = isdelete;
+    }
+
     @Builder
-    public Comment(Long commentId, Long reviewId, User user, String content, String userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Comment(Long commentId, Long reviewId, User user, String content, String userId, LocalDateTime createdAt, LocalDateTime updatedAt
+    ,Integer IsDelete) {
         this.commentId = commentId;
         this.reviewId = reviewId;
         this.user = user;
         this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.isDelete = IsDelete;
     }
 }

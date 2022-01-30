@@ -28,6 +28,6 @@ public interface BaseCommentRepository extends JpaRepository<Comment, Long> {
 //                            "   ON CO.SUID = UI.SUID " +
 //                            "  AND CO.SAID = UI.SAID    " +
 //                            "WHERE CO.REVIEW = ?1 ", nativeQuery = true )
-    Page<Comment> findAllByReviewId(Long reviewId, Pageable pageRequest);
+    Page<Comment> findAllByReviewIdAndIsDelete(Long reviewId, Integer IsDelete, Pageable pageRequest);
     Comment findByCommentId(Long commentID);
 }
