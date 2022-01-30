@@ -46,6 +46,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;
     private PasswordEncoder passwordEncoder;
     private final CryptUtils cryptUtils;
+
     @Autowired
     public JwtTokenProvider(@Value("${jwt.secret}")String secret,
                             @Value("${jwt.token-validity-in-seconds}")long tokenExpiryInSeconds,
