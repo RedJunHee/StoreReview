@@ -5,7 +5,7 @@ import com.review.storereview.dto.ResponseJsonObject;
 
 // 회원가입 시 이미 회원이 존재하는 경우 발생하는 에러
 public class PersonAlreadyExistsException extends RuntimeException{
-    private final ApiStatusCode errorStatusCode = ApiStatusCode.PERSON_ALREADY_EXISTS;
+    private final static ApiStatusCode errorStatusCode = ApiStatusCode.PERSON_ALREADY_EXISTS;
     private final ResponseJsonObject responseJsonObject;
 
     public ResponseJsonObject getResponseJsonObject(){
@@ -13,6 +13,7 @@ public class PersonAlreadyExistsException extends RuntimeException{
     }
 
     public PersonAlreadyExistsException() {
-        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode);
+        responseJsonObject = ResponseJsonObject.withError(errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage());
     }
+
 }

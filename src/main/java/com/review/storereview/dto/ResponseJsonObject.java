@@ -14,7 +14,7 @@ import java.util.Map;
 
 //Jackson어노테이션 json에 없는 프로퍼티 설정시 에러 무시 true
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ResponseJsonObject {
+public class ResponseJsonObject extends Throwable {
     // meta
     private Meta meta = null;
 
@@ -31,9 +31,9 @@ public class ResponseJsonObject {
     public ResponseJsonObject setData(Object val) {this.data = val; return this;}
 
     // 생성자
-/*    public ResponseJsonObject(ApiStatusCode metaStatusCode) {
+    public ResponseJsonObject(ApiStatusCode metaStatusCode) {
         this.meta = new Meta(metaStatusCode);
-    }*/
+    }
 
     /**
      * 성공일 때 호출될 정적 팩터리 메서드
@@ -75,6 +75,14 @@ public class ResponseJsonObject {
         return new ResponseJsonObject(meta);
     }
 
+    @Override
+    public String toString() {
+        return "ResponseJsonObject{" +
+                "meta=" + meta.toString() +
+                ", data=" + data +
+                '}';
+    }
+
     //meta Class
     public static class Meta {
         // statusCode (not null)
@@ -85,7 +93,7 @@ public class ResponseJsonObject {
         private String errorType =null;
         public String getErrorType() { return statusCode.getType(); }
 
-        // error Message  (null)  ex) "
+        // error Message  (null)  ex) "문법상 또는 파라미터 오류가 있어서 서버가 요청사항을 처리하지 못함."
         private String errorMsg =null;
         public String getErrorMsg() {
             return statusCode.getMessage();
@@ -96,9 +104,8 @@ public class ResponseJsonObject {
         //    "password": "크기가 5와 20 사이여야 합니다"
         // }
         private Map parameterErrorMsg = null;
-        public String getParameterErrorMsg() {
-            //
-            return "1";
+        public Map getParameterErrorMsg() {
+            return parameterErrorMsg;
         }
 
         /**
@@ -109,5 +116,25 @@ public class ResponseJsonObject {
             this.statusCode = statusCode;
         }
 
+        @Override
+        public String toString() {
+            if (errorType == null && errorMsg == null)      // 성공이면
+                return  "Meta{" +
+                        "statusCode=" + statusCode +
+                        '}';
+            else if (parameterErrorMsg != null)      // 파라미터 에러이면
+                return "Meta{" +
+                    "statusCode=" + statusCode +
+                    ", errorType='" + errorType + '\'' +
+                    ", errorMsg='" + errorMsg + '\'' +
+                    ", parameterErrorMsg=" + parameterErrorMsg +
+                    '}';
+            else                                                                   // 그 외 에러이면
+                return "Meta{" +
+                        "statusCode=" + statusCode +
+                        ", errorType='" + errorType + '\'' +
+                        ", errorMsg='" + errorMsg + '\'' +
+                        '}';
+        }
     }
 }

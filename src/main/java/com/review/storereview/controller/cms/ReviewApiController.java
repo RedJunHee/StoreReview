@@ -1,6 +1,8 @@
 package com.review.storereview.controller.cms;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
+import com.review.storereview.common.utils.CryptUtils;
+import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cms.Review;
 import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.ResponseJsonObject;
@@ -12,6 +14,8 @@ import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,28 +44,23 @@ public class ReviewApiController {
         // 2. placeAvgStars 계산
         Double placeAvgStars = reviewService.AveragePlaceStars(findReviews);
 
-        // 3. responseDto 생성 및 리스트화
+        // 3. responseDto 생성 및 리스트 추가
         for (Review review : findReviews) {
-            // 3.1. userId 조회
-//            User userId = userService.listUserIdBySuid(review.getSuid());
-            List<Object[]> resultUserId = userRepository.findUserIdBySuid(review.getSuid());
-            Object[] objects = resultUserId.get(0);
-            User userId = (User) objects[0];
-
+            // 3.1. content 인코딩
+            String encodedContent = CryptUtils.Base64Encoding(review.getContent());
             // 3.2. responseDto 생성
             ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
                     review.getReviewId(),
                     review.getUser().getSaid(),
-                    userId.getUserId(),
+                    review.getUser().getUserId(),
                     review.getStars(),
-                    review.getContent(),
+                    encodedContent,
                     review.getImgUrl(),
                     review.getCreatedAt(),
                     review.getUpdatedAt()
             );
             // 3.3. placeAvgStar 세팅
             reviewResponseDto.setPlaceAvgStar(placeAvgStars);
-
             // 3.4. 리스트에 추가
             reviewsResponseDtoList.add(reviewResponseDto);
         }
@@ -78,12 +77,13 @@ public class ReviewApiController {
     public ResponseEntity<ResponseJsonObject> findOneReview(@PathVariable Long reviewId) {
         // 1. 조회 서비스 로직 (리뷰 조회 - userId 조회)
         Review findReview = reviewService.listReview(reviewId);
-        User userId = reviewService.listUserIdBySuid(findReview.getSuid());
+        // 2. content 인코딩
+        String encodedContent = CryptUtils.Base64Encoding(findReview.getContent());
 
-        // 2. responseDto 생성
+        // 3. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                findReview.getReviewId(), findReview.getUser().getSaid(), userId.getUserId(),
-                findReview.getStars(), findReview.getContent(),
+                findReview.getReviewId(), findReview.getUser().getSaid(), findReview.getUser().getUserId(),
+                findReview.getStars(), encodedContent,
                 findReview.getImgUrl(),
                 findReview.getCreatedAt(), findReview.getUpdatedAt());
 
@@ -93,21 +93,39 @@ public class ReviewApiController {
 
     /**
      * {@Summary 리뷰 작성 컨트롤러}
-     * @param reviewUploadRequestDto
+     * @param requestDto
      */
     @PostMapping("/review")
-    public ResponseEntity<ResponseJsonObject> uploadReview(@RequestBody ReviewUploadRequestDto reviewUploadRequestDto) {
-        // 1. 업로드 서비스 로직 (리뷰 업로드 - userId 조회)
-        Review savedReview = reviewService.uploadReview(reviewUploadRequestDto);
-        User userId = reviewService.listUserIdBySuid(savedReview.getSuid());
+    public ResponseEntity<ResponseJsonObject> uploadReview(@RequestBody ReviewUploadRequestDto requestDto) {
+        // 1. 인코딩된 content 디코딩
+        String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
+        // 2. 인증된 사용자 토큰 값
+        // 2-1. 인증된 사용자의 인증 객체 가져오기
+        Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
+        // 2-2. 인증 객체의 유저정보 가져오기
+        JWTUserDetails userDetails = (JWTUserDetails) authenticationToken.getPrincipal();
+        // 3. 리뷰 생성
+        Review review = new Review().builder()
+                .placeId(requestDto.getPlaceId())
+                .content(requestDto.getContent())
+                .stars(requestDto.getStars())
+                .imgUrl(requestDto.getImgUrl())
+                .user(User.builder()
+                        .userId(authenticationToken.getName())  // Name == userId(이메일)
+                        .suid(userDetails.getSuid())
+                        .said(userDetails.getSaid())
+                        .build())
+                .build();
+        Review savedReview = reviewService.uploadReview(review);
+        // 4. content 인코딩
+        String encodedContent = CryptUtils.Base64Encoding(savedReview.getContent());
 
-        // 2. responseDto 생성
+        // 5. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                savedReview.getReviewId(), savedReview.getUser().getSaid(), userId.getUserId(),
-                savedReview.getStars(), savedReview.getContent(),
+                savedReview.getReviewId(), savedReview.getUser().getSaid(), savedReview.getUser().getUserId(),
+                savedReview.getStars(), encodedContent,
                 savedReview.getImgUrl(),
                 savedReview.getCreatedAt(), savedReview.getUpdatedAt());
-
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
@@ -115,18 +133,19 @@ public class ReviewApiController {
     /**
      * {@Summary 리뷰 업데이트 컨트롤러}
      * @param reviewId
-     * @param reviewUpdateRequestDto
+     * @param requestDto
      */
     @PutMapping("/reviews/{reviewId}")
-    public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequestDto reviewUpdateRequestDto) {
-        // 1. 리뷰 업데이트 서비스 로직
-        Review updatedReview = reviewService.updateReview(reviewId, reviewUpdateRequestDto);
-        User userId = reviewService.listUserIdBySuid(updatedReview.getSuid());
+    public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequestDto requestDto) {
+        // 1. 리뷰 업데이트 서비스 호출
+        Review updatedReview = reviewService.updateReview(reviewId, requestDto);
+        // 2. content 인코딩
+        String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
 
-        // 2. responseDto 생성
+        // 3. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                updatedReview.getReviewId(), updatedReview.getUser().getSaid(), userId.getUserId(),
-                updatedReview.getStars(), updatedReview.getContent(),
+                updatedReview.getReviewId(), updatedReview.getUser().getSaid(), updatedReview.getUser().getUserId(),
+                updatedReview.getStars(), encodedContent,
                 updatedReview.getImgUrl(),
                 updatedReview.getCreatedAt(), updatedReview.getUpdatedAt());
 

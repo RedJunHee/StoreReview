@@ -1,7 +1,6 @@
-package com.review.storereview.controller.cust;
+package com.review.storereview.controller.cms;
 
 import com.review.storereview.controller.TestController;
-import com.review.storereview.controller.cms.AuthController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

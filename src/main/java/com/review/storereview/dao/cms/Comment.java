@@ -34,7 +34,7 @@ public class Comment extends BaseTimeEntity {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Comment(Long id, Long reviewId, User user, String content, String userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Comment(Long id, Long reviewId, User user, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
         Id = id;
         this.reviewId = reviewId;
         this.user = user;

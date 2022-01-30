@@ -1,9 +1,7 @@
-package com.review.storereview.controller.cust;
+package com.review.storereview.controller.cms;
 
 import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.controller.TestController;
-import com.review.storereview.controller.cms.AuthController;
-import com.review.storereview.controller.cms.UserApiController;
 import com.review.storereview.service.cms.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -99,16 +97,16 @@ class UserApiControllerTest extends AbstractControllerTest{
 
         final ResultActions actions =
                 mvc.perform(        // perform() : MockMvcRequestBuilders를 통해서 구현한 Request를 테스트
-                        post("/user/signup")
+                        post("/api/signup")
                                 .contentType(MediaType.APPLICATION_JSON)    // 미디어타입 설정
                                 .accept(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8")
                                 .content(
                                         "{"
-                                                + " \"userId\" : \"banan99@naver.com\", "
+                                                + " \"userId\" : \"@naver.com\", "
                                                 + " \"name\" : \"문윤지\", "
                                                 + " \"nickname\" : \"moonz\", "
-                                                + " \"password\" : \"12345678\", "
+                                                + " \"password\" : \"moonmoon00!\", "
                                                 + " \"birthDate\" : \"1999-11-15\", "
                                                 + " \"gender\" : \"W\", "
                                                 + " \"phone\" : \"01012345678\" "
@@ -117,7 +115,7 @@ class UserApiControllerTest extends AbstractControllerTest{
                 .andDo(print())
                 .andExpect(status().isOk())      // HttpStatus.OK(200)
                 .andExpect(content().contentType("application/json;charset=utf-8"))     // contentType 검증
-                .andExpect(jsonPath("$.meta.code").value(200));     // response 검증
+                .andExpect(jsonPath("$.meta.statusCode").value(400));     // response 검증
     }
 
     // 중복 회원가입 테스트

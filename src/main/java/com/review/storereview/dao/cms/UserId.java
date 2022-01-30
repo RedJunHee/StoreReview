@@ -9,13 +9,12 @@ import java.util.Objects;
 /**
  * Class       : UserId
  * Author      : 조 준 희
- * Description : Class Description
+ * Description : User 엔티티 의 복합 키(suid, said)를 매핑하기 위한 클래스
  * History     : [2022-01-24] - 조 준희 - Class Create
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class UserId implements Serializable {
     @Column(name="SUID", nullable = false)
     private String suid;

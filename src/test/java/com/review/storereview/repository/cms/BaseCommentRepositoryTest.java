@@ -32,9 +32,11 @@ class BaseCommentRepositoryTest {
         Long reviewId = 1L;
 
         PageRequest pageRequest = PageRequest.of(page, 5);
+
         Page<Comment> comments = commentRepository.findAllByReviewId(reviewId,pageRequest);
 
-        System.out.println("토탈 사이즈 : " + comments.getTotalElements());
+
+//        System.out.println("토탈 사이즈 : " + comments.getTotalElements());
 
     }
 

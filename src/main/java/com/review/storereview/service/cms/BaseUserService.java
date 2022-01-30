@@ -14,7 +14,4 @@ public interface BaseUserService extends BaseService {
 
     void validateDuplicateUserByUserId(String userId);
 
-    // 로그인
-    User sign_in(UserSigninRequestDto requestDto) throws Exception;
-
 }

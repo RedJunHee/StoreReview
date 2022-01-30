@@ -1,4 +1,4 @@
-package com.review.storereview.repository.cust;
+package com.review.storereview.repository.cms;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.enumerate.Gender;

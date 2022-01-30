@@ -1,4 +1,4 @@
-package com.review.storereview.service.cust;
+package com.review.storereview.service.cms;
 
 import com.review.storereview.common.enumerate.Gender;
 import com.review.storereview.common.exception.PersonAlreadyExistsException;

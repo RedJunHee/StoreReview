@@ -2,10 +2,8 @@ package com.review.storereview.controller.cms;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParamValidationException;
-import com.review.storereview.dao.cms.User;
+import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.dto.ResponseJsonObject;
-import com.review.storereview.dto.request.UserSigninRequestDto;
-import com.review.storereview.dto.response.UserResponseDto;
 import com.review.storereview.dto.validator.UserSaveDtoValidator;
 import com.review.storereview.service.cms.BaseUserService;
 import com.review.storereview.dto.request.UserSaveRequestDto;
@@ -33,7 +31,7 @@ public class UserApiController {
      * @return ResponseEntity<ResponseJsonObject>
      */
     @PostMapping("/api/signup")
-    public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException {
+    public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException, ResponseJsonObject {
         System.out.println("UserApiController: save 호출");
         ResponseJsonObject resDto = null;   // ResponseJsonOBject 사용
         // 1. 파라미터 검증
@@ -41,9 +39,11 @@ public class UserApiController {
 
         // 1-1. 검증 실패 로직
         if (bindingResult.hasErrors()) {
-            System.out.println(userSaveDtoValidator.getErrorsMap());
+            System.out.println("검증 실패 로직에서 errorsMap : " + userSaveDtoValidator.getErrorsMap());
             throw new ParamValidationException(userSaveDtoValidator.getErrorsMap());
-//            throw new ParamValidationException(userSaveDtoValidator.getErrorMap());
+//            ResponseJsonObject exceptionDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
+//            throw exceptionDto;  // exceptionHandler에서 Controller 단에서 발생하는 예외를 잡아줌
+//            return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
         }
         else {      // 1-2. 검증 성공 로직
             // 2. join 서비스 로직
@@ -51,39 +51,10 @@ public class UserApiController {
 
             // 3. responseDto 생성
             resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK);
-            return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
+            return new ResponseEntity<>(resDto, HttpStatus.OK);
         }
     }
 
-
-    @PutMapping(value = "/api/sign_in")
-    public ResponseEntity<ResponseJsonObject> sign_in(@RequestBody UserSigninRequestDto requestDto) throws Exception {
-        ResponseJsonObject resDto = null;
-        UserResponseDto responseDto;
-
-        // 1. Validation 필요..
-
-
-        // 2. Sign_in 서비스 로직
-        User user = userService.sign_in(requestDto);
-
-        // 3. response 데이터 가공
-        responseDto = UserResponseDto.builder()
-                .suid(user.getSuid())
-                .said(user.getSaid())
-                .birthDate(user.getBirthDate())
-                .userId(user.getUserId())
-                .gender(user.getGender())
-                .name(user.getName())
-                .nickname(user.getNickname())
-                .phone(user.getPhone())
-                .build();
-
-       resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(responseDto);
-
-       // 5.
-        return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
-    }
     @PutMapping(value = "/api/test")
     public ResponseEntity<ResponseJsonObject> test()
     {
@@ -94,4 +65,7 @@ public class UserApiController {
         // 5.
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
     }
+
+
+
 }

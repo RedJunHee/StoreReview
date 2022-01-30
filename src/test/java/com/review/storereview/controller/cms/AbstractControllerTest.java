@@ -1,4 +1,4 @@
-package com.review.storereview.controller.cust;
+package com.review.storereview.controller.cms;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
