@@ -1,6 +1,6 @@
 package com.review.storereview.dao.cms;
 
-import com.review.storereview.common.utils.StringListConverter;
+import com.review.storereview.common.utils.ListToStringConverter;
 import com.review.storereview.dao.BaseTimeEntity;
 import lombok.*;
 import javax.persistence.*;
@@ -30,8 +30,8 @@ public class Review extends BaseTimeEntity {
     @Column(name = "CONTENT", nullable = false, length = 1000)
     private String content;
 
-    @Column(name = "IMG_URL", length = 45)
-    @Convert(converter = StringListConverter.class)
+    @Column(name = "IMG_URL", length = 300)
+    @Convert(converter = ListToStringConverter.class)
     private List<String> imgUrl;
 
     @Builder

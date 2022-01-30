@@ -17,7 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * {@Summary Review Service Layer }
+ * Class       : ReviewServiceImpl
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
+ */
 @Service
 public class ReviewServiceImpl {
 
@@ -33,6 +38,8 @@ public class ReviewServiceImpl {
         List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceIdOrderByCreatedAtDesc(placeId))
                 .orElse(Collections.emptyList());
 
+//        List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceId(placeId))
+//                .orElse(Collections.emptyList());
         return findReviews;
     }
 
@@ -66,29 +73,28 @@ public class ReviewServiceImpl {
 
     /** {@Summary 리뷰 업데이트 Service} */
     @Transactional
-    public Review updateReview(Long reviewId, ReviewUpdateRequestDto updateRequestDto) {
-        // 1. 인코딩된 content 디코딩
-        String decodedContent = CryptUtils.Base64Decoding(updateRequestDto.getContent());
+    public Review updateReview(Long reviewId, Review updatedReview) {
 
-        // 2. 리뷰 데이터 조회 & null 체크
+        // 1. 리뷰 데이터 조회 & null 체크
         Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
                 .orElseThrow(ReviewNotFoundException::new);
 
         // 3. 리뷰 데이터 수정
-        findReview.update(decodedContent, updateRequestDto.toEntity().getImgUrl()
-            , updateRequestDto.toEntity().getStars());
+        findReview.update(updatedReview.getContent(), updatedReview.getImgUrl()
+            , updatedReview.getStars());
 
         return findReview;
     }
 
     /**{@Summary 리뷰 데이터 제거 Service} **/
+    @Transactional
     public void deleteReview(Long reviewId) {
         // 1. 제거할 리뷰 데이터 조회 & null 체크
         Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
                 .orElseThrow(ReviewNotFoundException::new);
 
        // 2. 리뷰 데이터 제거
-        baseReviewRepository.delete(findReview);
+        baseReviewRepository.deleteByReviewId(findReview.getReviewId());
     }
 
 }
