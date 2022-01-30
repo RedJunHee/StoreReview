@@ -2,14 +2,18 @@ package com.review.storereview.dto.request;
 
 import com.review.storereview.dao.cms.Review;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
- * { Summary 리뷰 수정 요청 클래스 (DTO) }
+ * {@Summary 리뷰 수정 요청 클래스 (DTO) }
  * INPUT : [review_id, content]
+ * Author      : 문 윤 지
+ * History     : [2022-01-23]
  */
 @Getter
+@NoArgsConstructor
 public class ReviewUpdateRequestDto {
     private String content;
     private List<String> imgUrl;

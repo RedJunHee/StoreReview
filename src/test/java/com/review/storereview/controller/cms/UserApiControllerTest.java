@@ -115,7 +115,7 @@ class UserApiControllerTest extends AbstractControllerTest{
                 .andDo(print())
                 .andExpect(status().isOk())      // HttpStatus.OK(200)
                 .andExpect(content().contentType("application/json;charset=utf-8"))     // contentType 검증
-                .andExpect(jsonPath("$.meta.statusCode").value(400));     // response 검증
+                .andExpect(jsonPath("$.meta.statusCode").value(200));     // response 검증
     }
 
     // 중복 회원가입 테스트
