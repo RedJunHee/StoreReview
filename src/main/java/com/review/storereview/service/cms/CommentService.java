@@ -39,4 +39,9 @@ public class CommentService {
 
         return saveComment;
     }
+    public Comment findByCommentId(Long commentId){
+
+        return commentRepository.findByCommentId(commentId);
+
+    }
 }

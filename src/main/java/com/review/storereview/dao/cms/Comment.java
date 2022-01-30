@@ -13,7 +13,7 @@ public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="COMMENT_ID")
-    private Long Id;
+    private Long commentId;
 
     @Column(name="REVIEW_ID")
     private Long reviewId;
@@ -34,8 +34,8 @@ public class Comment extends BaseTimeEntity {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Comment(Long id, Long reviewId, User user, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        Id = id;
+    public Comment(Long commentId, Long reviewId, User user, String content, String userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.commentId = commentId;
         this.reviewId = reviewId;
         this.user = user;
         this.content = content;

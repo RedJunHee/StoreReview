@@ -8,6 +8,7 @@ import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cms.Comment;
 import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.ResponseJsonObject;
+import com.review.storereview.dto.request.CommentUpdateRequestDto;
 import com.review.storereview.dto.request.CommentWriteRequestDto;
 import com.review.storereview.dto.response.CommentListResponseDto;
 import com.review.storereview.dto.response.CommentResponseDto;
@@ -21,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.ws.Response;
 import java.time.LocalDateTime;
 
 /**
@@ -69,7 +72,7 @@ public class CommentApiController {
         for (Comment comment :comments.getContent()) {
             commentResponseDto.addComment(
                     new CommentListResponseDto.comment(
-                            comment.getId()
+                            comment.getCommentId()
                             ,comment.getUser().getSuid()
                             ,comment.getUser().getSaid()
                             ,comment.getContent()
@@ -119,17 +122,66 @@ public class CommentApiController {
 
         // ResponseDto 생성
         CommentResponseDto commentResponseDto = CommentResponseDto.builder()
-                .commentId(saveComment.getId())
+                .commentId(saveComment.getCommentId())
                 .userId(saveComment.getUser().getUserId())
                 .suid(saveComment.getUser().getSuid())
                 .said(saveComment.getUser().getSaid())
-                .content(saveComment.getContent())
+                .content(CryptUtils.Base64Encoding(saveComment.getContent()))
                 .createdAt(StringUtil.DateTimeToString(saveComment.getCreatedAt()))
                 .updatedAt(StringUtil.DateTimeToString(saveComment.getUpdatedAt()))
                 .build();
 
         ResponseJsonObject resDto =  ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(commentResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
+    }
+
+
+    @PutMapping("/comment")
+    public ResponseEntity<ResponseJsonObject> writeComment(@RequestBody CommentUpdateRequestDto requestDto)
+    {
+        try {
+            // content Base64 디코딩 작업
+            String decodingContent = CryptUtils.Base64Decoding(requestDto.getContent());
+
+            // Request 사용자 인증 객체 가져오기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            // 사용자 인증 객체에서 사용자 정보 가져오기
+            JWTUserDetails userDetails = (JWTUserDetails) authentication.getPrincipal();
+
+            // 코멘트 수정 서비스
+            Comment savedComment = commentService.findByCommentId(requestDto.getCommentId());
+
+            Comment comment = Comment.builder()
+                    .commentId(requestDto.getCommentId())
+                    .user(savedComment.getUser())
+                    .content(decodingContent)
+                    .updatedAt(LocalDateTime.now())
+                    .createdAt(savedComment.getCreatedAt())
+                    .build();
+
+            Comment updateComment = commentService.save(comment);
+
+            CommentResponseDto commentResponseDto = CommentResponseDto.builder()
+                    .commentId(updateComment.getCommentId())
+                    .userId(updateComment.getUser().getUserId())
+                    .suid(updateComment.getUser().getSuid())
+                    .said(updateComment.getUser().getSaid())
+                    .content(CryptUtils.Base64Encoding(updateComment.getContent()))
+                    .createdAt(StringUtil.DateTimeToString(updateComment.getCreatedAt()))
+                    .updatedAt(StringUtil.DateTimeToString(updateComment.getUpdatedAt()))
+                    .build();
+
+            // ResponseDto 작성
+            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(commentResponseDto);
+            return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.OK);
+
+        }
+        catch(Exception ex)
+        {
+            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR,ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
+            return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.OK);
+        }
     }
 
 }

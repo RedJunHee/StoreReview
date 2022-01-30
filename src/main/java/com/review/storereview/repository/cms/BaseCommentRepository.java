@@ -29,5 +29,5 @@ public interface BaseCommentRepository extends JpaRepository<Comment, Long> {
 //                            "  AND CO.SAID = UI.SAID    " +
 //                            "WHERE CO.REVIEW = ?1 ", nativeQuery = true )
     Page<Comment> findAllByReviewId(Long reviewId, Pageable pageRequest);
-
+    Comment findByCommentId(Long commentID);
 }

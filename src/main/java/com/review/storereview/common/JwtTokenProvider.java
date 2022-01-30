@@ -83,6 +83,10 @@ public class JwtTokenProvider implements AuthenticationProvider {
         {
             throw ex;
         }
+        catch(BadCredentialsException ex)
+        {
+            throw ex;
+        }
     }
     /**
      * 인증 절차 - 비밀번호 체크
