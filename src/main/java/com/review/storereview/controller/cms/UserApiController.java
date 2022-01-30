@@ -2,7 +2,6 @@ package com.review.storereview.controller.cms;
 
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParamValidationException;
-import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.dto.validator.UserSaveDtoValidator;
 import com.review.storereview.service.cms.BaseUserService;
@@ -31,7 +30,7 @@ public class UserApiController {
      * @return ResponseEntity<ResponseJsonObject>
      */
     @PostMapping("/api/signup")
-    public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException, ResponseJsonObject {
+    public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException {
         System.out.println("UserApiController: save 호출");
         ResponseJsonObject resDto = null;   // ResponseJsonOBject 사용
         // 1. 파라미터 검증
@@ -40,10 +39,10 @@ public class UserApiController {
         // 1-1. 검증 실패 로직
         if (bindingResult.hasErrors()) {
             System.out.println("검증 실패 로직에서 errorsMap : " + userSaveDtoValidator.getErrorsMap());
-            throw new ParamValidationException(userSaveDtoValidator.getErrorsMap());
-//            ResponseJsonObject exceptionDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
+//            throw new ParamValidationException(userSaveDtoValidator.getErrorsMap());
+            ResponseJsonObject exceptionDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
 //            throw exceptionDto;  // exceptionHandler에서 Controller 단에서 발생하는 예외를 잡아줌
-//            return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
         }
         else {      // 1-2. 검증 성공 로직
             // 2. join 서비스 로직

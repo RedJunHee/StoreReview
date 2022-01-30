@@ -1,5 +1,7 @@
 package com.review.storereview.controller.cms;
 
+import com.review.storereview.common.utils.ListToStringConverter;
+import com.review.storereview.config.SecurityConfig;
 import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.security.config.BeanIds;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -38,7 +39,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ReviewApiControllerTest  {
     @Autowired
     protected MockMvc reviewControllerMockMvc;
-
+    @MockBean
+    private SecurityConfig securityConfig;
+    @MockBean
+    private ListToStringConverter stringToListConverter;
     @MockBean
     private ReviewServiceImpl reviewService;
     List<String> imgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com","http://s3-img-url-test2.com"));
@@ -125,6 +129,7 @@ class ReviewApiControllerTest  {
     void updateReview() throws Exception {
         Long reviewId = 1L;
         List<String> updatedImgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com"));
+
         Integer stars = 3;
 
         ReviewUpdateRequestDto requestDto = new ReviewUpdateRequestDto("수정된 리뷰 테스트", updatedImgUrl, stars);
