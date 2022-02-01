@@ -50,9 +50,9 @@ class UserResponseDtoTest {
         listTest.add(new UserResponseDtoTest.TestClass());
         listTest.add(new UserResponseDtoTest.TestClass());
 
-        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(new UserResponseDtoTest.TestClass());
+        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(new UserResponseDtoTest.TestClass());
 
-        ResponseJsonObject resListDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(listTest);
+        ResponseJsonObject resListDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(listTest);
 
         ObjectMapper om = new ObjectMapper();
         String str = om.writeValueAsString(resDto);

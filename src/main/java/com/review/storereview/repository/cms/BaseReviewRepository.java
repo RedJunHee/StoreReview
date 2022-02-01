@@ -12,5 +12,4 @@ public interface BaseReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByPlaceIdOrderByCreatedAtDesc(String placeId);
 
     Review findByReviewId(Long reviewId);
-    void deleteByReviewId(Long reviewId);
 }

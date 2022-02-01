@@ -103,9 +103,9 @@ class UserApiControllerTest extends AbstractControllerTest{
                                 .characterEncoding("UTF-8")
                                 .content(
                                         "{"
-                                                + " \"userId\" : \"@naver.com\", "
-                                                + " \"name\" : \"문윤지\", "
-                                                + " \"nickname\" : \"moonz\", "
+                                                + " \"userId\" : \"banan99999@naver.com\", "
+                                                + " \"name\" : \"문운지\", "
+                                                + " \"nickname\" : \"moonzz\", "
                                                 + " \"password\" : \"moonmoon00!\", "
                                                 + " \"birthDate\" : \"1999-11-15\", "
                                                 + " \"gender\" : \"W\", "

@@ -32,7 +32,7 @@ class BaseUserRepositoryTest {
         Optional<User> user = userRepository.findByUserIdAndPassword(requstDto.getUserId(),requstDto.getPassword());
 
         if(user.isPresent()) {
-            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(user.get());
+            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(user.get());
             Assertions.assertThat(user.get().getSuid()).isEqualTo("RE001341154s");
         }
     }

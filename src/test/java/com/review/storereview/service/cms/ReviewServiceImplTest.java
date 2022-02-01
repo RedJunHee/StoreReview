@@ -109,7 +109,7 @@ class ReviewServiceImplTest {
         Assertions.assertThat(findOneReview.getContent()).isEqualTo("리뷰 서비스 테스트");
 
         // when
-        Review updatedReview = reviewService.updateReview(reviewId, review);
+        Review updatedReview = reviewService.updateReview(findOneReview, review);
         // verify
         Assertions.assertThat(updatedReview.getContent()).isEqualTo(review.getContent());
 

@@ -13,7 +13,7 @@ public class ReviewNotFoundException extends RuntimeException {
     }
 
     public ReviewNotFoundException() {
-        responseJsonObject = ResponseJsonObject.withError(errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage());
+        responseJsonObject = ResponseJsonObject.withError(errorStatusCode.getCode(), errorStatusCode.getType(), errorStatusCode.getMessage());
     }
 
 }

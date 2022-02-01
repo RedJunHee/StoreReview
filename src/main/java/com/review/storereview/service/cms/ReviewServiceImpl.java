@@ -73,15 +73,11 @@ public class ReviewServiceImpl {
 
     /** {@Summary 리뷰 업데이트 Service} */
     @Transactional
-    public Review updateReview(Long reviewId, Review updatedReview) {
+    public Review updateReview(Review findReview, Review renewReview) {
 
-        // 1. 리뷰 데이터 조회 & null 체크
-        Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
-                .orElseThrow(ReviewNotFoundException::new);
-
-        // 3. 리뷰 데이터 수정
-        findReview.update(updatedReview.getContent(), updatedReview.getImgUrl()
-            , updatedReview.getStars());
+        // 리뷰 데이터 수정
+        findReview.update(renewReview.getContent(), renewReview.getImgUrl()
+            , renewReview.getStars());
 
         return findReview;
     }
@@ -93,8 +89,8 @@ public class ReviewServiceImpl {
         Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
                 .orElseThrow(ReviewNotFoundException::new);
 
-       // 2. 리뷰 데이터 제거
-        baseReviewRepository.deleteByReviewId(findReview.getReviewId());
+        // 2. isDelete 업데이트 (서비스 상 제거)
+        findReview.updateIsDelete(1);
     }
 
 }

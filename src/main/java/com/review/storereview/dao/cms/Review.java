@@ -34,13 +34,18 @@ public class Review extends BaseTimeEntity {
     @Convert(converter = ListToStringConverter.class)
     private List<String> imgUrl;
 
+    // 지워진 글은 1 (default는 0)
+    @Column(name = "IS_DELETE", nullable = false)
+    private Integer isDelete;
+
     @Builder
-    public Review (User user, String placeId, Integer stars, String content, List<String> imgUrl) {
+    public Review (User user, String placeId, Integer stars, String content, List<String> imgUrl, Integer isDelete) {
         this.user = user;
         this.placeId = placeId;
         this.stars = stars;
         this.content = content;
         this.imgUrl = imgUrl;
+        this.isDelete = isDelete;
     }
 
     // ReviewUpdateRequestDto에서 필요
@@ -59,6 +64,8 @@ public class Review extends BaseTimeEntity {
         this.imgUrl = imgUrl;
         this.stars = stars;
     }
+
+    public void updateIsDelete(Integer isDelete) { this.isDelete = isDelete; }
 
     // for Test
     @Override

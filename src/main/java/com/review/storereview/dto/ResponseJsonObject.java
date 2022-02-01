@@ -9,7 +9,8 @@ import java.util.Map;
  *  Author      : 조 준 희
  *  Description : 모든 API return 클래스   == 응답 객체
  *  History     : [2021-12-21] - TestCode : com.review.StoreReview.web.rest.controller.dto.CommonResDtoTest.class
- [2021-01-21] - Update : ExceptionResponseDto 클래스와 통합
+ [2021-01-21] - Update : ExceptionResponseDto 클래스와 통합 (by 문윤지)
+ [2021-01-21] - Update : ExceptionResponseDto 클래스와 통합 (by 문윤지)
  */
 
 //Jackson어노테이션 json에 없는 프로퍼티 설정시 에러 무시 true
@@ -31,7 +32,7 @@ public class ResponseJsonObject {
     public ResponseJsonObject setData(Object val) {this.data = val; return this;}
 
     // 생성자
-    public ResponseJsonObject(ApiStatusCode metaStatusCode) {
+    public ResponseJsonObject(int metaStatusCode) {
         this.meta = new Meta(metaStatusCode);
     }
 
@@ -40,7 +41,7 @@ public class ResponseJsonObject {
      * @param statusCode
      * @return ResponseJsonObject
      */
-    public static ResponseJsonObject withStatusCode(ApiStatusCode statusCode) {
+    public static ResponseJsonObject withStatusCode(int statusCode) {
         Meta meta = new Meta(statusCode);
         return new ResponseJsonObject(meta);
     }
@@ -52,7 +53,7 @@ public class ResponseJsonObject {
      * @param errorMsg
      * @return
      */
-    public static ResponseJsonObject withError(ApiStatusCode statusCode, String errorType,  String errorMsg) {
+    public static ResponseJsonObject withError(int statusCode, String errorType,  String errorMsg) {
         Meta meta = new Meta(statusCode);
         meta.errorType = errorType;
         meta.errorMsg = errorMsg;
@@ -67,7 +68,7 @@ public class ResponseJsonObject {
      * @param parameterErrorMsg
      * @return
      */
-    public static ResponseJsonObject withParameterMsg(ApiStatusCode statusCode, String errorType,  String errorMsg, Map parameterErrorMsg) {
+    public static ResponseJsonObject withParameterMsg(int statusCode, String errorType,  String errorMsg, Map parameterErrorMsg) {
         Meta meta = new Meta(statusCode);
         meta.errorType = errorType;
         meta.errorMsg = errorMsg;
@@ -86,17 +87,18 @@ public class ResponseJsonObject {
     //meta Class
     public static class Meta {
         // statusCode (not null)
-        private ApiStatusCode statusCode = ApiStatusCode.NONE;
-        public Integer getStatusCode(){ return statusCode.getCode(); }
+        private ApiStatusCode apiStatus = ApiStatusCode.NONE;
+        private int statusCode;
+        public int getStatusCode(){ return this.statusCode; }
 
         // errorType (null)  ex) "ParameterCheckFailed"
         private String errorType =null;
-        public String getErrorType() { return statusCode.getType(); }
+        public String getErrorType() { return this.errorType; }
 
         // error Message  (null)  ex) "문법상 또는 파라미터 오류가 있어서 서버가 요청사항을 처리하지 못함."
         private String errorMsg =null;
         public String getErrorMsg() {
-            return statusCode.getMessage();
+            return this.errorMsg;
         }
 
         // parameter Error Msg (null)
@@ -105,14 +107,14 @@ public class ResponseJsonObject {
         // }
         private Map parameterErrorMsg = null;
         public Map getParameterErrorMsg() {
-            return parameterErrorMsg;
+            return this.parameterErrorMsg;
         }
 
         /**
          * meta 생성자
          * @param statusCode
          */
-        public Meta(ApiStatusCode statusCode) {
+        public Meta(int statusCode) {
             this.statusCode = statusCode;
         }
 

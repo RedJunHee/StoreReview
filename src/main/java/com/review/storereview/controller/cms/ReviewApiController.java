@@ -28,7 +28,6 @@ import java.util.List;
 @RestController
 public class ReviewApiController {
     private final ReviewServiceImpl reviewService;
-    protected static List<String> reviewsResponseDtoList = new ArrayList<>();
 
     @Autowired
     public ReviewApiController(ReviewServiceImpl reviewService) {
@@ -66,7 +65,7 @@ public class ReviewApiController {
                     )
             );
         }
-        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(listResponseDto);
+        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(listResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
 
@@ -88,7 +87,7 @@ public class ReviewApiController {
                 findReview.getImgUrl(),
                 findReview.getCreatedAt(), findReview.getUpdatedAt());
 
-        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(reviewResponseDto);
+        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
 
@@ -127,7 +126,7 @@ public class ReviewApiController {
                 savedReview.getStars(), encodedContent,
                 savedReview.getImgUrl(),
                 savedReview.getCreatedAt(), savedReview.getUpdatedAt());
-        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(reviewResponseDto);
+        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
 
@@ -140,14 +139,27 @@ public class ReviewApiController {
     public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequestDto requestDto) {
         // 1. 인코딩된 content 디코딩 및 content 세팅
         String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
-        // 2. 리뷰 생성
-        Review review = new Review().builder()
+        // 2. 인증된 사용자 토큰 값
+        // 2-1. 인증된 사용자의 인증 객체 가져오기
+        Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
+        // 2-2. 인증 객체의 유저정보 가져오기
+        JWTUserDetails userDetails = (JWTUserDetails) authenticationToken.getPrincipal();
+
+        // 3. 리뷰 작성자 유효성 검증
+        // 3.1. 리뷰 조회 & null 체크
+        Review findReview = reviewService.listReview(reviewId);
+        // 3.2 검증
+        if (findReview.getUser().getSuid() != userDetails.getSuid()) {
+            return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
+        }
+        // 4. 리뷰 생성
+        Review renewReview = new Review().builder()
                 .content(decodedContent)
                 .stars(requestDto.getStars())
                 .imgUrl(requestDto.getImgUrl())
                 .build();
-        // 1. 리뷰 업데이트 서비스 호출
-        Review updatedReview = reviewService.updateReview(reviewId, review);
+        // 5. 리뷰 업데이트 서비스 호출
+        Review updatedReview = reviewService.updateReview(findReview, renewReview);
         // 2. content 인코딩
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
 
@@ -158,7 +170,7 @@ public class ReviewApiController {
                 updatedReview.getImgUrl(),
                 updatedReview.getCreatedAt(), updatedReview.getUpdatedAt());
 
-        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(reviewResponseDto);
+        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
 
@@ -168,11 +180,23 @@ public class ReviewApiController {
      */
     @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<ResponseJsonObject> deleteReview(@PathVariable Long reviewId) {
-        // 1. 리뷰 제거 서비스 로직
+        // 1. 인증된 사용자 토큰 값
+        // 1-1. 인증된 사용자의 인증 객체 가져오기
+        Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
+        // 1-2. 인증 객체의 유저정보 가져오기
+        JWTUserDetails userDetails = (JWTUserDetails) authenticationToken.getPrincipal();
+
+        // 2. 리뷰 작성자 유효성 검증
+        // 2.1. 리뷰 조회 & null 체크
+        Review findReview = reviewService.listReview(reviewId);
+        // 2.2 검증
+        if (findReview.getUser().getSuid() != userDetails.getSuid()) {
+            return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
+        }
+        // 3. 리뷰 제거 서비스 로직
         reviewService.deleteReview(reviewId);
 
-        // 2. responseDto 생성
-        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK);
-        return new ResponseEntity<>(resDto, HttpStatus.OK);
+        // 4. responseDto 생성
+        return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()), HttpStatus.OK);
     }
 }

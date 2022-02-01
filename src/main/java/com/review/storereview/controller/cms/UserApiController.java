@@ -49,7 +49,7 @@ public class UserApiController {
             userService.join(userSaveRequestDto);
 
             // 3. responseDto 생성
-            resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK);
+            resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode());
             return new ResponseEntity<>(resDto, HttpStatus.OK);
         }
     }
@@ -59,7 +59,7 @@ public class UserApiController {
     {
         ResponseJsonObject resDto = null;
 
-        resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData("DATA!!");
+        resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData("DATA!!");
 
         // 5.
         return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
