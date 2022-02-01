@@ -12,12 +12,15 @@ import com.review.storereview.dto.response.ReviewResponseDto;
 import com.review.storereview.dto.response.ReviewListResponseDto;
 import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -60,8 +63,8 @@ public class ReviewApiController {
                             review.getStars(),
                             encodedContent,
                             review.getImgUrl(),
-                            review.getCreatedAt(),
-                            review.getUpdatedAt(),
+                            review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                            review.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                             review.getIsDelete()
                     )
             );
@@ -86,7 +89,8 @@ public class ReviewApiController {
                 findReview.getReviewId(), findReview.getUser().getSaid(), findReview.getUser().getUserId(),
                 findReview.getStars(), encodedContent,
                 findReview.getImgUrl(),
-                findReview.getCreatedAt(), findReview.getUpdatedAt(),
+                findReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                findReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 findReview.getIsDelete());
 
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
@@ -128,7 +132,8 @@ public class ReviewApiController {
                 savedReview.getReviewId(), savedReview.getUser().getSaid(), savedReview.getUser().getUserId(),
                 savedReview.getStars(), encodedContent,
                 savedReview.getImgUrl(),
-                savedReview.getCreatedAt(), savedReview.getUpdatedAt(),
+                savedReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                savedReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 savedReview.getIsDelete());
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
@@ -172,7 +177,8 @@ public class ReviewApiController {
                 updatedReview.getReviewId(), updatedReview.getUser().getSaid(), updatedReview.getUser().getUserId(),
                 updatedReview.getStars(), encodedContent,
                 updatedReview.getImgUrl(),
-                updatedReview.getCreatedAt(), updatedReview.getUpdatedAt(),
+                updatedReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                updatedReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 updatedReview.getIsDelete());
 
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
