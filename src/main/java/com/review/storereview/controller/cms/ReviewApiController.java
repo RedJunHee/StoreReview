@@ -61,7 +61,8 @@ public class ReviewApiController {
                             encodedContent,
                             review.getImgUrl(),
                             review.getCreatedAt(),
-                            review.getUpdatedAt()
+                            review.getUpdatedAt(),
+                            review.getIsDelete()
                     )
             );
         }
@@ -85,7 +86,8 @@ public class ReviewApiController {
                 findReview.getReviewId(), findReview.getUser().getSaid(), findReview.getUser().getUserId(),
                 findReview.getStars(), encodedContent,
                 findReview.getImgUrl(),
-                findReview.getCreatedAt(), findReview.getUpdatedAt());
+                findReview.getCreatedAt(), findReview.getUpdatedAt(),
+                findReview.getIsDelete());
 
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
@@ -115,6 +117,7 @@ public class ReviewApiController {
                         .suid(userDetails.getSuid())
                         .said(userDetails.getSaid())
                         .build())
+                .isDelete(0)
                 .build();
         Review savedReview = reviewService.uploadReview(review);
         // 4. content 인코딩
@@ -125,7 +128,8 @@ public class ReviewApiController {
                 savedReview.getReviewId(), savedReview.getUser().getSaid(), savedReview.getUser().getUserId(),
                 savedReview.getStars(), encodedContent,
                 savedReview.getImgUrl(),
-                savedReview.getCreatedAt(), savedReview.getUpdatedAt());
+                savedReview.getCreatedAt(), savedReview.getUpdatedAt(),
+                savedReview.getIsDelete());
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
@@ -168,7 +172,8 @@ public class ReviewApiController {
                 updatedReview.getReviewId(), updatedReview.getUser().getSaid(), updatedReview.getUser().getUserId(),
                 updatedReview.getStars(), encodedContent,
                 updatedReview.getImgUrl(),
-                updatedReview.getCreatedAt(), updatedReview.getUpdatedAt());
+                updatedReview.getCreatedAt(), updatedReview.getUpdatedAt(),
+                updatedReview.getIsDelete());
 
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);

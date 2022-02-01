@@ -11,5 +11,6 @@ import java.util.List;
 public interface BaseReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByPlaceIdOrderByCreatedAtDesc(String placeId);
 
+    List<Review> findAllByPlaceIdAndIsDeleteIsOrderByCreatedAtDesc(String placeId, int isDelete);
     Review findByReviewId(Long reviewId);
 }
