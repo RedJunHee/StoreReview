@@ -57,7 +57,7 @@ class BaseReviewRepositoryTest {
     }
 
     @Test
-    @DisplayName("저장된 리뷰가 제대로 조회되는지 확인")
+    @DisplayName("저장된 리뷰들이 제대로 조회되는지 확인")
     void findReview() {
         // given
         ReviewUploadRequestDto requestDto = new ReviewUploadRequestDto("1234", "테스트 내용", stars, imgUrl);

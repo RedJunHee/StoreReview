@@ -37,7 +37,7 @@ public class ReviewServiceImpl {
         // 리뷰 데이터를 리스트화 & null 이라면 빈 컬렉션 반환
         List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceIdAndIsDeleteIsOrderByCreatedAtDesc(placeId, 0))
                 .orElse(Collections.emptyList());
-        
+
 //        List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceId(placeId))
 //                .orElse(Collections.emptyList());
         return findReviews;
@@ -46,7 +46,7 @@ public class ReviewServiceImpl {
     /** {@Summary 특정 리뷰 데이터 조회 Service}*/
     public Review listReview(Long reviewId) {
         // 리뷰 데이터 조회 & null 체크
-        Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
+        Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewIdAndIsDeleteIs(reviewId, 0))
                 .orElseThrow(ReviewNotFoundException::new);
 
         return findReview;
