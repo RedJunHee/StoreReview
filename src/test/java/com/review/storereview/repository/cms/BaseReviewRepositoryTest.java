@@ -57,7 +57,7 @@ class BaseReviewRepositoryTest {
     }
 
     @Test
-    @DisplayName("저장된 리뷰가 제대로 조회되는지 확인")
+    @DisplayName("저장된 리뷰들이 제대로 조회되는지 확인")
     void findReview() {
         // given
         ReviewUploadRequestDto requestDto = new ReviewUploadRequestDto("1234", "테스트 내용", stars, imgUrl);
@@ -70,12 +70,13 @@ class BaseReviewRepositoryTest {
                         .suid("testSUID")
                         .said("testSAID")
                         .build())
+                .isDelete(0)
                 .build();
         // when
         Review savedReview1 = reviewRepository.save(review);
         Review savedReview2 = reviewRepository.save(review);
         // when
-        List<Review> findReviews = reviewRepository.findAllByPlaceIdOrderByCreatedAtDesc(savedReview1.getPlaceId());
+        List<Review> findReviews = reviewRepository.findAllByPlaceIdAndIsDeleteIsOrderByCreatedAtDesc(savedReview1.getPlaceId(), savedReview1.getIsDelete());
         // then
         Assertions.assertThat(reviewRepository.count()).isEqualTo(2);
         Assertions.assertThat(findReviews.size()).isEqualTo(2);

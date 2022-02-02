@@ -10,5 +10,5 @@ public class ContentNotFound extends RuntimeException{
     public ResponseJsonObject getResponseJsonObject () {return responseJsonObject;}
     public ContentNotFound() {
         super();
-        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode);}
+        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode.getCode());}
 }

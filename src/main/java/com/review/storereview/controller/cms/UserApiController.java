@@ -32,7 +32,6 @@ public class UserApiController {
     @PostMapping("/api/signup")
     public ResponseEntity<ResponseJsonObject> save(@RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) throws NoSuchAlgorithmException {
         System.out.println("UserApiController: save 호출");
-        ResponseJsonObject resDto = null;   // ResponseJsonOBject 사용
         // 1. 파라미터 검증
         userSaveDtoValidator.validate(userSaveRequestDto, bindingResult);
 
@@ -49,7 +48,7 @@ public class UserApiController {
             userService.join(userSaveRequestDto);
 
             // 3. responseDto 생성
-            resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK);
+            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode());
             return new ResponseEntity<>(resDto, HttpStatus.OK);
         }
     }
@@ -59,12 +58,10 @@ public class UserApiController {
     {
         ResponseJsonObject resDto = null;
 
-        resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData("DATA!!");
+        resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData("DATA!!");
 
         // 5.
-        return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
+        return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
-
-
 
 }

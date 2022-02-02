@@ -13,7 +13,7 @@ public class PersonAlreadyExistsException extends RuntimeException{
     }
 
     public PersonAlreadyExistsException() {
-        responseJsonObject = ResponseJsonObject.withError(errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage());
+        responseJsonObject = ResponseJsonObject.withError(errorStatusCode.getCode(), errorStatusCode.getType(), errorStatusCode.getMessage());
     }
 
 }

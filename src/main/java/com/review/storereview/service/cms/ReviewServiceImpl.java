@@ -2,15 +2,9 @@ package com.review.storereview.service.cms;
 
 import com.review.storereview.common.exception.ReviewNotFoundException;
 import com.review.storereview.common.utils.CryptUtils;
-import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cms.Review;
-import com.review.storereview.dao.cms.User;
-import com.review.storereview.dto.request.ReviewUpdateRequestDto;
-import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.repository.cms.BaseReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +29,7 @@ public class ReviewServiceImpl {
     /** {@Summary place에 해당하는 n개의 리뷰 데이터 리스트 조회 Service (2차원 리스트)} */
     public List<Review> listAllReviews(String placeId) {
         // 리뷰 데이터를 리스트화 & null 이라면 빈 컬렉션 반환
-        List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceIdOrderByCreatedAtDesc(placeId))
+        List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceIdAndIsDeleteIsOrderByCreatedAtDesc(placeId, 0))
                 .orElse(Collections.emptyList());
 
 //        List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceId(placeId))
@@ -46,7 +40,7 @@ public class ReviewServiceImpl {
     /** {@Summary 특정 리뷰 데이터 조회 Service}*/
     public Review listReview(Long reviewId) {
         // 리뷰 데이터 조회 & null 체크
-        Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
+        Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewIdAndIsDeleteIs(reviewId, 0))
                 .orElseThrow(ReviewNotFoundException::new);
 
         return findReview;
@@ -73,15 +67,11 @@ public class ReviewServiceImpl {
 
     /** {@Summary 리뷰 업데이트 Service} */
     @Transactional
-    public Review updateReview(Long reviewId, Review updatedReview) {
+    public Review updateReview(Review findReview, Review renewReview) {
 
-        // 1. 리뷰 데이터 조회 & null 체크
-        Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
-                .orElseThrow(ReviewNotFoundException::new);
-
-        // 3. 리뷰 데이터 수정
-        findReview.update(updatedReview.getContent(), updatedReview.getImgUrl()
-            , updatedReview.getStars());
+        // 리뷰 데이터 수정
+        findReview.update(renewReview.getContent(), renewReview.getImgUrl()
+            , renewReview.getStars());
 
         return findReview;
     }
@@ -93,8 +83,8 @@ public class ReviewServiceImpl {
         Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewId(reviewId))
                 .orElseThrow(ReviewNotFoundException::new);
 
-       // 2. 리뷰 데이터 제거
-        baseReviewRepository.deleteByReviewId(findReview.getReviewId());
+        // 2. isDelete 업데이트 (서비스 상 제거)
+        findReview.updateIsDelete(1);
     }
 
 }

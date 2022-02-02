@@ -56,17 +56,17 @@ public class AuthController {
         {
             logger.debug("AuthController Auth 체크 실패 "+ ex.getMessage());
             ex.printStackTrace();
-            return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.UNAUTHORIZED.getCode()), HttpStatus.UNAUTHORIZED);
         }catch(Exception ex)
         {
             ex.printStackTrace();
-            return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR, ApiStatusCode.SYSTEM_ERROR.getType(), ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(), ApiStatusCode.SYSTEM_ERROR.getType(), ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }   // 체크 필요!
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AuthorizationCheckFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(new TokenDto(jwt)), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(new TokenDto(jwt)), httpHeaders, HttpStatus.OK);
     }
 
 }

@@ -16,13 +16,13 @@ public class ParamValidationException extends RuntimeException{
 
     // 아마 삭제 예정
     public ParamValidationException() {
-        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode);
+        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode.getCode());
     }
 
     public ParamValidationException(Map<String, String> parameterErrorMsg) {
         System.out.println("ParamValidationException.ParamValidationException 호출됨");
         responseJsonObject = ResponseJsonObject.withParameterMsg(
-                errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage(), parameterErrorMsg
+                errorStatusCode.getCode(), errorStatusCode.getType(), errorStatusCode.getMessage(), parameterErrorMsg
         );
     }
     public ResponseJsonObject getResponseJsonObject(){

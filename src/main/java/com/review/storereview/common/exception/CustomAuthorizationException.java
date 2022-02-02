@@ -20,11 +20,11 @@ public class CustomAuthorizationException  {
 
     public CustomAuthorizationException() {
 
-        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode);
+        responseJsonObject = ResponseJsonObject.withStatusCode(errorStatusCode.getCode());
     }
 
     public CustomAuthorizationException(String message) {
-        responseJsonObject = ResponseJsonObject.withError(errorStatusCode, errorStatusCode.getType(), errorStatusCode.getMessage());
+        responseJsonObject = ResponseJsonObject.withError(errorStatusCode.getCode(), errorStatusCode.getType(), errorStatusCode.getMessage());
     }
 
 }
