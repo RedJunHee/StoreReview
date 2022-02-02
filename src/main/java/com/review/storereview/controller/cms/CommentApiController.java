@@ -88,12 +88,12 @@ public class CommentApiController {
             }
 
             // 결과값 리턴
-            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(commentResponseDto);
+            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(commentResponseDto);
             return new ResponseEntity<>(resDto, HttpStatus.OK);
         }catch(Exception ex)
         {
             logger.error(ex.getMessage());
-            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR,ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
+            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -142,13 +142,13 @@ public class CommentApiController {
                     .updatedAt(StringUtil.DateTimeToString(saveComment.getUpdatedAt()))
                     .build();
 
-            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.CREATED).setData(commentResponseDto);
+            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.CREATED.getCode()).setData(commentResponseDto);
             return new ResponseEntity<>(resDto, HttpStatus.CREATED);
         }
         catch(Exception ex)
         {
             logger.error(ex.getMessage());
-            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR,ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage() );
+            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage() );
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -192,14 +192,14 @@ public class CommentApiController {
                     .build();
 
             // ResponseDto 작성
-            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(commentResponseDto);
+            ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(commentResponseDto);
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.OK);
 
         }
         catch(Exception ex)
         {
             logger.error(ex.getMessage());
-            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR,ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
+            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -228,16 +228,16 @@ public class CommentApiController {
                         .build();
 
                 // ResponseDto 작성
-                ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK).setData(responseDto);
+                ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(responseDto);
                 return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
             } else {
                 logger.info("Comment delete failed!!");
-                return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.FORBIDDEN), HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.FORBIDDEN.getCode()), HttpStatus.FORBIDDEN);
             }
         }catch(Exception ex)
         {
             logger.error(ex.getMessage());
-            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR,ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
+            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
