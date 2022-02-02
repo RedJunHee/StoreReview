@@ -28,12 +28,11 @@ public class ReviewServiceImpl {
 
     /** {@Summary place에 해당하는 n개의 리뷰 데이터 리스트 조회 Service (2차원 리스트)} */
     public List<Review> listAllReviews(String placeId) {
+        // TODO 해당하는 placeId가 없을 경우 throw Error 해야하나?
         // 리뷰 데이터를 리스트화 & null 이라면 빈 컬렉션 반환
         List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceIdAndIsDeleteIsOrderByCreatedAtDesc(placeId, 0))
                 .orElse(Collections.emptyList());
 
-//        List<Review> findReviews = Optional.ofNullable(baseReviewRepository.findAllByPlaceId(placeId))
-//                .orElse(Collections.emptyList());
         return findReviews;
     }
 
