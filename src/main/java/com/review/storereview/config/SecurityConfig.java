@@ -6,6 +6,7 @@ import com.review.storereview.common.exception.handler.AuthenticationExceptionHa
 import com.review.storereview.common.exception.handler.AuthorizationExceptionHandler;
 import com.review.storereview.filter.AuthorizationCheckFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * Class       : SecurityConfig
@@ -65,6 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // enable h2-console
                     .and()
+                .cors()
+                    .and()
                 .headers()
                 .frameOptions()
                 .sameOrigin()       // 동일 도메인에서는 iframe 접근 가능
@@ -89,5 +95,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //AuthenticationFilterChain- UsernamePasswordAuthenticationFilter 전에 실행될 커스텀 필터 등록
                 .addFilterBefore(new AuthorizationCheckFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
                 //.apply(new JwtSecurityConfig(jwtTokenProvider));
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // - (3)
+        configuration.addAllowedOrigin("*");
+                configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
