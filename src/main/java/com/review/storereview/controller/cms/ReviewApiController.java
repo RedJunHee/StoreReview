@@ -167,12 +167,14 @@ public class ReviewApiController {
                 .stars(requestDto.getStars())
                 .imgUrl(requestDto.getImgUrl())
                 .build();
+
         // 5. 리뷰 업데이트 서비스 호출
         Review updatedReview = reviewService.updateReview(findReview, renewReview);
-        // 2. content 인코딩
+
+        // 6. content 인코딩
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
 
-        // 3. responseDto 생성
+        // 7. responseDto 생성
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
                 updatedReview.getReviewId(), updatedReview.getUser().getSaid(), updatedReview.getUser().getUserId(),
                 updatedReview.getStars(), encodedContent,
