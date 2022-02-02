@@ -28,7 +28,7 @@ jwt:
   #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
   #echo 'com-review-storereview-project-jwt-token-secret-key-com-review-storereview-project-jwt-token-secret-key'|base64
   secret: Y29tLXJldmlldy1zdG9yZXJldmlldy1wcm9qZWN0LWp3dC10b2tlbi1zZWNyZXQta2V5LWNvbS1yZXZpZXctc3RvcmVyZXZpZXctcHJvamVjdC1qd3QtdG9rZW4tc2VjcmV0LWtleQ==
-  token-validity-in-seconds: 86400
+  token-validity-in-seconds: 864000
 
 #ReviewService를 SHA256암호화 후 앞에서 32Byte
 aes-secret: 184EBFA87C052FB66887177B429201CE

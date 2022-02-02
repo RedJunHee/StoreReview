@@ -69,8 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // enable h2-console
                     .and()
-                .cors()
-                    .and()
                 .headers()
                 .frameOptions()
                 .sameOrigin()       // 동일 도메인에서는 iframe 접근 가능
@@ -97,17 +95,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.apply(new JwtSecurityConfig(jwtTokenProvider));
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // - (3)
-        configuration.addAllowedOrigin("*");
-                configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 }
