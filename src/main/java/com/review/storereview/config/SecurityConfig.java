@@ -85,6 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/authenticate").permitAll()    // 인증 절차 없이 접근 허용(로그인 관련 url)
                     .antMatchers("/api/signup").permitAll()
+                    .antMatchers("/test/ping").permitAll()
                     .antMatchers("/comment").hasRole(Authority.USER.getName())
                     .antMatchers("/test/tester").hasRole(Authority.USER.getName())
                     .antMatchers("/test/admin").hasRole(Authority.ADMIN.getName())

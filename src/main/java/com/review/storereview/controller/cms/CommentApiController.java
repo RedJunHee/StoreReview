@@ -123,8 +123,8 @@ public class CommentApiController {
                     .content(decodingContent)
                     .user(User.builder()
                             .userId(userDetails.getUsername())
-                            .suid(cryptUtils.AES_Decode(userDetails.getSuid()))
-                            .said(cryptUtils.AES_Decode(userDetails.getSaid()))
+                            .suid(userDetails.getSuid())
+                            .said(userDetails.getSaid())
                             .build())
                     .createdAt(LocalDateTime.now())
                     .IsDelete(0)
@@ -176,6 +176,13 @@ public class CommentApiController {
 
             // 코멘트 수정 서비스
             Comment savedComment = commentService.findByCommentId(requestDto.getCommentId());
+
+            // 자신의 코멘트가 아닌 경우 권한 없음.
+            if( savedComment.getUser().getSuid().equals(userDetails.getSuid()) == false)
+            {
+                logger.info("Failed. Comment Update UnAuthorization!!");
+                return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.FORBIDDEN.getCode()), HttpStatus.FORBIDDEN);
+            }
 
             Comment comment = Comment.builder()
                     .commentId(requestDto.getCommentId())
@@ -231,7 +238,7 @@ public class CommentApiController {
             Comment comment = commentService.findByCommentId(requestDto.getCommentId());
 
             //SUID 유효성 체크.
-            if (comment.getUser().getSuid().equals(cryptUtils.AES_Decode(userDetails.getSuid()))) {
+            if (comment.getUser().getSuid().equals(userDetails.getSuid())) {
                 comment.setisDelete(1);
                 // 코멘트 삭제 서비스 처리
                 Comment deleteComment = commentService.save(comment);
