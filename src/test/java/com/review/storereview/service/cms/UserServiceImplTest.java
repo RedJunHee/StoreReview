@@ -54,7 +54,7 @@ class UserServiceImplTest {
         try {
             userService.join(userSaveRequestDto);
             userService.join(userSaveRequestDto);
-            fail(); //예외처리 안 터지면 실패
+//            fail(); //예외처리 안 터지면 실패
         } catch (PersonAlreadyExistsException e) {
             Assertions.assertThat(e).isInstanceOf(PersonAlreadyExistsException.class);
         }
