@@ -2,9 +2,15 @@ package com.review.storereview.common.utils;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 import java.util.Base64; import java.util.Base64.Decoder; import java.util.Base64.Encoder;
 
 import java.nio.charset.StandardCharsets;
@@ -12,22 +18,43 @@ import java.nio.charset.StandardCharsets;
 class CryptUtilsTest {
 
     CryptUtils cryptUtils;
+    public static String alg = "AES/CBC/PKCS5Padding";
+    private String key = "";
+    private String iv ;// 16byte
+
+    @BeforeEach
+    public void befor()
+    {
+        cryptUtils = new CryptUtils("184EBFA87C052FB66887177B429201CE");
+        this.key = cryptUtils.getSecretKey();
+        this.iv = key.substring(0, 16);
+    }
 
     @Test
-    @DisplayName("AES 256bit 암호화 테스트")
-    public void AESEncryptTest()
-    {
+    @DisplayName("AES256 암호화")
+    public void AES_Encryption(){
         String str = "암호화 테스트";
-        String key = "184EBFA87C052FB66887177B429201CE";
-        String result = "";
         try {
-            result = cryptUtils.getAES().encrypt(cryptUtils.getSecretKey(),str);
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(cryptUtils.AES_Encode(str));
+        }catch(Exception ex)
+        {
+            ex.getMessage();
         }
-
-        System.out.println(result);
     }
+
+    @Test
+    @DisplayName("AES256 복호화")
+    public void AES_Decryption(){
+        String str = "yFbxF4IPEYjCpXhXzwPGIRkqlwQM0sCIFMK1sYq6oLw=";
+        try {
+            System.out.println(cryptUtils.AES_Decode(str));
+        }catch(Exception ex)
+        {
+            ex.getMessage();
+        }
+    }
+
+
     @Test
     @DisplayName("Base64 인코딩 테스트")
     public void Base64Encoding(){

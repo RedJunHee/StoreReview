@@ -40,10 +40,12 @@ public class CommentApiController {
     private final Logger logger = LoggerFactory.getLogger(CommentApiController.class);
 
     private final CommentService commentService;
+    private final CryptUtils cryptUtils;
 
     @Autowired
-    public CommentApiController(CommentService commentService) {
+    public CommentApiController(CommentService commentService, CryptUtils cryptUtils) {
         this.commentService = commentService;
+        this.cryptUtils = cryptUtils;
     }
 
     /** 특정 리뷰아이디에 달린 코멘트 리스트 조회
@@ -61,8 +63,8 @@ public class CommentApiController {
             PageRequest pageRequest = PageRequest.of(pageNo, 5, Sort.by("createdAt").ascending());
 
             // 리뷰에 달린 코멘트 정보 모두 조회
-            Page<Comment> comments = commentService.findAllCommentsAndIsDelete(reviewId,0, pageRequest);
-            if (comments.getNumberOfElements() == 0) {
+            Page<Comment> savedComments = commentService.findAllCommentsAndIsDelete(reviewId,0, pageRequest);
+            if (savedComments.getNumberOfElements() == 0) {
                 // 결과값 리턴
                 // 콘텐츠 없음.... 204 Code
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -71,18 +73,18 @@ public class CommentApiController {
 
             // 응답 객체 초기화
             CommentListResponseDto commentResponseDto = new CommentListResponseDto(
-                    comments.getTotalElements()
+                    savedComments.getTotalElements()
             );
 
-            for (Comment comment : comments.getContent()) {
+            for (Comment saveComment : savedComments.getContent()) {
                 commentResponseDto.addComment(
                         new CommentListResponseDto.comment(
-                                comment.getCommentId()
-                                , comment.getUser().getSaid()
-                                , CryptUtils.Base64Encoding(comment.getContent())
-                                , comment.getUser().getUserId()
-                                , StringUtil.DateTimeToString(comment.getCreatedAt())
-                                , StringUtil.DateTimeToString(comment.getUpdatedAt())
+                                saveComment.getCommentId()
+                                , cryptUtils.AES_Encode(saveComment.getUser().getSaid())
+                                , CryptUtils.Base64Encoding(saveComment.getContent())
+                                , saveComment.getUser().getUserId()
+                                , StringUtil.DateTimeToString(saveComment.getCreatedAt())
+                                , StringUtil.DateTimeToString(saveComment.getUpdatedAt())
                         )
                 );
             }
@@ -92,7 +94,7 @@ public class CommentApiController {
             return new ResponseEntity<>(resDto, HttpStatus.OK);
         }catch(Exception ex)
         {
-            logger.error(ex.getMessage());
+            logger.error("comment all select exception : " + ex.getMessage());
             ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -121,8 +123,8 @@ public class CommentApiController {
                     .content(decodingContent)
                     .user(User.builder()
                             .userId(userDetails.getUsername())
-                            .suid(userDetails.getSuid())
-                            .said(userDetails.getSaid())
+                            .suid(cryptUtils.AES_Decode(userDetails.getSuid()))
+                            .said(cryptUtils.AES_Decode(userDetails.getSaid()))
                             .build())
                     .createdAt(LocalDateTime.now())
                     .IsDelete(0)
@@ -136,7 +138,7 @@ public class CommentApiController {
             CommentResponseDto commentResponseDto = CommentResponseDto.builder()
                     .commentId(saveComment.getCommentId())
                     .userId(saveComment.getUser().getUserId())
-                    .said(saveComment.getUser().getSaid())
+                    .said(cryptUtils.AES_Encode(saveComment.getUser().getSaid()))
                     .content(CryptUtils.Base64Encoding(saveComment.getContent()))
                     .createdAt(StringUtil.DateTimeToString(saveComment.getCreatedAt()))
                     .updatedAt(StringUtil.DateTimeToString(saveComment.getUpdatedAt()))
@@ -147,15 +149,20 @@ public class CommentApiController {
         }
         catch(Exception ex)
         {
-            logger.error(ex.getMessage());
+            logger.error("comment save exception : " + ex.getMessage());
             ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage() );
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
+    /**
+     *  코멘트 수정 API
+     *
+     * @param requestDto
+     * @return 작성된 코멘트 정보 리턴.
+     */
     @PutMapping("/comment")
-    public ResponseEntity<ResponseJsonObject> writeComment(@RequestBody CommentUpdateRequestDto requestDto)
+    public ResponseEntity<ResponseJsonObject> updateComment(@RequestBody CommentUpdateRequestDto requestDto)
     {
         try {
             // content Base64 디코딩 작업
@@ -185,7 +192,7 @@ public class CommentApiController {
             CommentResponseDto commentResponseDto = CommentResponseDto.builder()
                     .commentId(updateComment.getCommentId())
                     .userId(updateComment.getUser().getUserId())
-                    .said(updateComment.getUser().getSaid())
+                    .said(cryptUtils.AES_Encode(updateComment.getUser().getSaid()))
                     .content(CryptUtils.Base64Encoding(updateComment.getContent()))
                     .createdAt(StringUtil.DateTimeToString(updateComment.getCreatedAt()))
                     .updatedAt(StringUtil.DateTimeToString(updateComment.getUpdatedAt()))
@@ -198,12 +205,18 @@ public class CommentApiController {
         }
         catch(Exception ex)
         {
-            logger.error(ex.getMessage());
+            logger.error("comment update exception : " + ex.getMessage());
             ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     *  코멘트 삭제 API
+     *
+     * @param requestDto
+     * @return 작성된 코멘트 정보 리턴.
+     */
     @DeleteMapping("/comment")
     public ResponseEntity<ResponseJsonObject> deleteComment(@RequestBody CommentDeleteRequestDto requestDto)
     {
@@ -217,7 +230,8 @@ public class CommentApiController {
             // 코멘트 작성자 유효성 체크
             Comment comment = commentService.findByCommentId(requestDto.getCommentId());
 
-            if (comment.getUser().getSuid().equals(userDetails.getSuid())) {
+            //SUID 유효성 체크.
+            if (comment.getUser().getSuid().equals(cryptUtils.AES_Decode(userDetails.getSuid()))) {
                 comment.setisDelete(1);
                 // 코멘트 삭제 서비스 처리
                 Comment deleteComment = commentService.save(comment);
@@ -231,12 +245,12 @@ public class CommentApiController {
                 ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(responseDto);
                 return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
             } else {
-                logger.info("Comment delete failed!!");
+                logger.info("Failed. Comment Delete UnAuthorization!!");
                 return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.FORBIDDEN.getCode()), HttpStatus.FORBIDDEN);
             }
         }catch(Exception ex)
         {
-            logger.error(ex.getMessage());
+            logger.error("comment delete exception : " + ex.getMessage());
             ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
             return new ResponseEntity<ResponseJsonObject>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -34,4 +34,14 @@ public class TestController {
         return new ResponseEntity<>( "testAPI", HttpStatus.OK);
     }
 
+
+    /**
+     * test용 api
+     * @return
+     */
+    @GetMapping("/ping")
+    public ResponseEntity<String> none(){
+        return new ResponseEntity<>( "ping~~pong~~", HttpStatus.OK);
+    }
+
 }
