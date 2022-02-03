@@ -165,7 +165,7 @@ public class JwtTokenProvider implements AuthenticationProvider {
      * @param token
      * @return
      */
-    public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token) throws BadCredentialsException {
         Claims claims = Jwts
                 .parserBuilder()
                 .setSigningKey(key)
@@ -177,13 +177,21 @@ public class JwtTokenProvider implements AuthenticationProvider {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
+        String suid = null, said = null ;
+        try {
 
-        String suid = claims.get("suid").toString();
-        String said = claims.get("said").toString();
+            suid = cryptUtils.AES_Decode(claims.get("suid").toString());
+            said = cryptUtils.AES_Decode(claims.get("said").toString());
+
+        } catch (Exception e) {
+            logger.error("Token get Authentication Error "+ e.getMessage());
+            throw new BadCredentialsException("");
+        }
 
         JWTUserDetails principal = new JWTUserDetails(claims.getSubject(), "", authorities, suid, said);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+
     }
 
     /**

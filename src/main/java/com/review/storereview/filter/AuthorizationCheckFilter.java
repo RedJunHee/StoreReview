@@ -3,6 +3,7 @@ package com.review.storereview.filter;
 import com.review.storereview.common.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -54,7 +55,7 @@ public class AuthorizationCheckFilter extends OncePerRequestFilter {
 //    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws BadCredentialsException,ServletException, IOException {
         String jwt = resolveToken(request);
         String requestURI = request.getRequestURI();
 
