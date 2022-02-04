@@ -19,9 +19,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 /**
  * {@Summary 리뷰 api 요청 컨트롤러 }
  * Author      : 문 윤 지
@@ -119,8 +124,16 @@ public class ReviewApiController {
      */
     @PostMapping("/review")
     public ResponseEntity<ResponseJsonObject> uploadReview(@RequestBody ReviewUploadRequestDto requestDto) {
-        // 1. 인코딩된 content 디코딩
+        // 1. 인코딩된 content, imgUrl 디코딩
         String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
+        List<String> imgUrl = requestDto.getImgUrl();
+        ArrayList<String> decodedImgFile = new ArrayList<>(imgUrl.size());
+        if (imgUrl.size() >= 1) {
+            for (int i=0; i< requestDto.getImgUrl().size(); i++) {
+                decodedImgFile.add(CryptUtils.Base64Decoding(imgUrl.get(i)));
+            }
+        }
+
         // 2. 인증된 사용자 토큰 값
         // 2-1. 인증된 사용자의 인증 객체 가져오기
         Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
@@ -131,7 +144,7 @@ public class ReviewApiController {
                 .placeId(requestDto.getPlaceId())
                 .content(decodedContent)
                 .stars(requestDto.getStars())
-                .imgUrl(requestDto.getImgUrl())
+                .imgUrl(decodedImgFile)
                 .user(User.builder()
                         .userId(authenticationToken.getName())  // Name == userId(이메일)
                         .suid(userDetails.getSuid())
@@ -140,8 +153,16 @@ public class ReviewApiController {
                 .isDelete(0)
                 .build();
         Review savedReview = reviewService.uploadReview(review);
-        // 4. content 인코딩
+        // 4. content, imgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(savedReview.getContent());
+        List<String> savedImgUrl = savedReview.getImgUrl();
+        ArrayList<String> encodedImgFile = new ArrayList<>(savedImgUrl.size());
+        if (savedImgUrl.size() >= 1) {
+            for (int i=0; i< requestDto.getImgUrl().size(); i++) {
+                System.out.println(CryptUtils.Base64Encoding(savedImgUrl.get(i)));
+                encodedImgFile.add(CryptUtils.Base64Encoding(savedImgUrl.get(i)));
+            }
+        }
 
         // 5. responseDto 생성
         ReviewResponseDto reviewResponseDto = null;
@@ -149,7 +170,7 @@ public class ReviewApiController {
             reviewResponseDto = new ReviewResponseDto(
                     savedReview.getReviewId(), cryptUtils.AES_Encode(savedReview.getUser().getSaid()), savedReview.getUser().getUserId(),
                     savedReview.getStars(), encodedContent,
-                    savedReview.getImgUrl(),
+                    encodedImgFile,
                     savedReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     savedReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     savedReview.getIsDelete());
@@ -181,7 +202,7 @@ public class ReviewApiController {
         // 3.1. 리뷰 조회 & null 체크
         Review findReview = reviewService.listReview(reviewId);
         // 3.2 검증
-        if (findReview.getUser().getSuid() != userDetails.getSuid()) {
+        if (!(findReview.getUser().getSuid().equals(userDetails.getSuid()))) {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
         }
         // 4. 리뷰 생성
@@ -234,7 +255,7 @@ public class ReviewApiController {
         Review findReview = reviewService.listReview(reviewId);
 
         // 2.2 검증
-        if (findReview.getUser().getSuid() != userDetails.getSuid()) {
+        if (!findReview.getUser().getSuid().equals(userDetails.getSuid())) {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
         }
         // 3. 리뷰 제거 서비스 로직
