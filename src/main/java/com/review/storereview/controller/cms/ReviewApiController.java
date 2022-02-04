@@ -11,18 +11,22 @@ import com.review.storereview.dto.request.ReviewUploadRequestDto;
 import com.review.storereview.dto.response.ReviewResponseDto;
 import com.review.storereview.dto.response.ReviewListResponseDto;
 import com.review.storereview.service.cms.ReviewServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 /**
  * {@Summary 리뷰 api 요청 컨트롤러 }
  * Author      : 문 윤 지
@@ -30,11 +34,15 @@ import java.util.List;
  */
 @RestController
 public class ReviewApiController {
+    private final Logger logger = LoggerFactory.getLogger(ReviewApiController.class);
+
     private final ReviewServiceImpl reviewService;
+    private final CryptUtils cryptUtils;
 
     @Autowired
-    public ReviewApiController(ReviewServiceImpl reviewService) {
+    public ReviewApiController(ReviewServiceImpl reviewService, CryptUtils cryptUtils) {
         this.reviewService = reviewService;
+        this.cryptUtils = cryptUtils;
     }
 
     /**
@@ -55,19 +63,25 @@ public class ReviewApiController {
             // 3.1. content 인코딩
             String encodedContent = CryptUtils.Base64Encoding(review.getContent());
             // 3.2. responseDto 추가
-            listResponseDto.addReview(
-                    new ReviewResponseDto(
-                            review.getReviewId(),
-                            review.getUser().getSaid(),
-                            review.getUser().getUserId(),
-                            review.getStars(),
-                            encodedContent,
-                            review.getImgUrl(),
-                            review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                            review.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                            review.getIsDelete()
-                    )
-            );
+            try {
+                listResponseDto.addReview(
+                        new ReviewResponseDto(
+                                review.getReviewId(),
+                                cryptUtils.AES_Encode(review.getUser().getSaid()),
+                                review.getUser().getUserId(),
+                                review.getStars(),
+                                encodedContent,
+                                review.getImgUrl(),
+                                review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                                review.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                                review.getIsDelete()
+                        )
+                );
+            } catch(Exception ex) {
+                logger.error("ReviewApiController.findAllReviews Method/ Said Encoding Exception : " + ex.getMessage());
+                ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
+                return new ResponseEntity<>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(listResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
@@ -85,13 +99,20 @@ public class ReviewApiController {
         String encodedContent = CryptUtils.Base64Encoding(findReview.getContent());
 
         // 3. responseDto 생성
-        ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                findReview.getReviewId(), findReview.getUser().getSaid(), findReview.getUser().getUserId(),
-                findReview.getStars(), encodedContent,
-                findReview.getImgUrl(),
-                findReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                findReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                findReview.getIsDelete());
+        ReviewResponseDto reviewResponseDto = null;
+        try {
+            reviewResponseDto = new ReviewResponseDto(
+                    findReview.getReviewId(), cryptUtils.AES_Encode(findReview.getUser().getSaid()), findReview.getUser().getUserId(),
+                    findReview.getStars(), encodedContent,
+                    findReview.getImgUrl(),
+                    findReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    findReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    findReview.getIsDelete());
+        } catch(Exception ex) {
+            logger.error("ReviewApiController.findOneReview Method/ Said Encoding Exception : " + ex.getMessage());
+            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
+            return new ResponseEntity<>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
@@ -103,8 +124,16 @@ public class ReviewApiController {
      */
     @PostMapping("/review")
     public ResponseEntity<ResponseJsonObject> uploadReview(@RequestBody ReviewUploadRequestDto requestDto) {
-        // 1. 인코딩된 content 디코딩
+        // 1. 인코딩된 content, imgUrl 디코딩
         String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
+        List<String> imgUrl = requestDto.getImgUrl();
+        ArrayList<String> decodedImgFile = new ArrayList<>(imgUrl.size());
+        if (imgUrl.size() >= 1) {
+            for (int i=0; i< requestDto.getImgUrl().size(); i++) {
+                decodedImgFile.add(CryptUtils.Base64Decoding(imgUrl.get(i)));
+            }
+        }
+
         // 2. 인증된 사용자 토큰 값
         // 2-1. 인증된 사용자의 인증 객체 가져오기
         Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
@@ -115,7 +144,7 @@ public class ReviewApiController {
                 .placeId(requestDto.getPlaceId())
                 .content(decodedContent)
                 .stars(requestDto.getStars())
-                .imgUrl(requestDto.getImgUrl())
+                .imgUrl(decodedImgFile)
                 .user(User.builder()
                         .userId(authenticationToken.getName())  // Name == userId(이메일)
                         .suid(userDetails.getSuid())
@@ -124,17 +153,32 @@ public class ReviewApiController {
                 .isDelete(0)
                 .build();
         Review savedReview = reviewService.uploadReview(review);
-        // 4. content 인코딩
+        // 4. content, imgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(savedReview.getContent());
+        List<String> savedImgUrl = savedReview.getImgUrl();
+        ArrayList<String> encodedImgFile = new ArrayList<>(savedImgUrl.size());
+        if (savedImgUrl.size() >= 1) {
+            for (int i=0; i< requestDto.getImgUrl().size(); i++) {
+                System.out.println(CryptUtils.Base64Encoding(savedImgUrl.get(i)));
+                encodedImgFile.add(CryptUtils.Base64Encoding(savedImgUrl.get(i)));
+            }
+        }
 
         // 5. responseDto 생성
-        ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                savedReview.getReviewId(), savedReview.getUser().getSaid(), savedReview.getUser().getUserId(),
-                savedReview.getStars(), encodedContent,
-                savedReview.getImgUrl(),
-                savedReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                savedReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                savedReview.getIsDelete());
+        ReviewResponseDto reviewResponseDto = null;
+        try {
+            reviewResponseDto = new ReviewResponseDto(
+                    savedReview.getReviewId(), cryptUtils.AES_Encode(savedReview.getUser().getSaid()), savedReview.getUser().getUserId(),
+                    savedReview.getStars(), encodedContent,
+                    encodedImgFile,
+                    savedReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    savedReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    savedReview.getIsDelete());
+        } catch(Exception ex) {
+            logger.error("ReviewApiController.uploadReview Method/ Said Encoding Exception : " + ex.getMessage());
+            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
+            return new ResponseEntity<>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
@@ -158,7 +202,7 @@ public class ReviewApiController {
         // 3.1. 리뷰 조회 & null 체크
         Review findReview = reviewService.listReview(reviewId);
         // 3.2 검증
-        if (findReview.getUser().getSuid() != userDetails.getSuid()) {
+        if (!(findReview.getUser().getSuid().equals(userDetails.getSuid()))) {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
         }
         // 4. 리뷰 생성
@@ -175,15 +219,22 @@ public class ReviewApiController {
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
 
         // 7. responseDto 생성
-        ReviewResponseDto reviewResponseDto = new ReviewResponseDto(
-                updatedReview.getReviewId(), updatedReview.getUser().getSaid(), updatedReview.getUser().getUserId(),
-                updatedReview.getStars(), encodedContent,
-                updatedReview.getImgUrl(),
-                updatedReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                updatedReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                updatedReview.getIsDelete());
-
-        ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
+        ReviewResponseDto reviewResponseDto = null;
+        ResponseJsonObject resDto = null;
+        try {
+            reviewResponseDto = new ReviewResponseDto(
+                    updatedReview.getReviewId(), cryptUtils.AES_Encode(updatedReview.getUser().getSaid()), updatedReview.getUser().getUserId(),
+                    updatedReview.getStars(), encodedContent,
+                    updatedReview.getImgUrl(),
+                    updatedReview.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    updatedReview.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    updatedReview.getIsDelete());
+        } catch(Exception ex) {
+            logger.error("ReviewApiController.updateReview Method/ Said Encoding2 Exception : " + ex.getMessage());
+            resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
+            return new ResponseEntity<>(resDto,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(reviewResponseDto);
         return new ResponseEntity<>(resDto, HttpStatus.OK);
     }
 
@@ -196,14 +247,15 @@ public class ReviewApiController {
         // 1. 인증된 사용자 토큰 값
         // 1-1. 인증된 사용자의 인증 객체 가져오기
         Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
-        // 1-2. 인증 객체의 유저정보 가져오기
+        // 1-2. 인증 객체의 유저정보 가져오기 (인코딩된 상태)
         JWTUserDetails userDetails = (JWTUserDetails) authenticationToken.getPrincipal();
 
         // 2. 리뷰 작성자 유효성 검증
         // 2.1. 리뷰 조회 & null 체크
         Review findReview = reviewService.listReview(reviewId);
+
         // 2.2 검증
-        if (findReview.getUser().getSuid() != userDetails.getSuid()) {
+        if (!findReview.getUser().getSuid().equals(userDetails.getSuid())) {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
         }
         // 3. 리뷰 제거 서비스 로직

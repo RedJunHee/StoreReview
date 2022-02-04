@@ -83,11 +83,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  */
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/authenticate").permitAll()    // 인증 절차 없이 접근 허용(로그인 관련 url)
-                    .antMatchers("/api/signup").permitAll()
-                    .antMatchers("/test/ping").permitAll()
-                    .antMatchers("/comment").hasRole(Authority.USER.getName())
-                    .antMatchers("/test/tester").hasRole(Authority.USER.getName())
+                    .antMatchers("/authenticate", "/api/signup", "/test/ping").permitAll()    // 인증 절차 없이 접근 허용(로그인 관련 url)
+                    .antMatchers("/comment", "/places/**", "/review", "/reviews/**", "/test/tester").hasRole(Authority.USER.getName())
                     .antMatchers("/test/admin").hasRole(Authority.ADMIN.getName())
                     .anyRequest().authenticated()       // 그 외 나머지 리소스들은 무조건 인증을 완료해야 접근 가능
                 .and()

@@ -9,7 +9,6 @@ import java.util.List;
 @Repository
 public interface BaseReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByPlaceIdAndIsDeleteIsOrderByCreatedAtDesc(String placeId, int isDelete);
-    Review findByReviewId(Long reviewId);
     Review findByReviewIdAndIsDeleteIs(Long reviewId, int isDelete);
 
 }
