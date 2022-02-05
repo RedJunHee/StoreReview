@@ -6,39 +6,28 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParamValidationException;
-import com.review.storereview.controller.cms.ReviewApiController;
-import com.review.storereview.dto.ResponseJsonObject;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-    private final Logger logger = LoggerFactory.getLogger(S3Service.class);
 
     private AmazonS3 s3Client;
 
@@ -59,22 +48,27 @@ public class S3Service {
         // AWSCredentials 생성
         AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
 
-        ClientConfiguration clientConfiguration = new ClientConfiguration();
-        clientConfiguration.setSignerOverride("AWSS3V4SignerType");
+//        ClientConfiguration clientConfiguration = new ClientConfiguration();
+//        clientConfiguration.setSignerOverride("AWSS3V4SignerType");
 
         // S3 Client 생성
         s3Client = AmazonS3ClientBuilder.standard()
-                .withClientConfiguration(clientConfiguration)
+                .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(this.region)
                 .build();
-        final S3ClientOptions clientOptions = S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build();
-        s3Client.setS3ClientOptions(clientOptions);
+//        s3Client = AmazonS3ClientBuilder.standard()
+//                .withClientConfiguration(clientConfiguration)
+//                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+//                .withRegion(this.region)
+//                .build();
+//        final S3ClientOptions clientOptions = S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build();
+//        s3Client.setS3ClientOptions(clientOptions);
     }
 
     /**
      * 새로운 파일을 업로드한다.
      * @param multipartFile
+     * @return 업로드한 이미지파일의 url 반환
      */
     @Transactional
     public String uploadFile(MultipartFile multipartFile) {
@@ -82,46 +76,13 @@ public class S3Service {
         String fileName = createFileName(getFileExtension(multipartFile.getOriginalFilename()));
 
         // 2. ObjectMetadata로 변환 및 S3 업로드
-        uploadFile = putS3(multipartFile, fileName);
-
-
-
-        // 4. 로컬 파일 제거
-        removeNewFile(uploadFile.get());
+         String uploadImageUrl = putS3(multipartFile, fileName);
         return uploadImageUrl;
     }
 
     // 파일 이름 생성
     private String createFileName(String originalFilename) {
         return UUID.randomUUID() + "_" + originalFilename;
-    }
-
-    /**
-     * MultipartFile을 File로 변환한다.
-     * @param file
-     * @throws IOException
-     */
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
-        if(convertFile.createNewFile()) {   // 생성되면 true
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
-            }
-            return Optional.of(convertFile);
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * convert하는 과정에서 생성된 로컬파일을 S3 업로드 완료 후 삭제한다.
-     * @param targetFile
-    */
-    private void removeNewFile(File targetFile) {
-        if(targetFile.delete()) {
-            logger.info("파일이 삭제되었습니다.");
-        }else {
-            logger.error("파일이 삭제되지 못했습니다.");
-        }
     }
 
     /**
@@ -141,9 +102,8 @@ public class S3Service {
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다.");
         }
-
+        // TODO url을 전달할 지 파일명을 전달할지 결정해야함 with 프론트
         return s3Client.getUrl(bucketName, fileName).toString();
-
     }
 
     /**

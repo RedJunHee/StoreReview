@@ -47,7 +47,7 @@ logging:
 cloud:
   aws:
     s3:
-      bucket: reviewservice-bucket
+      bucket: storereview-bucket
     region:
       static: us-east-2
     stack:
