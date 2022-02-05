@@ -1,5 +1,9 @@
 package com.review.storereview.controller.cms;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.utils.CryptUtils;
 import com.review.storereview.common.utils.StringUtil;
@@ -64,8 +68,14 @@ public class ReviewApiController {
         // 3. listResponseDto 생성 및 추가
         ReviewListResponseDto listResponseDto = new ReviewListResponseDto(placeAvgStars);
         for (Review review : findReviews) {
-            // 3.1. content 인코딩
+            // 3.1. content, imgUrlList 인코딩
             String encodedContent = CryptUtils.Base64Encoding(review.getContent());
+            List<String> encodedImgUrlList = new ArrayList<>();
+            if (review.getImgUrl().size() >= 1) {
+                for (String imgUrl : review.getImgUrl()) {
+                    encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
+                }
+            }
             // 3.2. responseDto 추가
             try {
                 listResponseDto.addReview(
@@ -75,7 +85,7 @@ public class ReviewApiController {
                                 review.getUser().getUserId(),
                                 review.getStars(),
                                 encodedContent,
-                                review.getImgUrl(),
+                                encodedImgUrlList,
                                 StringUtil.DateTimeToString(review.getCreatedAt()),
                                 StringUtil.DateTimeToString(review.getUpdatedAt()),
                                 review.getIsDelete()
@@ -99,16 +109,21 @@ public class ReviewApiController {
     public ResponseEntity<ResponseJsonObject> findOneReview(@PathVariable Long reviewId) {
         // 1. 조회 서비스 로직 (리뷰 조회 - userId 조회)
         Review findReview = reviewService.listReview(reviewId);
-        // 2. content 인코딩
+        // 2. content, imgUrlList 인코딩
         String encodedContent = CryptUtils.Base64Encoding(findReview.getContent());
-
+        List<String> encodedImgUrlList = new ArrayList<>();
+        if (findReview.getImgUrl().size() >= 1) {
+            for (String imgUrl : findReview.getImgUrl()) {
+                encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
+            }
+        }
         // 3. responseDto 생성
         ReviewResponseDto reviewResponseDto = null;
         try {
             reviewResponseDto = new ReviewResponseDto(
                     findReview.getReviewId(), cryptUtils.AES_Encode(findReview.getUser().getSaid()), findReview.getUser().getUserId(),
                     findReview.getStars(), encodedContent,
-                    findReview.getImgUrl(),
+                    encodedImgUrlList,
                     StringUtil.DateTimeToString(findReview.getCreatedAt()),
                     StringUtil.DateTimeToString(findReview.getUpdatedAt()),
                     findReview.getIsDelete());
@@ -191,11 +206,19 @@ public class ReviewApiController {
     /**
      * {@Summary 리뷰 업데이트 컨트롤러}
      * @param reviewId
-     * @param requestDto
+     * @param imgFileList
+     * @param requestDtoStr
      */
     @PutMapping("/reviews/{reviewId}")
-    public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId, @RequestPart("imgFileList") List<MultipartFile> imgFileList,
-                                                           @RequestParam("key") ReviewUpdateRequestDto requestDto) {
+    public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId,
+                                                           @RequestPart(value = "imgFileList", required = false) List<MultipartFile> imgFileList,
+                                                           @RequestParam("key") String requestDtoStr) throws JsonProcessingException {
+        // 0. ObjectMapping으로 String -> Dto 변환
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new SimpleModule());
+        ReviewUpdateRequestDto requestDto = objectMapper.readValue(requestDtoStr, new TypeReference<ReviewUpdateRequestDto>() {
+        });
+
         // 1. 인코딩된 content 디코딩 및 content 세팅
         String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
         // 2. 인증된 사용자 토큰 값
