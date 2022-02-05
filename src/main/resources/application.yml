@@ -43,3 +43,15 @@ logging:
   level:
     root: info
 
+# S3
+cloud:
+  aws:
+    s3:
+      bucket: reviewservice-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: AKIAYYPTKEMGS2I3U55T
+      secretKey: review123!
