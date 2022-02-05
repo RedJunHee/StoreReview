@@ -42,15 +42,15 @@ class ReviewServiceImplTest {
     @Test
     void 리뷰_업로드() {
         // when
-        List<String> imgUrl = new ArrayList<>(Arrays.asList("http://s3-img-url-test3.com","http://s3-img-url-test4.com", "http://s3-img-url-test5.com"));
+//        List<String> imgUrl = new ArrayList<>(Arrays.asList("http://s3-img-url-test3.com","http://s3-img-url-test4.com", "http://s3-img-url-test5.com"));
         Integer stars = 4;
 
-        ReviewUploadRequestDto uploadRequestDto = new ReviewUploadRequestDto("1234", "리뷰 서비스 테스트3", stars, imgUrl);
+        ReviewUploadRequestDto uploadRequestDto = new ReviewUploadRequestDto("1234", "리뷰 서비스 테스트3", stars);
         Review review = new Review().builder()
                 .placeId(uploadRequestDto.getPlaceId())
                 .content(uploadRequestDto.getContent())
                 .stars(uploadRequestDto.getStars())
-                .imgUrl(uploadRequestDto.getImgUrl())
+                .imgUrl(null)
                 .user(User.builder()
                         .userId("moooon99@naver.com")  // Name == userId(이메일)
                         .suid("SI0000000001")
@@ -96,11 +96,11 @@ class ReviewServiceImplTest {
         List<String> updatedImgUrl = new ArrayList<>(Arrays.asList("http://s3-img-url-test1.com"));
         // Collections.emptyList();
         Integer stars=1;
-        ReviewUpdateRequestDto updateRequestDto = new ReviewUpdateRequestDto("업데이트된 리뷰 서비스 테스트", updatedImgUrl, stars);
+        ReviewUpdateRequestDto updateRequestDto = new ReviewUpdateRequestDto("업데이트된 리뷰 서비스 테스트", stars);
         Review review = new Review().builder()
                 .content(updateRequestDto.getContent())
                 .stars(updateRequestDto.getStars())
-                .imgUrl(updateRequestDto.getImgUrl())
+                .imgUrl(null)
                 .build();
         // when : 조회
         Long reviewId = 4L;

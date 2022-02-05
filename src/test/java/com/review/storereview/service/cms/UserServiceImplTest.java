@@ -12,19 +12,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UserServiceImpl 테스트")
 class UserServiceImplTest {
 
     @Mock private BaseUserRepository userRepository;
+    @Mock private BCryptPasswordEncoder passwordEncoder;
     @InjectMocks private UserServiceImpl userService;
+
     LocalDate birthDate = LocalDate.of(1999, 11, 15);
 
     @Test
@@ -34,8 +37,8 @@ class UserServiceImplTest {
                 .userId("moonz99").name("문").nickname("moonz").password("1234567")
                 .birthDate(birthDate).gender(Gender.W).phone("01012345678")
                 .build();
-
-        doThrow(new PersonAlreadyExistsException()).when(userService).validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
+        // when
+        userService.join(userSaveRequestDto);
     }
 
     @Transactional  // 테스트 실행 후 다시 Rollback 된다. (@Commit 붙여줄 경우 테스트 시 실행된 트랜잭션이 커밋되어 롤백되지않는다.)
@@ -48,10 +51,10 @@ class UserServiceImplTest {
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder().userId("banan99").name("뭉지").nickname("moon").password("123456").birthDate(birthDate).gender(Gender.W).phone("01013572468")
                 .build();
 
-        userService.join(userSaveRequestDto);
         try {
             userService.join(userSaveRequestDto);
-            fail(); //예외처리 안 터지면 실패
+            userService.join(userSaveRequestDto);
+//            fail(); //예외처리 안 터지면 실패
         } catch (PersonAlreadyExistsException e) {
             Assertions.assertThat(e).isInstanceOf(PersonAlreadyExistsException.class);
         }

@@ -16,18 +16,16 @@ import java.util.List;
 @NoArgsConstructor
 public class ReviewUpdateRequestDto {
     private String content;
-    private List<String> imgUrl;
     private Integer stars;
 
-    public ReviewUpdateRequestDto(String content, List<String> imgUrl, Integer stars) {
+    public ReviewUpdateRequestDto(String content, Integer stars) {
         this.content = content;
-        this.imgUrl = imgUrl;
         this.stars = stars;
     }
 
     // Dto에서 필요한 부분을 entity화
     public Review toEntity() {
         return new Review(
-                content, imgUrl, stars);
+                content, stars);
     }
 }
