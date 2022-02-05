@@ -7,14 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 /**
  * Class       : CommentService
  * Author      : 조 준 희
  * Description : Class Description
+ * History     : [2022-01-24] - 조 준희 - Class Create
  * History     : [2022-01-24] - 조 준희 - Class Create
  */
 
@@ -43,5 +40,9 @@ public class CommentService {
 
         return commentRepository.findByCommentId(commentId);
 
+    }
+    // 리뷰 응답 시 코멘트 갯수 조회
+    public int findCommentNumByReviewId(Long reviewId) {
+        return commentRepository.findCommentNumByReviewId(reviewId);
     }
 }

@@ -11,12 +11,13 @@ import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cms.Review;
 import com.review.storereview.dao.cms.User;
 import com.review.storereview.dto.ResponseJsonObject;
-import com.review.storereview.dto.request.ReviewDeleteRequestDto;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
+import com.review.storereview.dto.response.ReviewFindResponseDto;
+import com.review.storereview.dto.response.ReviewFindListResponseDto;
 import com.review.storereview.dto.response.ReviewResponseDto;
-import com.review.storereview.dto.response.ReviewListResponseDto;
 import com.review.storereview.service.S3Service;
+import com.review.storereview.service.cms.CommentService;
 import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -42,13 +42,15 @@ public class ReviewApiController {
     private final Logger logger = LoggerFactory.getLogger(ReviewApiController.class);
 
     private final ReviewServiceImpl reviewService;
+    private final CommentService commentService;
     private final CryptUtils cryptUtils;
     private final S3Service s3Service;
     private static final String S3_END_POINT = "https://storereview-bucket.s3.us-east-2.amazonaws.com/";
 
     @Autowired
-    public ReviewApiController(ReviewServiceImpl reviewService, CryptUtils cryptUtils, S3Service s3Service) {
+    public ReviewApiController(ReviewServiceImpl reviewService, CommentService commentService, CryptUtils cryptUtils, S3Service s3Service) {
         this.reviewService = reviewService;
+        this.commentService = commentService;
         this.cryptUtils = cryptUtils;
         this.s3Service = s3Service;
     }
@@ -62,12 +64,14 @@ public class ReviewApiController {
         // 1. findAll 서비스 로직
         List<Review> findReviews = reviewService.listAllReviews(placeId);// 해당하는 장소 관련 리뷰들 모두 조회하여 리스트
 
-        // 2. placeAvgStars 계산
+        // 2.1. placeAvgStars 계산
         Double placeAvgStars = reviewService.AveragePlaceStars(findReviews);
 
         // 3. listResponseDto 생성 및 추가
-        ReviewListResponseDto listResponseDto = new ReviewListResponseDto(placeAvgStars);
+        ReviewFindListResponseDto listResponseDto = new ReviewFindListResponseDto(placeAvgStars);
         for (Review review : findReviews) {
+            // 3.1. 관련 코멘트 갯수
+            int commentNum = commentService.findCommentNumByReviewId(review.getReviewId());
             // 3.1. content, imgUrlList 인코딩
             String encodedContent = CryptUtils.Base64Encoding(review.getContent());
             List<String> encodedImgUrlList = new ArrayList<>();
@@ -79,7 +83,7 @@ public class ReviewApiController {
             // 3.2. responseDto 추가
             try {
                 listResponseDto.addReview(
-                        new ReviewResponseDto(
+                        new ReviewFindResponseDto(
                                 review.getReviewId(),
                                 cryptUtils.AES_Encode(review.getUser().getSaid()),
                                 review.getUser().getUserId(),
@@ -88,7 +92,8 @@ public class ReviewApiController {
                                 encodedImgUrlList,
                                 StringUtil.DateTimeToString(review.getCreatedAt()),
                                 StringUtil.DateTimeToString(review.getUpdatedAt()),
-                                review.getIsDelete()
+                                review.getIsDelete(),
+                                commentNum
                         )
                 );
             } catch(Exception ex) {
@@ -117,16 +122,18 @@ public class ReviewApiController {
                 encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
             }
         }
-        // 3. responseDto 생성
-        ReviewResponseDto reviewResponseDto = null;
+        // 3. 관련 코멘트 갯수
+        int commentNum = commentService.findCommentNumByReviewId(findReview.getReviewId());
+        // 4. responseDto 생성
+        ReviewFindResponseDto reviewResponseDto = null;
         try {
-            reviewResponseDto = new ReviewResponseDto(
+            reviewResponseDto = new ReviewFindResponseDto(
                     findReview.getReviewId(), cryptUtils.AES_Encode(findReview.getUser().getSaid()), findReview.getUser().getUserId(),
                     findReview.getStars(), encodedContent,
                     encodedImgUrlList,
                     StringUtil.DateTimeToString(findReview.getCreatedAt()),
                     StringUtil.DateTimeToString(findReview.getUpdatedAt()),
-                    findReview.getIsDelete());
+                    findReview.getIsDelete(), commentNum);
         } catch(Exception ex) {
             logger.error("ReviewApiController.findOneReview Method/ Said Encoding Exception : " + ex.getMessage());
             ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),ApiStatusCode.SYSTEM_ERROR.getType(),ApiStatusCode.SYSTEM_ERROR.getMessage());
@@ -185,6 +192,7 @@ public class ReviewApiController {
             });
         }
         // 6. responseDto 생성
+        int commentNum = 0;
         ReviewResponseDto reviewResponseDto = null;
         try {
             reviewResponseDto = new ReviewResponseDto(
