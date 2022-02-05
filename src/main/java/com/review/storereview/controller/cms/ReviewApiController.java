@@ -248,7 +248,7 @@ public class ReviewApiController {
      * @param reviewId
      */
     @DeleteMapping("/reviews/{reviewId}")
-    public ResponseEntity<ResponseJsonObject> deleteReview(@PathVariable Long reviewId, @RequestBody ReviewDeleteRequestDto requestDto) {
+    public ResponseEntity<ResponseJsonObject> deleteReview(@PathVariable Long reviewId) {
         // 1. 인증된 사용자 토큰 값
         // 1-1. 인증된 사용자의 인증 객체 가져오기
         Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
@@ -263,12 +263,12 @@ public class ReviewApiController {
         if (!findReview.getUser().getSuid().equals(userDetails.getSuid())) {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
         }
+
         // 3. 리뷰 제거 서비스 호출
         reviewService.deleteReview(reviewId);
         // 4. base64 디코딩 및 이미지파일 제거 서비스 호출
-        requestDto.getImgFileNames().forEach(fileName -> {
-            String decodedFileName = CryptUtils.Base64Decoding(fileName);
-            s3Service.deleteFile(decodedFileName);
+        findReview.getImgUrl().forEach(fileName -> {
+            s3Service.deleteFile(fileName);
         });
 
         // 4. responseDto 생성

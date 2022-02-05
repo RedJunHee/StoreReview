@@ -49,7 +49,7 @@ cloud:
     s3:
       bucket: reviewservice-bucket
     region:
-      static: ap-northeast-2
+      static: us-east-2
     stack:
       auto: false
     credentials:
