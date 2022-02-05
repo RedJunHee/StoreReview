@@ -13,7 +13,4 @@ public interface BaseUserRepository extends BaseRepository, JpaRepository<User, 
     Optional<User> findOneByUserId(String userId);
     Optional<User> findByUserIdAndPassword(String userId, String password);
     boolean existsByUserId(String userId);
-
-    @Query(value="SELECT USER_ID FROM USER_INFO", nativeQuery = true)
-    List<Object[]> findUserIdBySuid(String userId);     // userId 조인 시 필요
 }

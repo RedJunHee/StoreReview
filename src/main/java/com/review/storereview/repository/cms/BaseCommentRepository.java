@@ -30,4 +30,7 @@ public interface BaseCommentRepository extends JpaRepository<Comment, Long> {
 //                            "WHERE CO.REVIEW = ?1 ", nativeQuery = true )
     Page<Comment> findAllByReviewIdAndIsDelete(Long reviewId, Integer IsDelete, Pageable pageRequest);
     Comment findByCommentId(Long commentID);
+
+    @Query(value= "SELECT COUNT(COMMENT.COMMENT_ID) from COMMENT where COMMENT.REVIEW_ID =?", nativeQuery = true)
+    int findCommentNumByReviewId(Long reviewId);
 }

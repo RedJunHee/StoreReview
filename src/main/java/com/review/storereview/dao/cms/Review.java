@@ -49,8 +49,9 @@ public class Review extends BaseTimeEntity {
     }
 
     // ReviewUpdateRequestDto에서 필요
-    public Review(String content , Integer stars) {
+    public Review(String content, List<String> imgUrl, Integer stars) {
         this.content = content;
+        this.imgUrl = imgUrl;
         this.stars = stars;
     }
 

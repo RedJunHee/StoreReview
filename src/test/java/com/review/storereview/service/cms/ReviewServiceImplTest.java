@@ -93,10 +93,10 @@ class ReviewServiceImplTest {
 
     @Test
     void 리뷰_수정() {
-        List<String> updatedImgUrl = new ArrayList<>(Arrays.asList("http://s3-img-url-test1.com"));
+        List<String> imgUrlList = new ArrayList<>(Arrays.asList("http://s3-img-url-test1.com"));
         // Collections.emptyList();
         Integer stars=1;
-        ReviewUpdateRequestDto updateRequestDto = new ReviewUpdateRequestDto("업데이트된 리뷰 서비스 테스트", stars);
+        ReviewUpdateRequestDto updateRequestDto = new ReviewUpdateRequestDto("업데이트된 리뷰 서비스 테스트", imgUrlList, stars);
         Review review = new Review().builder()
                 .content(updateRequestDto.getContent())
                 .stars(updateRequestDto.getStars())
