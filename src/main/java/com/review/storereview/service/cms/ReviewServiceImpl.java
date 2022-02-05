@@ -1,7 +1,6 @@
 package com.review.storereview.service.cms;
 
 import com.review.storereview.common.exception.ReviewNotFoundException;
-import com.review.storereview.common.utils.CryptUtils;
 import com.review.storereview.dao.cms.Review;
 import com.review.storereview.repository.cms.BaseReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +68,7 @@ public class ReviewServiceImpl {
     public Review updateReview(Review findReview, Review renewReview) {
 
         // 리뷰 데이터 수정
-        findReview.update(renewReview.getContent(), renewReview.getImgUrl()
-            , renewReview.getStars());
-
+        findReview.update(renewReview.getContent(), renewReview.getStars());
         return findReview;
     }
 

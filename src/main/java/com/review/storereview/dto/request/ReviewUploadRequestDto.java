@@ -1,9 +1,9 @@
 package com.review.storereview.dto.request;
 
-import com.review.storereview.dao.cms.Review;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,25 +17,23 @@ import java.util.List;
 @NoArgsConstructor
 public class ReviewUploadRequestDto {
     private String placeId;
-    private List<String> imgUrl;    // base64 인코딩된 문자열 List
     private String content;
     private Integer stars;
 
     @Builder
-    public ReviewUploadRequestDto(String placeId, String content, Integer stars,  List<String> imgUrl) {
+    public ReviewUploadRequestDto(String placeId, String content, Integer stars) {
         this.placeId = placeId;
         this.content = content;
         this.stars = stars;
-        this.imgUrl = imgUrl;
     }
 
     // Dto에서 필요한 부분을 entity화
-    public Review toEntity() {
+/*    public Review toEntity() {
         return Review.builder()
                 .placeId(placeId)
                 .content(content)
                 .stars(stars)
                 .imgUrl(imgUrl)
                 .build();
-    }
+    }*/
 }
