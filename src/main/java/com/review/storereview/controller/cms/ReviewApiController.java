@@ -126,7 +126,8 @@ public class ReviewApiController {
      */
     @PostMapping("/review")
     public ResponseEntity<ResponseJsonObject> uploadReview(@RequestPart ("imgFileList") List<MultipartFile> imgFileList,
-                                                           @RequestPart("key") ReviewUploadRequestDto requestDto) {
+                                                           @RequestParam("key") ReviewUploadRequestDto requestDto) {
+        System.out.println("upload review 실행 : " + requestDto.toString());
         // 1. 인증된 사용자 토큰 값
         // 1-1. 인증된 사용자의 인증 객체 가져오기
         Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
@@ -193,7 +194,7 @@ public class ReviewApiController {
      */
     @PutMapping("/reviews/{reviewId}")
     public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId, @RequestPart("imgFileList") List<MultipartFile> imgFileList,
-                                                           @RequestPart("key") ReviewUpdateRequestDto requestDto) {
+                                                           @RequestParam("key") ReviewUpdateRequestDto requestDto) {
         // 1. 인코딩된 content 디코딩 및 content 세팅
         String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
         // 2. 인증된 사용자 토큰 값
