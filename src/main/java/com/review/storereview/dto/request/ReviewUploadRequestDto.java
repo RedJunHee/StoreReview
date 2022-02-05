@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ReviewUploadRequestDto {
     private String placeId;
-    private List<String> imgUrl;
+    private List<String> imgUrl;    // base64 인코딩된 문자열 List
     private String content;
     private Integer stars;
 
