@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
  * Author      : 조 준 희
  * Description : Class Description
  * History     : [2022-01-24] - 조 준희 - Class Create
- * History     : [2022-01-24] - 조 준희 - Class Create
  */
-
 @Service
 public class CommentService {
 
