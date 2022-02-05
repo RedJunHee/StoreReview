@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,19 +30,18 @@ import java.util.List;
 @SpringBootTest
 class BaseReviewRepositoryTest {
     @Autowired BaseReviewRepository reviewRepository;
-    List<String> imgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com","http://s3-img-url-test2.com"));
     Integer stars = 4;
 
     @Test
     @DisplayName("리뷰글이 DB에 잘 저장되는지 확인")
     void saveReview() {
         // given
-        ReviewUploadRequestDto requestDto = new ReviewUploadRequestDto("1234", "테스트 내용", stars, imgUrl);
+        ReviewUploadRequestDto requestDto = new ReviewUploadRequestDto("1234", "테스트 내용", stars);
         Review review = new Review().builder()
                 .placeId(requestDto.getPlaceId())
                 .content(requestDto.getContent())
                 .stars(requestDto.getStars())
-                .imgUrl(requestDto.getImgUrl())
+                .imgUrl(null)
                 .user(User.builder()
                         .suid("testSUID")
                         .said("testSAID")
@@ -60,12 +60,12 @@ class BaseReviewRepositoryTest {
     @DisplayName("저장된 리뷰들이 제대로 조회되는지 확인")
     void findReview() {
         // given
-        ReviewUploadRequestDto requestDto = new ReviewUploadRequestDto("1234", "테스트 내용", stars, imgUrl);
+        ReviewUploadRequestDto requestDto = new ReviewUploadRequestDto("1234", "테스트 내용", stars);
         Review review = new Review().builder()
                 .placeId(requestDto.getPlaceId())
                 .content(requestDto.getContent())
                 .stars(requestDto.getStars())
-                .imgUrl(requestDto.getImgUrl())
+                .imgUrl(null)
                 .user(User.builder()
                         .suid("testSUID")
                         .said("testSAID")
