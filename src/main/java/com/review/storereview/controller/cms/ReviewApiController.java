@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.review.storereview.common.enumerate.ApiStatusCode;
+import com.review.storereview.common.exception.ReviewNotFoundException;
 import com.review.storereview.common.utils.CryptUtils;
 import com.review.storereview.common.utils.StringUtil;
 import com.review.storereview.dao.JWTUserDetails;
@@ -75,7 +76,7 @@ public class ReviewApiController {
             // 3.1. content, imgUrlList 인코딩
             String encodedContent = CryptUtils.Base64Encoding(review.getContent());
             List<String> encodedImgUrlList = new ArrayList<>();
-            if (review.getImgUrl().size() >= 1) {
+            if (review.getImgUrl().get(0).length() >= 1) {
                 for (String imgUrl : review.getImgUrl()) {
                     encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
                 }
@@ -117,7 +118,8 @@ public class ReviewApiController {
         // 2. content, imgUrlList 인코딩
         String encodedContent = CryptUtils.Base64Encoding(findReview.getContent());
         List<String> encodedImgUrlList = new ArrayList<>();
-        if (findReview.getImgUrl().size() >= 1) {
+
+        if (findReview.getImgUrl().get(0).length() >= 1) {  // null이어도 1개로 나와서 String 길이 비교 진행
             for (String imgUrl : findReview.getImgUrl()) {
                 encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
             }
@@ -159,20 +161,12 @@ public class ReviewApiController {
         JWTUserDetails userDetails = (JWTUserDetails) authenticationToken.getPrincipal();
         // 2. 인코딩된 content 디코딩
         String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
-        //  3. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
-        List<String> uploadedImgUrlList = new ArrayList<>(imgFileList.size());
-        if (imgFileList.size() >= 1) {
-            imgFileList.forEach(imgFile -> {  // 프론트와 상의 후 진행 가능할 듯
-                uploadedImgUrlList.add(s3Service.uploadFile(imgFile));
-            });
-        }
 
-        // 4. 리뷰 생성 및 서비스 호출
+        // 3. 리뷰 생성
         Review review = new Review().builder()
                 .placeId(requestDto.getPlaceId())
                 .content(decodedContent)
                 .stars(requestDto.getStars())
-                .imgUrl(uploadedImgUrlList)
                 .user(User.builder()
                         .userId(authenticationToken.getName())  // Name == userId(이메일)
                         .suid(userDetails.getSuid())
@@ -180,18 +174,28 @@ public class ReviewApiController {
                         .build())
                 .isDelete(0)
                 .build();
+        //  4. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
+        List<String> uploadedImgUrlList = new ArrayList<>();
+        if (imgFileList!=null) {   // 안비었으면
+            imgFileList.forEach(imgFile -> {
+                uploadedImgUrlList.add(s3Service.uploadFile(imgFile));
+            });
+            review.setImgUrl(uploadedImgUrlList);
+        }
+        // 5. 리뷰 업로드 서비스 호출
         Review savedReview = reviewService.uploadReview(review);
 
-        // 5. content, imgUrl 인코딩
+        // 6. content, imgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(savedReview.getContent());
+        System.out.println(encodedContent);
         List<String> savedImgUrl = savedReview.getImgUrl();
         ArrayList<String> encodedImgFile = new ArrayList<>(savedImgUrl.size());
-        if (savedImgUrl.size() >= 1) {
+        if (savedImgUrl.get(0).length() >= 1) {
             savedImgUrl.forEach(imgUrl -> {
                 encodedImgFile.add(CryptUtils.Base64Encoding(imgUrl));
             });
         }
-        // 6. responseDto 생성
+        // 7. responseDto 생성
         int commentNum = 0;
         ReviewResponseDto reviewResponseDto = null;
         try {
@@ -242,41 +246,53 @@ public class ReviewApiController {
         if (!(findReview.getUser().getSuid().equals(userDetails.getSuid()))) {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
         }
-     // 4.1. 지워질 이미지 url만 남기는 로직 (제거할 이미지가 있는 경우)
-        List<String> ImgUrlListFromDB = findReview.getImgUrl();
-        if (!ImgUrlListFromDB.equals(requestDto.getImgUrlList())) {    // 남은 리스트가 db의 url리스트와 다르면
-            requestDto.getImgUrlList().forEach(url -> {
-                ImgUrlListFromDB.removeIf(dbUrl -> dbUrl.equals(url));    // 지워질 url만 남게된다.
-            });
+        // 4. 리뷰 생성
+        Review renewReview = new Review().builder()
+                .content(decodedContent)
+                .stars(requestDto.getStars())
+                .build();
+
+        // 5. 추가된 이미지파일 s3 업로드 서비스 호출 (업로드할 이미지가 있는 경우에)
+        List<String> renewImgUrlList = new ArrayList<>();
+        if (imgFileList!=null) {   // 추가할 파일이 있으면
+            // 5.2. s3 업로드 및 url 추가
+            for (MultipartFile imgFile : imgFileList) {
+                String imgUrl = s3Service.uploadFile(imgFile);
+                renewImgUrlList.add(imgUrl);    // 기존 urlList에 업로드된 urlList 추가
+            }
         }
-        // 4.2. 파일 제거 서비스 호출
+        // 남은 url이 있다면
+        if (requestDto.getImgUrlList() != null) {
+            for (String imgUrl : requestDto.getImgUrlList()) {
+                renewImgUrlList.add(imgUrl);
+            }
+        }
+        renewReview.setImgUrl(renewImgUrlList);
+
+        // 6.1. 제거할 이미지 url만 남기는 로직 (제거할 이미지가 있는 경우)
+        List<String> ImgUrlListFromDB = findReview.getImgUrl();
+        if (ImgUrlListFromDB.get(0).length() >= 1) {  // db에 url이 있다면 작업 진행 (없다면 애초에 제거할 이미지없으니 pass)
+            if (requestDto.getImgUrlList() != null) // 남은 url이 있다면 (제거된 이미지가 있거나 없는 경우)
+                    requestDto.getImgUrlList().forEach(url -> {
+                        ImgUrlListFromDB.removeIf(dbUrl -> dbUrl.equals(url));    // db의 url리스트와 다른지 비교하면서 같으면  제거. 남은 url은 제거할 url
+                    });
+        }
+        // 6.2. 파일 제거 서비스 호출
         String filename = null;
-        if (ImgUrlListFromDB.size() >= 1)
+        // 제거할 이미지 url이 있다면
+        if (ImgUrlListFromDB.get(0).length() >= 1)
             for (String deletedImgUrl : ImgUrlListFromDB) {
                 filename = deletedImgUrl.replace(S3_END_POINT, "");
                 s3Service.deleteFile(filename);
             }
-        // 5. 추가된 이미지파일 s3 업로드 서비스 호출 (업로드할 이미지가 있는 경우에)
-        if (imgFileList.size() >=1 ) {
-            imgFileList.forEach(imgFile -> {
-                String imgUrl = s3Service.uploadFile(imgFile);
-                requestDto.getImgUrlList().add(imgUrl);
-            });
-        }
-        // 6. 리뷰 생성
-        Review renewReview = new Review().builder()
-                .content(decodedContent)
-                .stars(requestDto.getStars())
-                .imgUrl(requestDto.getImgUrlList())
-                .build();
 
         // 8. 리뷰 업데이트 서비스 호출
         Review updatedReview = reviewService.updateReview(findReview, renewReview);
         // 9. content, imgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
         List<String> encodedImgUrlList = new ArrayList<>();
-        if (updatedReview.getImgUrl().size() >= 1) {
-            for (String imgUrl : updatedReview.getImgUrl()) {
+        if (renewImgUrlList.get(0).length() >= 1) {
+            for (String imgUrl :renewImgUrlList) {
                 encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
             }
         }
@@ -315,8 +331,11 @@ public class ReviewApiController {
         // 2. 리뷰 작성자 유효성 검증
         // 2.1. 리뷰 조회 & null 체크
         Review findReview = reviewService.listReview(reviewId);
-
-        // 2.2 검증
+        if (Objects.isNull(findReview)) {
+            ResponseJsonObject exceptionDto = new ReviewNotFoundException().getResponseJsonObject();
+            return new ResponseEntity<>(exceptionDto, HttpStatus.NOT_FOUND);
+        }
+        // 2.2 유효성 검증
         if (!findReview.getUser().getSuid().equals(userDetails.getSuid())) {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
         }
@@ -326,7 +345,7 @@ public class ReviewApiController {
         // 4. 이미지파일 제거 서비스 호출
         String filename = null;
         List<String> imgUrlList = findReview.getImgUrl();
-        if (imgUrlList.size() >= 1)
+        if (imgUrlList.get(0).length() >= 1)
             for (String deletedImgUrl : imgUrlList) {
                 filename = deletedImgUrl.replace(S3_END_POINT, "");
                 s3Service.deleteFile(filename);
