@@ -30,6 +30,7 @@ public class Review extends BaseTimeEntity {
     @Column(name = "CONTENT", nullable = false, length = 1000)
     private String content;
 
+    @Setter
     @Column(name = "IMG_URL", length = 300)
     @Convert(converter = ListToStringConverter.class)
     private List<String> imgUrl;
