@@ -11,16 +11,16 @@ import java.util.List;
  * History     : [2022-01-31]
  */
 @Getter
-public class ReviewListResponseDto {
-    private List<ReviewResponseDto> reviewsResponseDtoList;
+public class ReviewFindListResponseDto {
+    private List<ReviewFindResponseDto> reviewsResponseDtoList;
     private Double placeAvgStar;
 
-    public ReviewListResponseDto(Double placeAvgStar) {
+    public ReviewFindListResponseDto(Double placeAvgStar) {
         reviewsResponseDtoList = new ArrayList<>(); // 초기화
         this.placeAvgStar = placeAvgStar;
     }
 
-    public void addReview(ReviewResponseDto reviewDto)
+    public void addReview(ReviewFindResponseDto reviewDto)
     {
         this.reviewsResponseDtoList.add(reviewDto);
     }

@@ -4,6 +4,7 @@ import com.review.storereview.common.utils.CryptUtils;
 import com.review.storereview.common.utils.ListToStringConverter;
 import com.review.storereview.config.SecurityConfig;
 import com.review.storereview.service.S3Service;
+import com.review.storereview.service.cms.CommentService;
 import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,9 +45,10 @@ class ReviewApiControllerTest  {
     @MockBean
     private SecurityConfig securityConfig;
     @MockBean
-    private ListToStringConverter stringToListConverter;
+    private ListToStringConverter listToStringConverter;
     @MockBean
     private ReviewServiceImpl reviewService;
+    @MockBean private CommentService commentService;
     @MockBean
     private CryptUtils cryptUtils;
     @MockBean
@@ -70,7 +72,7 @@ class ReviewApiControllerTest  {
 
     @BeforeEach
     public void setUp() {   // UserApiController를 MockMvc 객체로 만든다.
-        reviewControllerMockMvc = MockMvcBuilders.standaloneSetup(new ReviewApiController(reviewService, cryptUtils, s3Service))
+        reviewControllerMockMvc = MockMvcBuilders.standaloneSetup(new ReviewApiController(reviewService, commentService, cryptUtils, s3Service))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true)) // charset을 UTF-8로 설정 (option)
                 .build();
         DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
