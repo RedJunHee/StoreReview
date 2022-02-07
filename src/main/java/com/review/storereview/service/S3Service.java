@@ -1,9 +1,9 @@
 package com.review.storereview.service;
 
-import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -48,21 +48,11 @@ public class S3Service {
         // AWSCredentials 생성
         AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
 
-//        ClientConfiguration clientConfiguration = new ClientConfiguration();
-//        clientConfiguration.setSignerOverride("AWSS3V4SignerType");
-
         // S3 Client 생성
         s3Client = AmazonS3ClientBuilder.standard()
                 .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
-//        s3Client = AmazonS3ClientBuilder.standard()
-//                .withClientConfiguration(clientConfiguration)
-//                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-//                .withRegion(this.region)
-//                .build();
-//        final S3ClientOptions clientOptions = S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build();
-//        s3Client.setS3ClientOptions(clientOptions);
     }
 
     /**

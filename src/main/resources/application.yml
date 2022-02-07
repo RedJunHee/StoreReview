@@ -51,7 +51,12 @@ logging:
         descriptor:
           sql: trace
   level:
-    root: info
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+        internal:
+          InstanceMetadataServiceResourceFetcher: error
 
 # S3
 cloud:
