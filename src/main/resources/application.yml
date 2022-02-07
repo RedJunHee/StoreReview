@@ -51,6 +51,7 @@ logging:
         descriptor:
           sql: trace
   level:
+    root: info
     com:
       amazonaws:
         util:
