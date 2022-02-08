@@ -2,13 +2,20 @@ package com.review.storereview.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.review.storereview.common.enumerate.ApiStatusCode;
+import com.review.storereview.common.exception.ReviewServiceException;
+import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cms.ApiLog;
+import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.service.cms.LogService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -36,47 +43,67 @@ public class RequestAroundLogAop {
 
     //  execution(* com.review.storereview.controller 하위 패키지 내에
     //   *Controller 클래스의 모든 메서드 Around => Pointcut 설정
-    @Around(value = "execution(* com.review.storereview.controller.*.*Controller.*(..))")
+    @Around(value = "execution(* com.review.storereview.controller.*Controller.*(..))")
     public Object ApiLog(ProceedingJoinPoint joinPoint) throws Throwable { // 파라미터 : 프록시 대상 객체의 메서드를 호출할 때 사용
-
         Object[] arguments   = joinPoint.getArgs();
-        String  inputParam = Arrays.toString(arguments);
+        String  inputParam = om.writeValueAsString(arguments);
         String  outputMessage = "" ;
-
+        char apiStatus = 'Y';
+        String methodName = "";
         // Api log 담는 객체에 필요한 요소
         // ID(identity) / DATE(datetime) / SUID(varchar_12) / SAID(varchar_12) / API_NAME(varchar_20) / API_STATUS(char_1) / API_DESC(varchar_100) / PROCESS_TIME (Double)
         LocalDateTime date = LocalDateTime.now();
-        String suid = "TEST00000001";
-        String said = "TEST00000002";
-        String methodName  = joinPoint.getSignature().getName();   // 메소드 이름 => Api명
-        final char apiStatus = 'Y'; // 성공 케이스
-        StringBuilder apiResultDescription = new StringBuilder();
+        String suid = "";
+        String said = "";
         long elapsedTime = 0L;
-
-        StopWatch stopWatch = new StopWatch();
+        StringBuilder apiResultDescription = new StringBuilder();
         // joinPoint 리턴 객체 담을 변수
         Object retValue = null;
-        //
+        StopWatch stopWatch = new StopWatch();
+
         try {
+            // API 요청 사용자 정보 가져오기.
+            Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
+            if(authenticationToken.getPrincipal().equals("anonymousUser") == false){
+                //인증 객체에 저장되어있는 유저정보 가져오기.
+                JWTUserDetails userDetails = (JWTUserDetails) authenticationToken.getPrincipal();
+                suid = userDetails.getSuid();
+                said = userDetails.getSaid();
+            }
+
+            methodName  = joinPoint.getSignature().getName();   // 메소드 이름 => Api명
+
             // 서비스 처리 시간 기록 시작
             stopWatch.start();
             retValue = joinPoint.proceed();   // 실제 대상 객체의 메서드 호출
 
             outputMessage = om.writeValueAsString( ((ResponseEntity)retValue).getBody());
 
-            //api 처리 정보 => INPUT + OUTPUT   ** Exception이 떨어졌을때 Exception정보도 담는지 확인 필요 함.
-            apiResultDescription.append("[INPUT]").append(System.lineSeparator())
-                                .append(inputParam).append(System.lineSeparator())
-                                .append("[OUTPUT]").append(System.lineSeparator())
-                                .append(outputMessage).append(System.lineSeparator());
-
-        } catch(Exception ex) {
+        }
+        catch(ReviewServiceException ex)
+        {
+            apiStatus = 'N';
+            outputMessage = om.writeValueAsString(ex.getResponseJsonObject());
+            throw ex;
+        }
+        catch(Exception ex) {
+            apiStatus='N';
             //Exception
-            ex.printStackTrace();
-
-        } finally {
+            ResponseJsonObject resDto = ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(),
+                                                                ApiStatusCode.SYSTEM_ERROR.getType(),
+                                                                ApiStatusCode.SYSTEM_ERROR.getMessage());
+            outputMessage = om.writeValueAsString(resDto);
+            throw ex;
+        }
+        finally {
             // 서비스 처리 시간 기록 종료
             stopWatch.stop();
+
+            //api 처리 정보 => INPUT + OUTPUT   ** Exception이 떨어졌을때 Exception정보도 담는지 확인 필요 함.
+            apiResultDescription.append("[INPUT]").append(System.lineSeparator())
+                    .append(inputParam).append(System.lineSeparator())
+                    .append("[OUTPUT]").append(System.lineSeparator())
+                    .append(outputMessage).append(System.lineSeparator());
 
             elapsedTime = stopWatch.getTotalTimeMillis();
             String apiDesc = "";
@@ -90,7 +117,6 @@ public class RequestAroundLogAop {
 
             // INSERT
             logService.InsertApiLog(data);
-
         }
 
         return retValue;

@@ -4,16 +4,9 @@ import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.dto.ResponseJsonObject;
 
 // 리뷰 게시글 조회 불가 에러
-public class ReviewNotFoundException extends RuntimeException {
-    private final ApiStatusCode errorStatusCode = ApiStatusCode.REVIEW_NOT_FOUND;
-    private final ResponseJsonObject responseJsonObject;
-
-    public ResponseJsonObject getResponseJsonObject(){
-        return responseJsonObject;
-    }
-
+public class ReviewNotFoundException extends ReviewServiceException {
     public ReviewNotFoundException() {
-        responseJsonObject = ResponseJsonObject.withError(errorStatusCode.getCode(), errorStatusCode.getType(), errorStatusCode.getMessage());
+        super(ApiStatusCode.REVIEW_NOT_FOUND);
     }
 
 }

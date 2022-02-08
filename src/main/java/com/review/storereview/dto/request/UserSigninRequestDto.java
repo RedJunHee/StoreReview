@@ -23,13 +23,4 @@ public class UserSigninRequestDto {
                 .password(password)
                 .build();
     }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
-
 }
