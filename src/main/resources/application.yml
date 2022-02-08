@@ -22,6 +22,11 @@ spring:
       jdbc-url: jdbc:mysql://storereview.ci48003jbapz.us-east-1.rds.amazonaws.com:3306/STOREREVIEW_DB
       username: admin
       password: review123
+ # 개인 정보
+  profiles:
+    include:
+      -credentials
+
 
 #server:
 #  ssl:
@@ -68,6 +73,3 @@ cloud:
       static: us-east-2
     stack:
       auto: false
-    credentials:
-      accessKey: AKIAYYPTKEMG6UANUHZZ
-      secretKey: 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
