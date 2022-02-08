@@ -1,19 +1,13 @@
 package com.review.storereview.common.exception.handler;
 
-import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParamValidationException;
 import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import com.review.storereview.common.exception.PersonIdNotFoundException;
 import com.review.storereview.dto.ResponseJsonObject;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**

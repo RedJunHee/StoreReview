@@ -28,15 +28,15 @@ spring:
       - credentials
 
 
-#server:
-#  ssl:
-#    key-store: classpath:Review.p12
-#    key-store-type: PKCS12
-#    key-alias: Review
-#    enabled: true
-#    trust-store: classpath:Reviewtrust.pkcs12
-#    trust-store-password: 'review123!@'
-#    key-store-password: 'review123!@'
+server:
+  ssl:
+    key-store: classpath:Review.p12
+    key-store-type: PKCS12
+    key-alias: Review
+    enabled: true
+    trust-store: classpath:Reviewtrust.pkcs12
+    trust-store-password: 'review123!@'
+    key-store-password: 'review123!@'
 
 jwt:
   header: Authorization
