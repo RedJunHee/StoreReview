@@ -1,5 +1,7 @@
 package com.review.storereview.controller;
 
+import com.review.storereview.common.exception.ParamValidationException;
+import com.review.storereview.common.exception.PersonAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +43,8 @@ public class TestController {
      */
     @GetMapping("/ping")
     public ResponseEntity<String> none(){
-        return new ResponseEntity<>( "ping~~pong~~", HttpStatus.OK);
+        throw new ParamValidationException();
+        //return new ResponseEntity<>( "ping~~pong~~", HttpStatus.OK);
     }
 
 }
