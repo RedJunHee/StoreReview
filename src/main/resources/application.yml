@@ -25,7 +25,7 @@ spring:
  # 개인 정보
   profiles:
     include:
-      -credentials
+      - credentials
 
 
 #server:
