@@ -14,6 +14,7 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.security.config.BeanIds;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -91,6 +92,7 @@ class UserApiControllerTest extends AbstractControllerTest{
      *           Cookies = []
      * @throws Exception
      */
+//    @Rollback
     @Test
     @DisplayName("회원가입 Controller 테스트")
     public void 회원가입_컨트롤러테스트() throws Exception {    // mvc.perform() -> throws Exception
@@ -99,7 +101,6 @@ class UserApiControllerTest extends AbstractControllerTest{
                 mvc.perform(        // perform() : MockMvcRequestBuilders를 통해서 구현한 Request를 테스트
                         post("/api/signup")
                                 .contentType(MediaType.APPLICATION_JSON)    // 미디어타입 설정
-                                .accept(MediaType.APPLICATION_JSON)
                                 .characterEncoding("UTF-8")
                                 .content(
                                         "{"

@@ -4,6 +4,7 @@ import com.review.storereview.common.utils.CryptUtils;
 import com.review.storereview.common.utils.ListToStringConverter;
 import com.review.storereview.config.SecurityConfig;
 import com.review.storereview.service.S3Service;
+import com.review.storereview.service.cms.BaseUserService;
 import com.review.storereview.service.cms.CommentService;
 import com.review.storereview.service.cms.ReviewServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockFilterConfig;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,43 +41,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Author      : 문 윤 지
  * History     : [2022-01-23]
  */
-@WebMvcTest
-class ReviewApiControllerTest  {
-    @Autowired
+@SpringBootTest
+class ReviewApiControllerTest {
     protected MockMvc reviewControllerMockMvc;
-    @MockBean
-    private SecurityConfig securityConfig;
-    @MockBean
-    private ListToStringConverter listToStringConverter;
-    @MockBean
-    private ReviewServiceImpl reviewService;
-    @MockBean private CommentService commentService;
-    @MockBean
-    private CryptUtils cryptUtils;
-    @MockBean
-    private S3Service s3Service;
-    List<String> imgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com","http://s3-img-url-test2.com"));
-    Integer stars = 4;
-
-    private ReviewApiController reviewController;
-
+    @Autowired
+    private WebApplicationContext context;
+    @Autowired
+    public ReviewApiController reviewController;
     protected Object reviewController() {
         return reviewController;
     }
+
     protected MediaType contentType = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8")
     );
-
-    @Autowired
-    private WebApplicationContext context;
-
     @BeforeEach
-    public void setUp() {   // UserApiController를 MockMvc 객체로 만든다.
-        reviewControllerMockMvc = MockMvcBuilders.standaloneSetup(new ReviewApiController(reviewService, commentService, cryptUtils, s3Service))
-                .addFilters(new CharacterEncodingFilter("UTF-8", true)) // charset을 UTF-8로 설정 (option)
-                .build();
+    private void setup() {
         DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
         try {
             delegatingFilterProxy.init(new MockFilterConfig(context.getServletContext(), BeanIds.SPRING_SECURITY_FILTER_CHAIN));
@@ -88,6 +72,17 @@ class ReviewApiControllerTest  {
                 .alwaysDo(print())
                 .build();
     }
+    @Autowired private ReviewServiceImpl reviewService;
+    @Autowired private CommentService commentService;
+    @Autowired private CryptUtils cryptUtils;
+    @Autowired private S3Service s3Service;
+    @Autowired private SecurityConfig securityConfig;
+    @Autowired private BaseUserService userService;
+
+    List<String> imgUrl = new ArrayList<String>(Arrays.asList("http://s3-img-url-test1.com", "http://s3-img-url-test2.com"));
+    Integer stars = 4;
+    static String token ="Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJteWo5OUBAbmF2ZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsInN1aWQiOiJ3MWozNVBFWkNralhiSkRDYlNRbzBnPT0iLCJzYWlkIjoidWVxTUVuM2F0Qll0RnhNRGNmNzgwQT09IiwiZXhwIjoxNjQ0ODAxNDQyfQ.yy6pZhd9MT0z_SVFf5OuIdCtA9sQLsXOS2ykyxSSaer_eYqcC0HhIYJTaWk7jmEswwnGasly4steC-17CONGUA";
+
 /*    @Test
     @DisplayName("리뷰 등록 확인")
     void uploadReview() throws Exception {
@@ -118,17 +113,19 @@ class ReviewApiControllerTest  {
         ;*/
 
         // 리뷰 n개 조회
-        String placeId = "1234";
+        String placeId = "123456";
+
         reviewControllerMockMvc.perform(get("/places/{" + placeId + "}")
-                        .contentType(contentType)
-                        .header("Authenticate", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJteWo5OUBuYXZlci5jb20iLCJhdXRoIjoiUk9MRV9VU0VSIiwic3VpZCI6IlNJMDAwMDAwMDAwMSIsInNhaWQiOiJSVjAwMDAwMDAwMDEiLCJleHAiOjE2NDM1OTYyMTF9.ehvEo-CGIBp9Jo1XJi4KBvBcCLpEfuuP_SSBbCMXIdPL4s1_6qpPtqIhid8N3N4xM8TfL8QcG3A4_CJG2HbBCQ")
+                        .header("Authenticate", token)
+                        .contentType(this.contentType))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meta.statusCode").value(200)
                 )
                 .andDo(print())
-                .andExpect(status().isOk())      // HttpStatus.OK(200)
-                .andExpect(content().contentType("application/json;charset=utf-8"))     // contentType 검증
-                .andExpect(jsonPath("$.meta.code").value(200))
-//                .andExpect(jsonPath("$.data").value())
+//                .andExpect(jsonPath("$.data.reviewsResponseDtoList.reviewId").value(29))
+//                .andExpect(jsonPath("$.data.reviewsResponseDtoList.length()").value(6))
         ;
+
     }
 
 /*
