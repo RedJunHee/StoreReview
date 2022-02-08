@@ -107,6 +107,7 @@ public class S3Service {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("S3Service.getFileExtension 호출됨==========");
             Map<String, String> parameterErrorMsg = new HashMap<>();
             parameterErrorMsg.put(fileName, "잘못된 형식의 파일입니다.");
             throw new ParamValidationException(parameterErrorMsg);

@@ -26,7 +26,11 @@ spring:
   profiles:
     include:
       - credentials
-
+  # 파일크기 제한
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 server:
   ssl:
