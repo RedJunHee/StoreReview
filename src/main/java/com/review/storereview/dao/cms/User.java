@@ -52,7 +52,6 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @NotBlank
     @Column(name="PHONE", nullable = false)
     private String phone;
 

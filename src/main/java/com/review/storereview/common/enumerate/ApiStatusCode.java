@@ -22,6 +22,7 @@ public enum ApiStatusCode {
     ,UNAUTHORIZED (401, "UnAuthorized", "Unauthorized, 사용자 인증 실패.")
     ,FORBIDDEN (403, "Forbidden", "Forbidden, 사용권한 없음.")
     ,PERSON_ALREADY_EXISTS(411, "Person already exists", "이미 존재하는 사용자입니다.")
+    ,PERSONID_NOT_FOUND(404, "Person not found", "해당 이메일의 회원은 존재하지 않습니다")
     ,REVIEW_NOT_FOUND(404, "Review Not Found", "해당 게시물을 찾을 수 없습니다.")
     ,SYSTEM_ERROR(599,"System Error", "시스템오류.")
     ;

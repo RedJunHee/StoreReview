@@ -1,9 +1,13 @@
 package com.review.storereview.service.cms;
 
+import com.review.storereview.common.exception.ParamValidationException;
 import com.review.storereview.common.exception.ReviewNotFoundException;
 import com.review.storereview.dao.cms.Review;
+import com.review.storereview.dto.ResponseJsonObject;
 import com.review.storereview.repository.cms.BaseReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +42,7 @@ public class ReviewServiceImpl {
     /** {@Summary 특정 리뷰 데이터 조회 Service}*/
     public Review listReview(Long reviewId) {
         // 리뷰 데이터 조회 & null 체크
-        Review findReview = Optional.ofNullable(baseReviewRepository.findByReviewIdAndIsDeleteIs(reviewId, 0))
-                .orElseThrow(ReviewNotFoundException::new);
-
+        Review findReview = baseReviewRepository.findByReviewIdAndIsDeleteIs(reviewId, 0);
         return findReview;
     }
 
@@ -68,7 +70,7 @@ public class ReviewServiceImpl {
     public Review updateReview(Review findReview, Review renewReview) {
 
         // 리뷰 데이터 수정
-        findReview.update(renewReview.getContent(), renewReview.getStars());
+        findReview.update(renewReview.getContent(), renewReview.getStars(), renewReview.getImgUrl());
         return findReview;
     }
 

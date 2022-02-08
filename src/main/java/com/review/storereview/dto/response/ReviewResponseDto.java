@@ -1,6 +1,9 @@
 package com.review.storereview.dto.response;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 /**
@@ -10,6 +13,7 @@ import java.util.List;
  * History     : [2022-01-23]
  */
 @Getter
+@NoArgsConstructor
 public class ReviewResponseDto {
 
     // [REVIEW_ID, SAID, USER_ID, STARS, CONTENT, IMG_URL, CREATED_AT, UPDATED_AT, IS_DELETE]
@@ -18,12 +22,14 @@ public class ReviewResponseDto {
     private String userId;
     private Integer stars;
     private String content;
+    @Setter
     private List<String> imgUrl;
     private String createdAt;
     private String updatedAt;
     private Integer isDelete;
 
     // 기본 생성자
+    @Builder
     public ReviewResponseDto(Long reviewId, String said, String userId, Integer stars, String content, List<String> imgUrl, String createdAt, String updatedAt, Integer isDelete) {
         this.reviewId = reviewId;
         this.said = said;
