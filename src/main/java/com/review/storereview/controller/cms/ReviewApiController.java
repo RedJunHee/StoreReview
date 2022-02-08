@@ -159,7 +159,7 @@ public class ReviewApiController {
      * @param requestDto
      */
     @PostMapping("/review")
-    public ResponseEntity<ResponseJsonObject> uploadReview(@RequestPart("imgFileList") List<MultipartFile> imgFileList,
+    public ResponseEntity<ResponseJsonObject> uploadReview(@RequestPart(value = "imgFileList", required = false) List<MultipartFile> imgFileList,
                                                            @RequestParam("key") ReviewUploadRequestDto requestDto) {
         System.out.println("upload review 실행 : " + requestDto.toString());
         // 1. 인증된 사용자 토큰 값
@@ -232,7 +232,8 @@ public class ReviewApiController {
      * @param imgFileList
      * @param requestDtoStr
      */
-    @PutMapping("/reviews/{reviewId}")
+//    @PutMapping("/reviews/{reviewId}")
+    @RequestMapping(value="/reviews/{reviewId}", method = RequestMethod.PUT)
     public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId,
                                                            @RequestPart(value = "imgFileList", required = false) List<MultipartFile> imgFileList,
                                                            @RequestParam("key") String requestDtoStr) throws JsonProcessingException {
