@@ -27,6 +27,7 @@ class AuthControllerTest extends AbstractControllerTest {
     public TestController testController;
     // 아이디 패스워드 모두 유효한 파라미터.
     String validAuthParam;
+    String validAuthParam2;
 
     // 패스워드 유효하지 않는 파람
     String invalidPasswordParam;
@@ -50,7 +51,7 @@ class AuthControllerTest extends AbstractControllerTest {
     public void paramSetup()  throws Exception{
         // 테스터 계정의 비밀번호는 "test"
         validAuthParam = "{\"userId\":\"test@review.com\",\"password\":\"9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
-
+        validAuthParam2 = "{\"userId\":\"local999@naver.com\",\"password\":\"4525198B45979E2D454E7EB0406D8DA1F4D7486EF68633C713B6975CC9C554E4\"}";
         invalidPasswordParam = "{\"userId\":\"test@review.com\",\"password\":\"9F86D081884C7D659333sA2F0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
         invalidUserIdParam = "{\"userId\":\"tessssst@review.com\",\"password\":\"9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
         invalidAuthParam = "{\"userId\":\"tessssst@review.com\",\"password\":\"9F86D081884C7D659A2FEAAsssdAD015A3BF4F1B2B0B822CD15D6C15B0F00A08\"}";
@@ -77,7 +78,7 @@ class AuthControllerTest extends AbstractControllerTest {
     public void 아이디_패스워드_모두_유효() throws Exception
     {
         authControllerMockMvc.perform(post("/authenticate")
-                .content(validAuthParam).contentType(this.contentType))
+                .content(validAuthParam2).contentType(this.contentType))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.statusCode",is(200)))
                 .andExpect(jsonPath("$..['token']").exists());

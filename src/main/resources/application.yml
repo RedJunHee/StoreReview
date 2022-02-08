@@ -23,15 +23,15 @@ spring:
       username: admin
       password: review123
 
-server:
-  ssl:
-    key-store: classpath:Review.p12
-    key-store-type: PKCS12
-    key-alias: Review
-    enabled: true
-    trust-store: classpath:Reviewtrust.pkcs12
-    trust-store-password: 'review123!@'
-    key-store-password: 'review123!@'
+#server:
+#  ssl:
+#    key-store: classpath:Review.p12
+#    key-store-type: PKCS12
+#    key-alias: Review
+#    enabled: true
+#    trust-store: classpath:Reviewtrust.pkcs12
+#    trust-store-password: 'review123!@'
+#    key-store-password: 'review123!@'
 
 jwt:
   header: Authorization
@@ -52,6 +52,12 @@ logging:
           sql: trace
   level:
     root: info
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+        internal:
+          InstanceMetadataServiceResourceFetcher: error
 
 # S3
 cloud:
