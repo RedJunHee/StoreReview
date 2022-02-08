@@ -30,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -152,7 +153,7 @@ public class ReviewApiController {
      */
     @PostMapping("/review")
     public ResponseEntity<ResponseJsonObject> uploadReview(@RequestPart ("imgFileList") List<MultipartFile> imgFileList,
-                                                           @RequestParam("key") ReviewUploadRequestDto requestDto) {
+                                                           @RequestParam("key") ReviewUploadRequestDto requestDto) throws IOException {
         System.out.println("upload review 실행 : " + requestDto.toString());
         // 1. 인증된 사용자 토큰 값
         // 1-1. 인증된 사용자의 인증 객체 가져오기
@@ -176,6 +177,9 @@ public class ReviewApiController {
                 .build();
         //  4. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
         List<String> uploadedImgUrlList = new ArrayList<>();
+        System.out.println(imgFileList.get(0).getResource().exists()); // true. isEmpty(), ==null 모두 false
+        System.out.println(imgFileList.get(0).getResource().contentLength());   // 0
+        System.out.println(imgFileList.get(0).getName());   // imgFileList
         if (imgFileList!=null) {   // 안비었으면
             imgFileList.forEach(imgFile -> {
                 uploadedImgUrlList.add(s3Service.uploadFile(imgFile));
@@ -353,5 +357,15 @@ public class ReviewApiController {
 
         // 5. responseDto 생성
         return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()), HttpStatus.OK);
+    }
+
+    /**
+     * {@Summary}해당 url이 null인지 확인한다.
+     * db에서 imgUrl 조회 시, 빈 값일지라도, imgUrl.size()==1이기 때문에 imgUrl의 첫번째 요소의 length로 비교하여 값의 null여부를 판단한다.
+     * return true if
+     * @param urlLength
+     */
+    private boolean isNull(int urlLength) {
+        return true;
     }
 }
