@@ -21,10 +21,14 @@
 - Javascript, Typescript
 
 ### Back-End
-- **Server & Library**
+- **Server**
+    - Ubuntu 20.x
+    - Docker Container ( CentOS 7 )
+    - Ley's Encrypt SSL Protocol
+- **FrameWork**
     - Java 8
     - Spring Boot 2.5.x
-    - Spring Data JPA + querydsl
+    - Spring Data JPA
 - **Build Tool**
     - Gradle
 - **DataBase**
@@ -36,7 +40,7 @@
     
 ### Cooperation Tool
 - **버전 관리**
-    - Git
+    - Git(Pull Request Feedback Cycle)
 - **의견 공유 및 정리**
     - Discord
     - Notion
