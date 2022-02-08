@@ -59,7 +59,6 @@ logging:
       type:
         descriptor:
           sql: trace
-  level:
     root: info
     com:
       amazonaws:
@@ -67,6 +66,10 @@ logging:
           EC2MetadataUtils: error
         internal:
           InstanceMetadataServiceResourceFetcher: error
+  level:
+    org:
+      springframework:
+        web: debug
 
 # S3
 cloud:
