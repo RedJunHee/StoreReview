@@ -38,9 +38,7 @@ public class UserApiController {
         // 1-1. 검증 실패 로직
         if (bindingResult.hasErrors()) {
             System.out.println("검증 실패 로직에서 errorsMap : " + userSaveDtoValidator.getErrorsMap());
-//            throw new ParamValidationException(userSaveDtoValidator.getErrorsMap());
             ResponseJsonObject exceptionDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
-//            throw exceptionDto;  // exceptionHandler에서 Controller 단에서 발생하는 예외를 잡아줌
             return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
         }
         else {      // 1-2. 검증 성공 로직

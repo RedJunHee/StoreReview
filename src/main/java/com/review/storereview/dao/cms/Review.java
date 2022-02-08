@@ -60,12 +60,15 @@ public class Review extends BaseTimeEntity {
         return  user.getSuid();
     }
 
-    public void update(String content , Integer stars) {
+    public void update(String content , Integer stars, List<String> imgUrl) {
         this.content = content;
         this.stars = stars;
+        this.imgUrl = imgUrl;
     }
 
-    public void updateIsDelete(Integer isDelete) { this.isDelete = isDelete; }
+    public void updateIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
 
     // for Test
     @Override
