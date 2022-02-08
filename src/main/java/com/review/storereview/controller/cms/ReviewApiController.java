@@ -267,6 +267,7 @@ public class ReviewApiController {
                 .build();
         // 5. 제거되지 않은 url 체크
         List<String> renewImgUrlList = new ArrayList<>();
+        System.out.println("전달받은 urlList null인지 체크 : " +Objects.isNull(requestDto.getImgUrlList()));
         if (!requestDto.getImgUrlList().isEmpty()) {
             System.out.println("requestDto.getImgUrlList가 안 비어서 실행");
             for (String imgUrl : requestDto.getImgUrlList()) {
