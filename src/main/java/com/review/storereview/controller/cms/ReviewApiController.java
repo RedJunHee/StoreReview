@@ -31,7 +31,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -186,7 +185,7 @@ public class ReviewApiController {
         //  4. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
         List<String> uploadedImgUrlList = new ArrayList<>();
         // TODO postman으로 테스트 시, 비어있어도 null, Empty로 처리하지 않음.
-        if (imgFileList.get(0).getSize() >= 1) {   //  content길이로 빈 파일인지 체크
+        if (!Objects.isNull(imgFileList)) {   //  content길이로 빈 파일인지 체크
             imgFileList.forEach(imgFile -> {
                 uploadedImgUrlList.add(s3Service.uploadFile(imgFile));
             });
@@ -267,18 +266,17 @@ public class ReviewApiController {
         // 5. 제거되지 않은 url 체크
         List<String> renewImgUrlList = new ArrayList<>();
         System.out.println("전달받은  imgUrl null인지 체크 : " +Objects.isNull(requestDto.getImgUrl()));
-        if (!Objects.isNull(requestDto.getImgUrl())) {
-            System.out.println("requestDto.getImgUrl가 안 비어서 실행");
-            for (String imgUrl : requestDto.getImgUrl()) {
-                renewImgUrlList.add(imgUrl);
+        if (!Objects.isNull(requestDto.getImgUrl()))
+            if (requestDto.getImgUrl().get(0).length() >= 1) {
+                System.out.println("requestDto.getImgUrl가 안 비어서 실행");
+                for (String imgUrl : requestDto.getImgUrl())
+                    renewImgUrlList.add(imgUrl);
             }
-        }
 
         // 5. 추가된 이미지파일 s3 업로드 서비스 호출 (업로드할 이미지가 있는 경우에)
         System.out.println("imgFileList is Null?  : " +Objects.isNull(imgFileList));
         // TODO postman으로 테스트 시, 비어있어도 null, Empty로 처리하지 않음.
-//        if (!Objects.isNull(imgFileList)) {
-        if (imgFileList.get(0).getSize() >= 1) {
+        if (!Objects.isNull(imgFileList)) {
             // 5.2. s3 업로드 및 url 추가
             for (MultipartFile imgFile : imgFileList) {
                 String imgUrl = s3Service.uploadFile(imgFile);
@@ -295,6 +293,7 @@ public class ReviewApiController {
         List<String> ImgUrlListFromDB = findReview.getImgUrl();
         if (!Objects.isNull(ImgUrlListFromDB)) {  // db에 url이 있다면 작업 진행 (없다면 애초에 제거할 이미지없으니 pass)
             if (!Objects.isNull(requestDto.getImgUrl())) // 남은 url이 있다면 (제거된 이미지가 있거나 없는 경우)
+                if (requestDto.getImgUrl().get(0).length() >= 1)
                     requestDto.getImgUrl().forEach(url -> {
                         ImgUrlListFromDB.removeIf(dbUrl -> dbUrl.equals(url));    // db의 url리스트와 다른지 비교하면서 같으면  제거. 남은 url은 제거할 url
                     });
@@ -315,10 +314,9 @@ public class ReviewApiController {
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
         List<String> encodedImgUrlList = new ArrayList<>();
         if (!Objects.isNull(updatedReview.getImgUrl())) {
-//            encodedImgUrlList  = new ArrayList<>(renewImgUrlList.size());
-            for (String imgUrl :renewImgUrlList) {
-                encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
-            }
+            if (updatedReview.getImgUrl().get(0).length() >= 1)
+                for (String imgUrl : renewImgUrlList)
+                    encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
         }
         //10. responseDto 생성
         ReviewResponseDto reviewResponseDto = null;
@@ -370,10 +368,11 @@ public class ReviewApiController {
         String fileName = null;
         List<String> imgUrlList = findReview.getImgUrl();
         if (!Objects.isNull(imgUrlList))
-            for (String deletedImgUrl : imgUrlList) {
-                fileName = deletedImgUrl.replace(S3_END_POINT, "");
-                s3Service.deleteFile(fileName);
-            };
+            if (imgUrlList.get(0).length() >= 1)
+                for (String deletedImgUrl : imgUrlList) {
+                    fileName = deletedImgUrl.replace(S3_END_POINT, "");
+                    s3Service.deleteFile(fileName);
+                };
 
         // 5. responseDto 생성
         return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()), HttpStatus.OK);
