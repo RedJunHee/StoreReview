@@ -79,9 +79,10 @@ public class ReviewApiController {
             String encodedContent = CryptUtils.Base64Encoding(review.getContent());
             List<String> encodedImgUrlList = new ArrayList<>();
             if (!Objects.isNull(review.getImgUrl())) {
-                for (String imgUrl : review.getImgUrl()) {
-                    encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
-                }
+                if (!review.getImgUrl().isEmpty())
+                    for (String imgUrl : review.getImgUrl()) {
+                        encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
+                    }
             }
             // 3.2. responseDto 추가
             try {
@@ -127,9 +128,10 @@ public class ReviewApiController {
         List<String> encodedImgUrlList = new ArrayList<>();
 
         if (!Objects.isNull(findReview.getImgUrl())) {
-            for (String imgUrl : findReview.getImgUrl()) {
-                encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
-            }
+            if (!findReview.getImgUrl().isEmpty())
+                for (String imgUrl : findReview.getImgUrl()) {
+                    encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
+                }
         }
         // 3. 관련 코멘트 갯수
         int commentNum = commentService.findCommentNumByReviewId(findReview.getReviewId());
@@ -200,9 +202,10 @@ public class ReviewApiController {
         List<String> savedImgUrl = savedReview.getImgUrl();
         ArrayList<String> encodedImgUrl = new ArrayList<>();
         if (!Objects.isNull(savedImgUrl)) {
-            savedImgUrl.forEach(imgUrl -> {
-                encodedImgUrl.add(CryptUtils.Base64Encoding(imgUrl));
-            });
+            if (!savedReview.getImgUrl().isEmpty())
+                savedImgUrl.forEach(imgUrl -> {
+                    encodedImgUrl.add(CryptUtils.Base64Encoding(imgUrl));
+                });
         }
 
         // 7. responseDto 생성
@@ -267,7 +270,7 @@ public class ReviewApiController {
         List<String> renewImgUrlList = new ArrayList<>();
         System.out.println("전달받은  imgUrl null인지 체크 : " +Objects.isNull(requestDto.getImgUrl()));
         if (!Objects.isNull(requestDto.getImgUrl()))
-            if (requestDto.getImgUrl().get(0).length() >= 1) {
+            if (!requestDto.getImgUrl().isEmpty()) {
                 System.out.println("requestDto.getImgUrl가 안 비어서 실행");
                 for (String imgUrl : requestDto.getImgUrl())
                     renewImgUrlList.add(imgUrl);
@@ -293,7 +296,7 @@ public class ReviewApiController {
         List<String> ImgUrlListFromDB = findReview.getImgUrl();
         if (!Objects.isNull(ImgUrlListFromDB)) {  // db에 url이 있다면 작업 진행 (없다면 애초에 제거할 이미지없으니 pass)
             if (!Objects.isNull(requestDto.getImgUrl())) // 남은 url이 있다면 (제거된 이미지가 있거나 없는 경우)
-                if (requestDto.getImgUrl().get(0).length() >= 1)
+                if (!requestDto.getImgUrl().isEmpty())
                     requestDto.getImgUrl().forEach(url -> {
                         ImgUrlListFromDB.removeIf(dbUrl -> dbUrl.equals(url));    // db의 url리스트와 다른지 비교하면서 같으면  제거. 남은 url은 제거할 url
                     });
@@ -313,8 +316,8 @@ public class ReviewApiController {
         // 9. content, imgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
         List<String> encodedImgUrlList = new ArrayList<>();
-        if (!Objects.isNull(updatedReview.getImgUrl())) {
-            if (updatedReview.getImgUrl().get(0).length() >= 1)
+        if (!Objects.isNull(updatedReview.getImgUrl())) {   // null 이 아니고 size가 0
+            if (!updatedReview.getImgUrl().isEmpty())
                 for (String imgUrl : renewImgUrlList)
                     encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
         }
@@ -368,7 +371,7 @@ public class ReviewApiController {
         String fileName = null;
         List<String> imgUrlList = findReview.getImgUrl();
         if (!Objects.isNull(imgUrlList))
-            if (imgUrlList.get(0).length() >= 1)
+            if (!imgUrlList.isEmpty())
                 for (String deletedImgUrl : imgUrlList) {
                     fileName = deletedImgUrl.replace(S3_END_POINT, "");
                     s3Service.deleteFile(fileName);
