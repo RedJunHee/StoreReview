@@ -75,7 +75,7 @@ public class ReviewApiController {
         for (Review review : findReviews) {
             // 3.1. 관련 코멘트 갯수
             int commentNum = commentService.findCommentNumByReviewId(review.getReviewId());
-            // 3.1. content, imgUrlList 인코딩
+            // 3.1. content, ImgUrl 인코딩
             String encodedContent = CryptUtils.Base64Encoding(review.getContent());
             List<String> encodedImgUrlList = new ArrayList<>();
             if (!Objects.isNull(review.getImgUrl())) {
@@ -122,7 +122,7 @@ public class ReviewApiController {
             return new ResponseEntity<>(new PersonIdNotFoundException().getResponseJsonObject(),
                     HttpStatus.BAD_REQUEST);
         }
-        // 2. content, imgUrlList 인코딩
+        // 2. content, ImgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(findReview.getContent());
         List<String> encodedImgUrlList = new ArrayList<>();
 
@@ -236,41 +236,39 @@ public class ReviewApiController {
     @RequestMapping(value="/reviews/{reviewId}", method = RequestMethod.PUT)
     public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId,
                                                            @RequestPart(value = "imgFileList", required = false) List<MultipartFile> imgFileList,
-                                                           @RequestParam("key") String requestDtoStr) throws JsonProcessingException {
-        // 0. ObjectMapping으로 String -> Dto 변환
-        ObjectMapper objectMapper = new ObjectMapper()
-                .registerModule(new SimpleModule());
-        ReviewUpdateRequestDto requestDto = objectMapper.readValue(requestDtoStr, new TypeReference<ReviewUpdateRequestDto>() {
-        });
-        // 1. 인코딩된 content 디코딩 및 content 세팅
-        String decodedContent = CryptUtils.Base64Decoding(requestDto.getContent());
-        // 2. 인증된 사용자 토큰 값
-        // 2-1. 인증된 사용자의 인증 객체 가져오기
+                                                           @RequestParam(value = "key") String requestDtoStr) throws JsonProcessingException {
+        // 1. 인증된 사용자 토큰 값
+        // 1-1. 인증된 사용자의 인증 객체 가져오기
         Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
-        // 2-2. 인증 객체의 유저정보 가져오기
+        // 1-2. 인증 객체의 유저정보 가져오기
         JWTUserDetails userDetails = (JWTUserDetails) authenticationToken.getPrincipal();
-        // 3. 리뷰 작성자 유효성 검증
-        // 3.1. 리뷰 조회 & null 체크
+        // 2. 리뷰 작성자 유효성 검증
+        // 2.1. 리뷰 조회 & null 체크
         Review findReview = reviewService.listReview(reviewId);
         if (findReview == null) {
             return new ResponseEntity<>(new PersonIdNotFoundException().getResponseJsonObject(),
                     HttpStatus.BAD_REQUEST);
         }
-        // 3.2 검증
+        // 2.2 유효성 검증
         if (!(findReview.getUser().getSuid().equals(userDetails.getSuid()))) {
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.FORBIDDEN.getCode(), ApiStatusCode.FORBIDDEN.getType(), ApiStatusCode.FORBIDDEN.getMessage()), HttpStatus.FORBIDDEN);
         }
+        // 3. ObjectMapping으로 String -> Dto 변환
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new SimpleModule());
+        ReviewUpdateRequestDto requestDto = objectMapper.readValue(requestDtoStr, new TypeReference<ReviewUpdateRequestDto>() {
+        });
         // 4. 리뷰 생성
         Review renewReview = new Review().builder()
-                .content(decodedContent)
+                .content(CryptUtils.Base64Decoding(requestDto.getContent()))
                 .stars(requestDto.getStars())
                 .build();
         // 5. 제거되지 않은 url 체크
         List<String> renewImgUrlList = new ArrayList<>();
-        System.out.println("전달받은 urlList null인지 체크 : " +Objects.isNull(requestDto.getImgUrlList()));
-        if (!requestDto.getImgUrlList().isEmpty()) {
-            System.out.println("requestDto.getImgUrlList가 안 비어서 실행");
-            for (String imgUrl : requestDto.getImgUrlList()) {
+        System.out.println("전달받은  imgUrl null인지 체크 : " +Objects.isNull(requestDto.getImgUrl()));
+        if (!requestDto.getImgUrl().isEmpty()) {
+            System.out.println("requestDto.getImgUrl가 안 비어서 실행");
+            for (String imgUrl : requestDto.getImgUrl()) {
                 renewImgUrlList.add(imgUrl);
             }
         }
@@ -293,8 +291,8 @@ public class ReviewApiController {
         // 7.1. 제거할 이미지 url만 남기는 로직 (제거할 이미지가 있는 경우)
         List<String> ImgUrlListFromDB = findReview.getImgUrl();
         if (!Objects.isNull(ImgUrlListFromDB)) {  // db에 url이 있다면 작업 진행 (없다면 애초에 제거할 이미지없으니 pass)
-            if (!requestDto.getImgUrlList().isEmpty()) // 남은 url이 있다면 (제거된 이미지가 있거나 없는 경우)
-                    requestDto.getImgUrlList().forEach(url -> {
+            if (!requestDto.getImgUrl().isEmpty()) // 남은 url이 있다면 (제거된 이미지가 있거나 없는 경우)
+                    requestDto.getImgUrl().forEach(url -> {
                         ImgUrlListFromDB.removeIf(dbUrl -> dbUrl.equals(url));    // db의 url리스트와 다른지 비교하면서 같으면  제거. 남은 url은 제거할 url
                     });
             System.out.println(ImgUrlListFromDB.size());

@@ -24,9 +24,11 @@ public class Review extends BaseTimeEntity {
     @Column(name="PLACE_ID", length = 20, nullable = false)
     private String placeId;
 
+    @Setter
     @Column(name = "STARS", nullable = false)
     private Integer stars;
 
+    @Setter
     @Column(name = "CONTENT", nullable = false, length = 1000)
     private String content;
 
