@@ -31,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -185,7 +186,7 @@ public class ReviewApiController {
         //  4. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
         List<String> uploadedImgUrlList = new ArrayList<>();
         // TODO postman으로 테스트 시, 비어있어도 null, Empty로 처리하지 않음.
-        if (!Objects.isNull(imgFileList)) {   //  content길이로 빈 파일인지 체크
+        if (imgFileList.get(0).getSize() >= 1) {   //  content길이로 빈 파일인지 체크
             imgFileList.forEach(imgFile -> {
                 uploadedImgUrlList.add(s3Service.uploadFile(imgFile));
             });
@@ -274,8 +275,10 @@ public class ReviewApiController {
         }
 
         // 5. 추가된 이미지파일 s3 업로드 서비스 호출 (업로드할 이미지가 있는 경우에)
-        // TODO postman으로 테스트 시, 비어있지 않아도 null, Empty로 처리하지 않음.
-        if (!Objects.isNull(imgFileList)) {
+        System.out.println("imgFileList is Null?  : " +Objects.isNull(imgFileList));
+        // TODO postman으로 테스트 시, 비어있어도 null, Empty로 처리하지 않음.
+//        if (!Objects.isNull(imgFileList)) {
+        if (imgFileList.get(0).getSize() >= 1) {
             // 5.2. s3 업로드 및 url 추가
             for (MultipartFile imgFile : imgFileList) {
                 String imgUrl = s3Service.uploadFile(imgFile);
