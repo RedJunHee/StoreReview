@@ -266,7 +266,7 @@ public class ReviewApiController {
         // 5. 제거되지 않은 url 체크
         List<String> renewImgUrlList = new ArrayList<>();
         System.out.println("전달받은  imgUrl null인지 체크 : " +Objects.isNull(requestDto.getImgUrl()));
-        if (!requestDto.getImgUrl().isEmpty()) {
+        if (!Objects.isNull(requestDto.getImgUrl())) {
             System.out.println("requestDto.getImgUrl가 안 비어서 실행");
             for (String imgUrl : requestDto.getImgUrl()) {
                 renewImgUrlList.add(imgUrl);
@@ -291,7 +291,7 @@ public class ReviewApiController {
         // 7.1. 제거할 이미지 url만 남기는 로직 (제거할 이미지가 있는 경우)
         List<String> ImgUrlListFromDB = findReview.getImgUrl();
         if (!Objects.isNull(ImgUrlListFromDB)) {  // db에 url이 있다면 작업 진행 (없다면 애초에 제거할 이미지없으니 pass)
-            if (!requestDto.getImgUrl().isEmpty()) // 남은 url이 있다면 (제거된 이미지가 있거나 없는 경우)
+            if (!Objects.isNull(requestDto.getImgUrl())) // 남은 url이 있다면 (제거된 이미지가 있거나 없는 경우)
                     requestDto.getImgUrl().forEach(url -> {
                         ImgUrlListFromDB.removeIf(dbUrl -> dbUrl.equals(url));    // db의 url리스트와 다른지 비교하면서 같으면  제거. 남은 url은 제거할 url
                     });
