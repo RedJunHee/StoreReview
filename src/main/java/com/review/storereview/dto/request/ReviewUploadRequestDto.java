@@ -3,8 +3,6 @@ package com.review.storereview.dto.request;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
 
 /**
  * {@Summary 리뷰 작성 요청 클래스 (DTO) }

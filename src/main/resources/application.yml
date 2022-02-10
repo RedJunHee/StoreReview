@@ -60,13 +60,13 @@ logging:
         descriptor:
           sql: trace
     root: info
+  level:
     com:
       amazonaws:
         util:
           EC2MetadataUtils: error
         internal:
           InstanceMetadataServiceResourceFetcher: error
-  level:
     org:
       springframework:
         web: debug
