@@ -59,7 +59,7 @@ public class AuthController {
             return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.UNAUTHORIZED.getCode()), HttpStatus.UNAUTHORIZED);
         }catch(Exception ex)
         {
-            ex.printStackTrace();
+            logger.error("AuthController Exception : " + ex.getMessage());
             return new ResponseEntity<>(ResponseJsonObject.withError(ApiStatusCode.SYSTEM_ERROR.getCode(), ApiStatusCode.SYSTEM_ERROR.getType(), ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }   // 체크 필요!
 
