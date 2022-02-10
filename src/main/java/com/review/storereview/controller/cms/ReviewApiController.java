@@ -77,9 +77,10 @@ public class ReviewApiController {
             int commentNum = commentService.findCommentNumByReviewId(review.getReviewId());
             // 3.1. content, ImgUrl 인코딩
             String encodedContent = CryptUtils.Base64Encoding(review.getContent());
-            List<String> encodedImgUrlList = new ArrayList<>();
+            List<String> encodedImgUrlList = null;
             if (!Objects.isNull(review.getImgUrl())) {
                 if (!review.getImgUrl().isEmpty())
+                     encodedImgUrlList = new ArrayList<>();
                     for (String imgUrl : review.getImgUrl()) {
                         encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
                     }
@@ -125,10 +126,11 @@ public class ReviewApiController {
         }
         // 2. content, ImgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(findReview.getContent());
-        List<String> encodedImgUrlList = new ArrayList<>();
+        List<String> encodedImgUrlList = null;
 
         if (!Objects.isNull(findReview.getImgUrl())) {
             if (!findReview.getImgUrl().isEmpty())
+                 encodedImgUrlList = new ArrayList<>();
                 for (String imgUrl : findReview.getImgUrl()) {
                     encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
                 }
@@ -185,12 +187,12 @@ public class ReviewApiController {
                 .isDelete(0)
                 .build();
         //  4. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
-        List<String> uploadedImgUrlList = new ArrayList<>();
+        List<String> uploadedImgUrlList = null;
         // TODO postman으로 테스트 시, 비어있어도 null, Empty로 처리하지 않음.
         if (!Objects.isNull(imgFileList)) {   //  content길이로 빈 파일인지 체크
-            imgFileList.forEach(imgFile -> {
+            uploadedImgUrlList = new ArrayList<>();
+            for (MultipartFile imgFile : imgFileList)
                 uploadedImgUrlList.add(s3Service.uploadFile(imgFile));
-            });
             review.setImgUrl(uploadedImgUrlList);
         }
 
@@ -200,16 +202,16 @@ public class ReviewApiController {
         // 6. content, imgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(savedReview.getContent());
         List<String> savedImgUrl = savedReview.getImgUrl();
-        ArrayList<String> encodedImgUrl = new ArrayList<>();
+        ArrayList<String> encodedImgUrl = null;
         if (!Objects.isNull(savedImgUrl)) {
-            if (!savedReview.getImgUrl().isEmpty())
-                savedImgUrl.forEach(imgUrl -> {
-                    encodedImgUrl.add(CryptUtils.Base64Encoding(imgUrl));
-                });
+            if (!Objects.isNull(savedReview.getImgUrl()))
+                encodedImgUrl = new ArrayList<>();
+            for (String imgUrl : savedImgUrl) {
+                encodedImgUrl.add(CryptUtils.Base64Encoding(imgUrl));
+            }
         }
 
         // 7. responseDto 생성
-        int commentNum = 0;
         ReviewResponseDto reviewResponseDto = null;
         try {
             reviewResponseDto = new ReviewResponseDto(
@@ -287,9 +289,11 @@ public class ReviewApiController {
                 renewImgUrlList.add(imgUrl);    // 기존 urlList에 업로드된 urlList 추가
             }
         }
-
-        renewReview.setImgUrl(renewImgUrlList);
-        System.out.println(renewImgUrlList.size());
+        // db에 null 입력
+        if(renewImgUrlList.size() < 1)
+            renewReview.setImgUrl(null);
+        else
+            renewReview.setImgUrl(renewImgUrlList);
 
         // 7. 제거할 이미지 제거
         // 7.1. 제거할 이미지 url만 남기는 로직 (제거할 이미지가 있는 경우)
@@ -308,16 +312,17 @@ public class ReviewApiController {
             for (String deletedImgUrl : ImgUrlListFromDB) {
                 fileName = deletedImgUrl.replace(S3_END_POINT, "");
                 s3Service.deleteFile(fileName);
-                System.out.println(fileName + "제거 완료");
+                System.out.println("delete finished : " + fileName);
             }
 
         // 8. 리뷰 업데이트 서비스 호출
         Review updatedReview = reviewService.updateReview(findReview, renewReview);
         // 9. content, imgUrl 인코딩
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
-        List<String> encodedImgUrlList = new ArrayList<>();
+        List<String> encodedImgUrlList = null;
         if (!Objects.isNull(updatedReview.getImgUrl())) {   // null 이 아니고 size가 0
-            if (!updatedReview.getImgUrl().isEmpty())
+            if (!Objects.isNull(updatedReview.getImgUrl()))
+                encodedImgUrlList = new ArrayList<>();
                 for (String imgUrl : renewImgUrlList)
                     encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
         }
