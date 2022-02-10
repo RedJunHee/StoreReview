@@ -1,9 +1,9 @@
 package com.review.storereview.common.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.review.storereview.dto.request.ReviewUploadRequestDto;
-import lombok.SneakyThrows;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 /**
@@ -13,17 +13,23 @@ import org.springframework.stereotype.Component;
  * History     : [2022-02-05] - 문 윤 지 - Class Create
  */
 @Component // MVC 웹 설정을 따로 할 필요 x
-public class StringToRequestDtoConverter implements Converter<String, ReviewUploadRequestDto> {
+public class StringToRequestDtoConverter extends Throwable implements Converter<String, ReviewUploadRequestDto> {
 
     private ObjectMapper objectMapper;
+    ReviewUploadRequestDto uploadRequestDto;
 
     public StringToRequestDtoConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    @SneakyThrows
     @Override
     public ReviewUploadRequestDto convert(String source) {
-        return objectMapper.readValue(source, new TypeReference<ReviewUploadRequestDto>() {});
+        try {
+            uploadRequestDto = objectMapper.readValue(source, new TypeReference<ReviewUploadRequestDto>() {
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return uploadRequestDto;
     }
 }

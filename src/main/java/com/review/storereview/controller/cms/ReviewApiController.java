@@ -163,9 +163,15 @@ public class ReviewApiController {
      * @param requestDto
      */
     @PostMapping("/review")
-    public ResponseEntity<ResponseJsonObject> uploadReview(@RequestPart(value = "imgFileList", required = false) List<MultipartFile> imgFileList,
-                                                           @RequestParam("key") ReviewUploadRequestDto requestDto) {
-        System.out.println("upload review 실행 : " + requestDto.toString());
+    public ResponseEntity<ResponseJsonObject> uploadReview(
+            @RequestPart(value = "imgFileList", required = false) List<MultipartFile> imgFiles,
+            @RequestParam("key") ReviewUploadRequestDto requestDto) {
+        // 파라미터 검증
+        Map<String, String> errorsMap = checkParameterValid(requestDto);
+        if (errorsMap.size() >= 1) {
+            ResponseJsonObject exceptionDto = new ParamValidationException(errorsMap).getResponseJsonObject();
+            return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
+        }
         // 1. 인증된 사용자 토큰 값
         // 1-1. 인증된 사용자의 인증 객체 가져오기
         Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
@@ -189,9 +195,9 @@ public class ReviewApiController {
         //  4. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
         List<String> uploadedImgUrlList = null;
         // TODO postman으로 테스트 시, 비어있어도 null, Empty로 처리하지 않음.
-        if (!Objects.isNull(imgFileList)) {   //  content길이로 빈 파일인지 체크
+        if (!Objects.isNull(imgFiles)) {   //  content길이로 빈 파일인지 체크
             uploadedImgUrlList = new ArrayList<>();
-            for (MultipartFile imgFile : imgFileList)
+            for (MultipartFile imgFile : imgFiles)
                 uploadedImgUrlList.add(s3Service.uploadFile(imgFile));
             review.setImgUrl(uploadedImgUrlList);
         }
@@ -232,15 +238,36 @@ public class ReviewApiController {
     }
 
     /**
+     * @RequestParam으로  ReviewUploadRequestDto에 바인딩된 파라미터를 검증한다.
+     * @param requestDto
+     */
+    private Map<String, String> checkParameterValid(ReviewUploadRequestDto requestDto) {
+        Map<String, String> errorsMap = new HashMap<>();
+        String defaultMessage;
+
+        // 1. stars 체크
+        if (requestDto.getStars() < -1 || requestDto.getStars() > 6) {
+            defaultMessage = "stars는 1 이상 5 이하의 정수로 작성해야 합니다.";
+            errorsMap.put("stars", defaultMessage);
+        }
+        // 2. content null 체크
+        if (requestDto.getContent() == null) {
+            defaultMessage = "내용을 입력해야합니다.";
+            errorsMap.put("content", defaultMessage);
+        }
+        return errorsMap;
+    }
+
+    /**
      * {@Summary 리뷰 업데이트 컨트롤러}
      * @param reviewId
-     * @param imgFileList
+     * @param imgFiles
      * @param requestDtoStr
      */
 //    @PutMapping("/reviews/{reviewId}")
     @RequestMapping(value="/reviews/{reviewId}", method = RequestMethod.PUT)
     public ResponseEntity<ResponseJsonObject> updateReview(@PathVariable Long reviewId,
-                                                           @RequestPart(value = "imgFileList", required = false) List<MultipartFile> imgFileList,
+                                                           @RequestPart(value = "imgFileList", required = false) List<MultipartFile> imgFiles,
                                                            @RequestParam(value = "key") String requestDtoStr) throws JsonProcessingException {
         // 1. 인증된 사용자 토큰 값
         // 1-1. 인증된 사용자의 인증 객체 가져오기
@@ -279,11 +306,11 @@ public class ReviewApiController {
             }
 
         // 5. 추가된 이미지파일 s3 업로드 서비스 호출 (업로드할 이미지가 있는 경우에)
-        System.out.println("imgFileList is Null?  : " +Objects.isNull(imgFileList));
+        System.out.println("Is imgFiles Null?  : " +Objects.isNull(imgFiles));
         // TODO postman으로 테스트 시, 비어있어도 null, Empty로 처리하지 않음.
-        if (!Objects.isNull(imgFileList)) {
+        if (!Objects.isNull(imgFiles)) {
             // 5.2. s3 업로드 및 url 추가
-            for (MultipartFile imgFile : imgFileList) {
+            for (MultipartFile imgFile : imgFiles) {
                 String imgUrl = s3Service.uploadFile(imgFile);
                 System.out.println(imgUrl);
                 renewImgUrlList.add(imgUrl);    // 기존 urlList에 업로드된 urlList 추가
