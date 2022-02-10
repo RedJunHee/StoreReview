@@ -221,11 +221,11 @@ public class CommentApiController {
     /**
      *  코멘트 삭제 API
      *
-     * @param requestDto
+     * @param commentId
      * @return 작성된 코멘트 정보 리턴.
      */
-    @DeleteMapping("/comment")
-    public ResponseEntity<ResponseJsonObject> deleteComment(@RequestBody CommentDeleteRequestDto requestDto)
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity<ResponseJsonObject> deleteComment(@PathVariable("commentId") Long commentId)
     {
         try {
             // 서비스 요청 사용자 인증 객체 가져오기
@@ -235,7 +235,7 @@ public class CommentApiController {
             JWTUserDetails userDetails = (JWTUserDetails) authentication.getPrincipal();
 
             // 코멘트 작성자 유효성 체크
-            Comment comment = commentService.findByCommentId(requestDto.getCommentId());
+            Comment comment = commentService.findByCommentId(commentId);
 
             //SUID 유효성 체크.
             if (comment.getUser().getSuid().equals(userDetails.getSuid())) {
@@ -252,7 +252,7 @@ public class CommentApiController {
                 ResponseJsonObject resDto = ResponseJsonObject.withStatusCode(ApiStatusCode.OK.getCode()).setData(responseDto);
                 return new ResponseEntity<ResponseJsonObject>(resDto, HttpStatus.OK);
             } else {
-                logger.info("Failed. Comment Delete UnAuthorization!!");
+                logger.error("Failed. Comment Delete UnAuthorization!!");
                 return new ResponseEntity<>(ResponseJsonObject.withStatusCode(ApiStatusCode.FORBIDDEN.getCode()), HttpStatus.FORBIDDEN);
             }
         }catch(Exception ex)

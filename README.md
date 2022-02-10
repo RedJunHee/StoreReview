@@ -47,11 +47,19 @@
     - Figma (프로토타입)
 
 ## 해결 과제 (Back-End) 🤹
+- [X] Server 세팅
+- [X] Cors 정책 허용
+- [X] SSL Protocol 세팅
 - [X] api 규약 정의
 - [X] DB 설계 & ERD 작성
 - [X] 프로젝트 세팅
-- [ ] model 정의 및 MySQL 연동
+- [X] model 정의 및 MySQL 연동
 - [ ] 기능 구현
-    - [ ] 회원가입 & 로그인 
-    - [ ] 가게 검색 및 정보 조회 (Naver 검색 API 이용)
-    - [ ] ..
+    - [X] Spring Security JWT 인증/인가 기능 구현
+    - [X] AES256, BCrypt, Base64 Tool 개발
+    - [ ] 회원가입 
+    - [X] 로그인 (Authenticate) JWT 발급 
+    - [X] 리뷰 코멘트 조회 (리뷰에 달린 모든 코멘트 + Paging) 
+    - [X] 리뷰 코멘트 작성 
+    - [X] 리뷰 코멘트 수정 (리뷰 사용자 체크 후 수정 기능 수행)
+    - [X] 리뷰 코멘트 삭제 (리뷰 사용자 체크 후 삭제 기능 수행)
