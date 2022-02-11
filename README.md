@@ -1,5 +1,6 @@
 # StoreReview
 리뷰 서비스를 제공하는 웹 사이트 개발 프로젝트입니다. 😊
+
 [여기 모아](https://store-review.nextwing.me/)
 
 ## 팀원 🧑🏻‍🤝‍🧑🏻
@@ -51,7 +52,7 @@
 - [X] Server 세팅
 - [X] Cors 정책 허용
 - [X] SSL Protocol 세팅
-- [X] api 규약 정의
+- [X] [api 규약 정의](https://docs.google.com/document/d/1JvENVWph2QBL9mxwRsd1sTEhiNriD3MX/edit?usp=sharing&ouid=116446426306038263641&rtpof=true&sd=true)
 - [X] DB 설계 & ERD 작성
 - [X] 프로젝트 세팅
 - [X] model 정의 및 MySQL 연동
