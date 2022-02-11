@@ -43,7 +43,7 @@ public class RequestAroundLogAop {
 
     //  execution(* com.review.storereview.controller 하위 패키지 내에
     //   *Controller 클래스의 모든 메서드 Around => Pointcut 설정
-    @Around(value = "execution(* com.review.storereview.controller.*Controller.*(..))")
+    @Around(value = "execution(* com.review.storereview.controller..*Controller.*(..))")
     public Object ApiLog(ProceedingJoinPoint joinPoint) throws Throwable { // 파라미터 : 프록시 대상 객체의 메서드를 호출할 때 사용
         Object[] arguments   = joinPoint.getArgs();
         String  inputParam = om.writeValueAsString(arguments);
