@@ -38,7 +38,12 @@ public class UserApiController {
         // 1-1. 검증 실패 로직
         if (bindingResult.hasErrors()) {
             System.out.println("검증 실패 로직에서 errorsMap : " + userSaveDtoValidator.getErrorsMap());
-            ResponseJsonObject exceptionDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
+//            ResponseJsonObject exceptionDto = new ParamValidationException(userSaveDtoValidator.getErrorsMap()).getResponseJsonObject();
+            ResponseJsonObject exceptionDto = ResponseJsonObject.withParameterMsg(
+                    ApiStatusCode.PARAMETER_CHECK_FAILED.getCode(),
+                    ApiStatusCode.PARAMETER_CHECK_FAILED.getType(),
+                    ApiStatusCode.PARAMETER_CHECK_FAILED.getMessage(),
+                    userSaveDtoValidator.getErrorsMap());
             return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
         }
         else {      // 1-2. 검증 성공 로직

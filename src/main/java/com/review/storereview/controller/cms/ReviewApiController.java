@@ -211,7 +211,7 @@ public class ReviewApiController {
                 encodedImgUrls.add(CryptUtils.Base64Encoding(imgUrl));
             }
         }
-        System.out.println(savedReview);
+        System.out.println("업로드된 reviewId : " + savedReview.getReviewId());
         // 7. responseDto 생성
         ReviewResponseDto reviewResponseDto = null;
         try {
@@ -297,7 +297,7 @@ public class ReviewApiController {
         Review updatedReview = reviewService.updateReview(findReview, renewReview);
         // 6. content 인코딩
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
-        System.out.println(renewReview);
+        System.out.println(encodedContent);
         // 7. responseDto 생성
         ReviewResponseDto reviewResponseDto;
         ResponseJsonObject resDto;
