@@ -5,7 +5,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.review.storereview.dto.request.ReviewUpdateRequestDto;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StringToReviewUpdateRequestDtoConverter implements Converter<String, ReviewUpdateRequestDto> {
 
     private ObjectMapper objectMapper;
