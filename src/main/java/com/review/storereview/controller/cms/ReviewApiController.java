@@ -193,7 +193,11 @@ public class ReviewApiController {
                 .build();
         //  4. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
         List<String> uploadedImgUrls = uploadImgUrls(imgFiles);
-        review.setImgUrl(uploadedImgUrls);  // null 혹은 List
+        // 이중 체크 (db에 null로 저장되지 않는 문제
+        if (CollectionUtils.isNullOrEmpty(uploadedImgUrls))
+            review.setImgUrl(null);  // null
+        else
+            review.setImgUrl(uploadedImgUrls);
         // 5. 리뷰 업로드 서비스 호출
         Review savedReview = reviewService.uploadReview(review);
 

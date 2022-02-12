@@ -1,5 +1,7 @@
 package com.review.storereview.common.utils;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,11 +16,12 @@ import org.springframework.stereotype.Component;
  */
 @Component // MVC 웹 설정을 따로 할 필요 x
 public class StringToReviewUploadRequestDtoConverter implements Converter<String, ReviewUploadRequestDto> {
-    private ObjectMapper objectMapper;
+    public ObjectMapper objectMapper;
     ReviewUploadRequestDto uploadRequestDto;
 
     public StringToReviewUploadRequestDtoConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+        this.objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
     }
 
     @Override
