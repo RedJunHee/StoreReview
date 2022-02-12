@@ -13,12 +13,11 @@ import org.springframework.stereotype.Component;
  * History     : [2022-02-05] - 문 윤 지 - Class Create
  */
 @Component // MVC 웹 설정을 따로 할 필요 x
-public class StringToRequestDtoConverter implements Converter<String, ReviewUploadRequestDto> {
-
+public class StringToReviewUploadRequestDtoConverter implements Converter<String, ReviewUploadRequestDto> {
     private ObjectMapper objectMapper;
     ReviewUploadRequestDto uploadRequestDto;
 
-    public StringToRequestDtoConverter(ObjectMapper objectMapper) {
+    public StringToReviewUploadRequestDtoConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 

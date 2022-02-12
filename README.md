@@ -36,7 +36,6 @@
 - **DataBase**
     - MySQL
 - **Infra**
-    - AWS EC2
     - AWS RDS
     - AWS S3
     
@@ -65,12 +64,21 @@
 - [X] [api 규약 정의](https://docs.google.com/document/d/1JvENVWph2QBL9mxwRsd1sTEhiNriD3MX/edit?usp=sharing&ouid=116446426306038263641&rtpof=true&sd=true)
 - [X] DB 설계 & ERD 작성
 - [X] 프로젝트 세팅
-- [X] model 정의 및 MySQL 연동
+- [X] 모델 정의 및 MySQL 연동
+- [ ] [테스트 코드](https://github.com/RedJunHee/StoreReview/tree/master/src/test/java/com/review/storereview) 작성
 - [ ] 기능 구현
     - [X] Spring Security JWT 인증/인가 기능 구현
-    - [X] AES256, BCrypt, Base64 Tool 개발
-    - [ ] 회원가입 
+    - [X] Utils 기능 구현
+      - AES256, BCrypt, Base64 Tool 개발
+      - 타입 컨버터 기능
+    - [X] 전역 예외 처리 핸들러 구현
+    - [X] 회원가입 
+      - Validator 기능 구현
     - [X] 로그인 (Authenticate) JWT 발급 
+    - [X] 리뷰 조회 (가게의 전체 리뷰 조회, 개별 리뷰 조회)
+    - [X] 리뷰 작성 (이미지 업로드 기능 수행)
+    - [X] 리뷰 수정 (리뷰 작성자 권한)
+    - [X] 리뷰 삭제 (리뷰 작성자 권한)
     - [X] 리뷰 코멘트 조회 (리뷰에 달린 모든 코멘트 + Paging) 
     - [X] 리뷰 코멘트 작성 
     - [X] 리뷰 코멘트 수정 (리뷰 사용자 체크 후 수정 기능 수행)
