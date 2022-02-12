@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.CollectionUtils;
 import com.review.storereview.common.exception.ParamValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +40,7 @@ public class S3Service {
 
     @Value("${cloud.aws.region.static}")
     private String region;
+    private static final String S3_END_POINT = "https://storereview-bucket.s3.us-east-2.amazonaws.com/";
 
     @PostConstruct
     public void setS3Client() {
@@ -97,10 +97,16 @@ public class S3Service {
 
     /**
      * S3에 업로드된 이미지파일을 삭제한다.
-     * @param fileName
+     * @param deletedImgUrls
      */
-    public void deleteFile(String fileName) {
-        s3Client.deleteObject(bucketName, fileName);
+    public void deleteFiles(List<String> deletedImgUrls) {
+        String fileName = null;
+        List<String> imgUrlList = deletedImgUrls;
+        if (!CollectionUtils.isNullOrEmpty(imgUrlList))
+            for (String deletedImgUrl : imgUrlList) {
+                fileName = deletedImgUrl.replace(S3_END_POINT, "");
+                s3Client.deleteObject(bucketName, fileName);
+            }
     }
 
     private String getFileExtension(String fileName) {
@@ -112,5 +118,53 @@ public class S3Service {
             parameterErrorMsg.put(fileName, "잘못된 형식의 파일입니다.");
             throw new ParamValidationException(parameterErrorMsg);
         }
+    }
+    /**
+     * 업데이트 시, 이미지 작업 호출
+     * 1. 제거 : db imgUrl에서 dto.imgUrl을 중복 제거하여 삭제할 imgUrl을 구한다.
+     * 2. 추가 : 1) imgFile 업로드 2) 업로드한 imgUrl을 dto.imgUrl에 추가
+     * 3. review.setImgUrl()
+     */
+    public List<String> saveOrDeleteImg (List<String> imgUrlsFromDB, List<String> remainingImgUrls, List<MultipartFile> addedImgFiles) {
+        // 반환할 imgUrl에 남은 imgUrl 미리 저장
+        List<String> renewImgUrls = remainingImgUrls;
+
+        // 1. 남은 이미지 처리 (삭제 or Nothing)
+        System.out.println("남은 imgUrl null인지 체크 : " +Objects.isNull(remainingImgUrls));
+        if (CollectionUtils.isNullOrEmpty(remainingImgUrls)) {   // 전달된 남은 imgUrl이 비었고
+            if (!CollectionUtils.isNullOrEmpty(imgUrlsFromDB)) // 원래 이미지가 있는 리뷰의 경우, 삭제 진행
+                deleteFiles(imgUrlsFromDB);
+        }
+       else {  // 전달된 남은 imgUrl이 있고
+            if (!CollectionUtils.isNullOrEmpty(imgUrlsFromDB)) // 원래 이미지가 있는 리뷰의 경우, 비교 후 삭제 진행
+                remainingImgUrls.forEach(remainingImgUrl -> {
+                    imgUrlsFromDB.removeIf(dbUrl -> dbUrl.equals(remainingImgUrl));    // db의 url리스트와 다른지 비교하면서 같으면  제거. 남은 url은 제거할 url
+                });
+            // 제거할 imgUrl이 있으면 삭제 진행
+            if (!CollectionUtils.isNullOrEmpty(imgUrlsFromDB))
+                deleteFiles(imgUrlsFromDB);
+        }
+
+       // 2. 추가된 이미지파일 추가
+        if (!CollectionUtils.isNullOrEmpty(addedImgFiles)) {
+            // s3 업로드 및 url 추가
+            for (MultipartFile imgFile : addedImgFiles) {
+                String imgUrl = uploadFile(imgFile);
+                renewImgUrls.add(imgUrl);    // 기존 imgUrls에 업로드된 url 추가
+            }
+        }
+       return renewImgUrls;
+    }
+
+    /**
+     * 프론트로부터 혹은 DB로부터 전달된 객체가 비었는지 체크하기 위해
+     * null인 경우와 빈 배열일 경우를 동시에 체크한다.
+     */
+    private boolean isEmptydoubleCheck(List<?> objects) {
+        if (!Objects.isNull(objects))
+            if (!objects.isEmpty()) {
+                return true;
+        }
+        return false;
     }
 }
