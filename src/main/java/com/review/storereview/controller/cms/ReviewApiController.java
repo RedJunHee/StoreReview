@@ -23,7 +23,7 @@ import com.review.storereview.dto.response.ReviewResponseDto;
 import com.review.storereview.service.S3Service;
 import com.review.storereview.service.cms.CommentService;
 import com.review.storereview.service.cms.ReviewServiceImpl;
-import org.graalvm.util.CollectionsUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
