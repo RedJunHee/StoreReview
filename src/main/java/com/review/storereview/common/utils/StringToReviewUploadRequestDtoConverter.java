@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component // MVC 웹 설정을 따로 할 필요 x
 public class StringToReviewUploadRequestDtoConverter implements Converter<String, ReviewUploadRequestDto> {
-    private ObjectMapper objectMapper;
+    public ObjectMapper objectMapper;
     ReviewUploadRequestDto uploadRequestDto;
 
     public StringToReviewUploadRequestDtoConverter(ObjectMapper objectMapper) {

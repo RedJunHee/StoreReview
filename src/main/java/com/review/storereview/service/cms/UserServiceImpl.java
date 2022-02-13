@@ -28,7 +28,7 @@ public class UserServiceImpl implements BaseUserService {
      * @return User
      */
     @Override
-    public void join(UserSaveRequestDto userSaveRequestDto)  {
+    public boolean join(UserSaveRequestDto userSaveRequestDto)  {
         // 1. 중복 회원 검증 (id)
         validateDuplicateUserByUserId(userSaveRequestDto.getUserId());
 
@@ -46,23 +46,16 @@ public class UserServiceImpl implements BaseUserService {
         // 4. DB 저장
         userRepository.save(user);
         System.out.println("사용자 정보 DB 저장 완료");
+        return false;
     }
 
     // 중복 회원 검증
     @Override
-    public void validateDuplicateUserByUserId(String userId) {
+    public void validateDuplicateUserByUserId(String userId) throws PersonAlreadyExistsException {
         System.out.println("validateDuplicateUser 호출됨");
         boolean isExist = userRepository.existsByUserId(userId);
 
-        if (isExist)  // 중복이면 true
+        if (isExist) // 중복이면 true
             throw new PersonAlreadyExistsException();
-//            throw new ResponseEntity<ResponseJsonObject>(new PersonAlreadyExistsException().getResponseJsonObject(), HttpStatus.CONFLICT);
     }
-
-/*
-        // SUID, SAID 암호화(AES-256 : 암호화&복호화 가능 알고리즘)
-        CryptUtils.Aes aes = CryptUtils.getAES();
-        user.setSaid(aes.encrypt(KEY, result.getSaid()));
-        user.setSuid(aes.encrypt(KEY, result.getSuid()));
-*/
 }

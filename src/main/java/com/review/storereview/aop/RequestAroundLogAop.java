@@ -1,6 +1,7 @@
 package com.review.storereview.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ReviewServiceException;
@@ -37,7 +38,8 @@ public class RequestAroundLogAop {
 
     @Autowired
     public RequestAroundLogAop(LogService logService) {
-        this.om = new ObjectMapper().registerModule(new JavaTimeModule());
+        this.om = new ObjectMapper().registerModule(new JavaTimeModule())
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
         this.logService = logService;
     }
 

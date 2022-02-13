@@ -1,11 +1,6 @@
 package com.review.storereview.controller.cms;
 
 import com.amazonaws.util.CollectionUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.review.storereview.common.enumerate.ApiStatusCode;
 import com.review.storereview.common.exception.ParamValidationException;
 import com.review.storereview.common.exception.PersonIdNotFoundException;
@@ -193,7 +188,11 @@ public class ReviewApiController {
                 .build();
         //  4. 이미지파일 s3 저장 (업로드할 이미지가 있는 경우에)
         List<String> uploadedImgUrls = uploadImgUrls(imgFiles);
-        review.setImgUrl(uploadedImgUrls);  // null 혹은 List
+        // 이중 체크 (db에 null로 저장되지 않는 문제
+        if (CollectionUtils.isNullOrEmpty(uploadedImgUrls))
+            review.setImgUrl(null);  // null
+        else
+            review.setImgUrl(uploadedImgUrls);
         // 5. 리뷰 업로드 서비스 호출
         Review savedReview = reviewService.uploadReview(review);
 
@@ -207,7 +206,7 @@ public class ReviewApiController {
                 encodedImgUrls.add(CryptUtils.Base64Encoding(imgUrl));
             }
         }
-        System.out.println(savedReview);
+        System.out.println("업로드된 reviewId : " + savedReview.getReviewId());
         // 7. responseDto 생성
         ReviewResponseDto reviewResponseDto = null;
         try {
@@ -293,7 +292,7 @@ public class ReviewApiController {
         Review updatedReview = reviewService.updateReview(findReview, renewReview);
         // 6. content 인코딩
         String encodedContent = CryptUtils.Base64Encoding(updatedReview.getContent());
-        System.out.println(renewReview);
+        System.out.println(encodedContent);
         // 7. responseDto 생성
         ReviewResponseDto reviewResponseDto;
         ResponseJsonObject resDto;
