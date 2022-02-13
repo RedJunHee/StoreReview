@@ -1,7 +1,5 @@
 package com.review.storereview.common.utils;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +19,6 @@ public class StringToReviewUploadRequestDtoConverter implements Converter<String
 
     public StringToReviewUploadRequestDtoConverter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
     }
 
     @Override
