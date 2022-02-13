@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -90,8 +92,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                    .antMatchers(HttpMethod.GET,"/comment/**").permitAll()
+                    .antMatchers(HttpMethod.POST,"/comment").hasRole(Authority.USER.getName())
+                    .antMatchers(HttpMethod.PUT,"/comment").hasRole(Authority.USER.getName())
+                    .antMatchers(HttpMethod.DELETE,"/comment").hasRole(Authority.USER.getName())
+                    .antMatchers(HttpMethod.GET, "/reviews/**","/places/**" ).permitAll()
                     .antMatchers("/authenticate", "/api/signup", "/test/ping").permitAll()    // 인증 절차 없이 접근 허용(로그인 관련 url)
-                    .antMatchers("/comment", "/places/**", "/review", "/reviews/**", "/test/tester").hasRole(Authority.USER.getName())
+                    .antMatchers("/review", "/test/tester").hasRole(Authority.USER.getName())
                     .antMatchers("/test/admin").hasRole(Authority.ADMIN.getName())
                     .anyRequest().authenticated()       // 그 외 나머지 리소스들은 무조건 인증을 완료해야 접근 가능
                 .and()
