@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  *  Description : 회원가입 시 파라미터에 대한 Custom Validator
  *  History     : [2021-01-11]
  */
-@Component
+//@Component
 public class UserSaveDtoValidator implements Validator {
     // 검증 오류 결과 보관
     private static Map<String, String> errorsMap;
@@ -32,7 +32,7 @@ public class UserSaveDtoValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-         errorsMap = new HashMap<>();
+        errorsMap = new HashMap<>();
         UserSaveRequestDto userSaveRequestDto = (UserSaveRequestDto) target;
         BindingResult bindingResult = (BindingResult) errors;
         String defaultMessage;
