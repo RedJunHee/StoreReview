@@ -4,7 +4,7 @@
 [여기 모아](https://store-review.nextwing.me/)
 
 ## 팀원 🧑🏻‍🤝‍🧑🏻
-- Front-End : [이수경](https://github.com/ssssksss), [박재현](https://github.com/ghtea)
+- Front-End : [박재현](https://github.com/ghtea)
 - Back-End : [문윤지](https://github.com/BananMoon), [조준희](https://github.com/RedJunHee)
 
 ## 주요 기능 💃
