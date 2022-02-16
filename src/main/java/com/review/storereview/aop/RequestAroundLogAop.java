@@ -8,7 +8,6 @@ import com.review.storereview.common.exception.ReviewServiceException;
 import com.review.storereview.dao.JWTUserDetails;
 import com.review.storereview.dao.cms.ApiLog;
 import com.review.storereview.dto.ResponseJsonObject;
-import com.review.storereview.dto.request.ServiceRequestDTO;
 import com.review.storereview.service.cms.LogService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -20,8 +19,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -51,12 +53,9 @@ public class RequestAroundLogAop {
     public Object ApiLog(ProceedingJoinPoint joinPoint) throws Throwable { // 파라미터 : 프록시 대상 객체의 메서드를 호출할 때 사용
         Object[] arguments   = joinPoint.getArgs();
 
-        for(int i = 0 ; i < arguments.length ; i++)
-        {
-            if(arguments[i] instanceof MultipartFile == true)
-                arguments[i] = String.format("MultiPartFile : %s",((MultipartFile) arguments[i]).getName() );
-        }
-        String  inputParam = om.writeValueAsString(arguments) ;
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+
+        String  inputParam = "inputParams";
         String  outputMessage = "" ;
         char apiStatus = 'Y';
         String methodName = "";
