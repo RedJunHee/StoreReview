@@ -55,10 +55,8 @@ public class RequestAroundLogAop {
         Object[] arguments   = joinPoint.getArgs();
 //        String  inputParam;
 //        for (int i=0; i<arguments.length; i++) {
-//            if (arguments[i] instanceof MultipartFile) {
-//                System.out.println("MultipartFile임!");
-//            } else
-//              inputParam += om.writeValueAsString(arguments);
+//            if (!(arguments[i] instanceof MultipartFile)) {
+//              inputParam += om.writeValueAsString(arguments[i]);
 //        }
 
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
