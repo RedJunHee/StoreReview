@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +53,11 @@ public class RequestAroundLogAop {
     @Around(value = "execution(* com.review.storereview.controller..*Controller.*(..))")
     public Object ApiLog(ProceedingJoinPoint joinPoint) throws Throwable { // 파라미터 : 프록시 대상 객체의 메서드를 호출할 때 사용
         Object[] arguments   = joinPoint.getArgs();
+//        String  inputParam;
+//        for (int i=0; i<arguments.length; i++) {
+//            if (!(arguments[i] instanceof MultipartFile)) {
+//              inputParam += om.writeValueAsString(arguments[i]);
+//        }
 
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 

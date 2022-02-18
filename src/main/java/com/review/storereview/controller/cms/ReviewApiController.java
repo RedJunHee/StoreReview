@@ -76,10 +76,10 @@ public class ReviewApiController {
             List<String> encodedImgUrlList = null;
             if (!Objects.isNull(review.getImgUrl())) {
                 if (!review.getImgUrl().isEmpty())
-                     encodedImgUrlList = new ArrayList<>();
-                    for (String imgUrl : review.getImgUrl()) {
-                        encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
-                    }
+                    encodedImgUrlList = new ArrayList<>();
+                for (String imgUrl : review.getImgUrl()) {
+                    encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
+                }
             }
             // 3.2. responseDto 추가
             try {
@@ -125,10 +125,10 @@ public class ReviewApiController {
 
         if (!Objects.isNull(findReview.getImgUrl())) {
             if (!findReview.getImgUrl().isEmpty())
-                 encodedImgUrlList = new ArrayList<>();
-                for (String imgUrl : findReview.getImgUrl()) {
-                    encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
-                }
+                encodedImgUrlList = new ArrayList<>();
+            for (String imgUrl : findReview.getImgUrl()) {
+                encodedImgUrlList.add(CryptUtils.Base64Encoding(imgUrl));
+            }
         }
         // 3. 관련 코멘트 갯수
         int commentNum = commentService.findCommentNumByReviewId(findReview.getReviewId());
@@ -278,7 +278,7 @@ public class ReviewApiController {
                 .content(CryptUtils.Base64Decoding(requestDto.getContent()))
                 .stars(requestDto.getStars())
                 .build();
-        List<String> encodedImgUrlList = null;
+        List<String> encodedImgUrlList = new ArrayList<>();
         // 4. imgUrl : save or delete / 인코딩
         List<String> renewImgUrls = s3Service.saveOrDeleteImg(findReview.getImgUrl(), requestDto.getImgUrl(), imgFiles);
         if(CollectionUtils.isNullOrEmpty(renewImgUrls))
