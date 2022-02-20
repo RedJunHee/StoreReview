@@ -1,7 +1,7 @@
 # StoreReview
 리뷰 서비스를 제공하는 웹 사이트 개발 프로젝트입니다. 😊
 
-[여기 모아](https://store-review.nextwing.me/)
+[웹사이트 보러가기](https://store-review.nextwing.me/)
 
 [Front-End repository](https://github.com/ghtea/store-review-fe)
 
